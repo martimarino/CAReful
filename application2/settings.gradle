@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Inattentive Drivers Detection"
+rootProject.name = "Inattenive Drivers"
 include ':app'
