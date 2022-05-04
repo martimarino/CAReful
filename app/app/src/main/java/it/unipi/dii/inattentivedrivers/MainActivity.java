@@ -1,4 +1,4 @@
-package it.unipi.dii.projectmsss;
+package it.unipi.dii.inattentivedrivers;
 
 import android.os.Bundle;
 
@@ -10,7 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import it.unipi.dii.projectmsss.databinding.ActivityMainBinding;
+import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 

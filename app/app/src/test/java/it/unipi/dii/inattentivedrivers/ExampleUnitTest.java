@@ -1,4 +1,4 @@
-package it.unipi.dii.projectmsss;
+package it.unipi.dii.inattentivedrivers;
 
 import org.junit.Test;
 

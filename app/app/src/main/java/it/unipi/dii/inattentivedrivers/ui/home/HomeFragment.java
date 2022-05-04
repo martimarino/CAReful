@@ -1,4 +1,4 @@
-package it.unipi.dii.projectmsss.ui.home;
+package it.unipi.dii.inattentivedrivers.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.unipi.dii.projectmsss.databinding.FragmentHomeBinding;
+import it.unipi.dii.inattentivedrivers.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
 

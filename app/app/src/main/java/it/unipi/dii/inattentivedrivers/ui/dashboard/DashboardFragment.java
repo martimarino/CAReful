@@ -1,4 +1,4 @@
-package it.unipi.dii.projectmsss.ui.dashboard;
+package it.unipi.dii.inattentivedrivers.ui.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.unipi.dii.projectmsss.databinding.FragmentDashboardBinding;
+import it.unipi.dii.inattentivedrivers.databinding.FragmentDashboardBinding;
 
 public class DashboardFragment extends Fragment {
 

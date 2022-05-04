@@ -1,4 +1,4 @@
-package it.unipi.dii.projectmsss.ui.notifications;
+package it.unipi.dii.inattentivedrivers.ui.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.unipi.dii.projectmsss.databinding.FragmentNotificationsBinding;
+import it.unipi.dii.inattentivedrivers.databinding.FragmentNotificationsBinding;
 
 public class NotificationsFragment extends Fragment {
 
