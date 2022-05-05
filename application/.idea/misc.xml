@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Andrea Lagna/AndroidStudioProjects/mobile-and-social-sensing-systems/application/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.183" />
+        <entry key="..\:/Users/Andrea Lagna/AndroidStudioProjects/mobile-and-social-sensing-systems/application/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/Andrea Lagna/AndroidStudioProjects/mobile-and-social-sensing-systems/application/app/src/main/res/layout/activity_main.xml" value="0.14945652173913043" />
+        <entry key="..\:/Users/Andrea Lagna/AndroidStudioProjects/mobile-and-social-sensing-systems/application/app/src/main/res/menu/bottom_nav_menu.xml" value="0.264" />
         <entry key="..\:/Users/marti/OneDrive - University of Pisa/AIDE/1 anno/Mobile and Social Sensing Systems/Project MSSS/app/app/src/main/res/layout/activity_main.xml" value="0.25" />
       </map>
     </option>
