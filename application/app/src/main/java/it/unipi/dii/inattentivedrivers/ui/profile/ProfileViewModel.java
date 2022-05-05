@@ -1,16 +1,16 @@
-package it.unipi.dii.inattentivedrivers.ui.dashboard;
+package it.unipi.dii.inattentivedrivers.ui.profile;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class ProfileViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public ProfileViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is profile fragment");
     }
 
     public LiveData<String> getText() {

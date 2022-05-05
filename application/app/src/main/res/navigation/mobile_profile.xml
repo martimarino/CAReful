@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="it.unipi.dii.inattentivedrivers.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_history"
+        android:name="it.unipi.dii.inattentivedrivers.ui.history.HistoryFragment"
         android:label="@string/title_history"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_history" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="it.unipi.dii.inattentivedrivers.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_profile"
+        android:name="it.unipi.dii.inattentivedrivers.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>
