@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_newtrip">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="it.unipi.dii.inattentivedrivers.ui.home.HomeFragment"
+        android:id="@+id/navigation_newtrip"
+        android:name="it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment"
         android:label="@string/title_newtrip"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_newtrip" />
 
     <fragment
         android:id="@+id/navigation_history"
