@@ -3,4 +3,8 @@
     <string name="title_newtrip">New Trip</string>
     <string name="title_history">History</string>
     <string name="title_profile">Profile</string>
+    <string name="password">password</string>
+    <string name="global_rank">rank</string>
+    <string name="e_mail">E-mail</string>
+    <string name="signUp">Registration</string>
 </resources>
