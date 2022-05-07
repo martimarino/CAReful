@@ -28,6 +28,13 @@ public class ProfileFragment extends Fragment {
         profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
+/*
+    Button button = (Button) findViewById(R.id.button_send);
+button.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+            // Do something in response to button click
+        }
+    });*/
 
     @Override
     public void onDestroyView() {

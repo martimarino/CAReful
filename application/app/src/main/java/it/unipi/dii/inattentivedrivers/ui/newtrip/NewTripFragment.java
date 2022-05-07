@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.databinding.FragmentNewtripBinding;
 
 public class NewTripFragment extends Fragment {
