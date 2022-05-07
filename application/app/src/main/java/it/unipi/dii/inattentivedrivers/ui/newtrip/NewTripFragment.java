@@ -29,6 +29,14 @@ public class NewTripFragment extends Fragment {
 
 
         final TextView textView = binding.textNewtrip;
+        final Button button = binding.button;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openActivity2();
+            }
+        });
+
         newTripViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
@@ -37,6 +45,11 @@ public class NewTripFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void openActivity2(){
+        Intent intent = new Intent(getActivity(), StartTrip.class);
+        startActivity(intent);
     }
 
 }
