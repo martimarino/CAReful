@@ -7,8 +7,7 @@
     android:layout_marginTop="20dp"
     android:paddingLeft="70dp"
     android:paddingRight="70dp"
-    tools:ignore="ExtraText">
-    tools:context=".MainActivity">
+    tools:context=".ui.settings.SettingsFragment">
 
     <TextView
         android:id="@+id/textGeoloc"
@@ -148,7 +147,8 @@
         android:text="Location Updates"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/sw_gps"
@@ -156,9 +156,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="GPS/SavePower"
+        android:onClick="GPSlistener"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/tv_address"
