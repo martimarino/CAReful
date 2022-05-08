@@ -26,7 +26,6 @@ public class NewTripFragment extends Fragment {
         View root = binding.getRoot();
 
 
-
         final Button button = binding.button;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
