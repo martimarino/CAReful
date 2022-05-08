@@ -10,7 +10,6 @@ public class NewTripViewModel extends ViewModel {
 
     public NewTripViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is New Trip fragment");
     }
 
     public LiveData<String> getText() {

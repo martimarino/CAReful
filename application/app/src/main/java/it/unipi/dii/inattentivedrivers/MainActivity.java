@@ -12,10 +12,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.R.layout;
 import android.view.View;
 import android.widget.Switch;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,25 +30,19 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
-//import it.unipi.dii.inattentivedrivers.network.NetworkActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
     public static final int FAST_UPDATE_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
-    //private final NetworkActivity APIConnector = new NetworkActivity();
+
     TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor, tv_updates, tv_address;
     Switch sw_locationupdates, sw_gps;
-
-    //tracking location or not
-    boolean updateOn = false;
 
     // Google's API for location services.
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -142,16 +134,13 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PERMISSIONS_FINE_LOCATION:
-                ;
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateGPS();
-                } else {
-                    Toast.makeText(this, "This app requires permission to be granted in order to work properly", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
+        if (requestCode == PERMISSIONS_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                updateGPS();
+            } else {
+                Toast.makeText(this, "This app requires permission to be granted in order to work properly", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 
@@ -167,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
                         Criteria criteria = new Criteria();
-                        String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+                        String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
                         locationManager.requestLocationUpdates(bestProvider, 1000, 0, (LocationListener) this);
                     }
                 // put the values of location into the UI
@@ -218,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         tv_accuracy.setText(R.string.not_tracking);
         tv_altitude.setText(R.string.not_tracking);
         tv_sensor.setText(R.string.not_tracking);
+        tv_address.setText(R.string.not_tracking);
 
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
     }
