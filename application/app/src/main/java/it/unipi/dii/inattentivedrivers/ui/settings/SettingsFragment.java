@@ -1,17 +1,12 @@
 package it.unipi.dii.inattentivedrivers.ui.settings;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -81,10 +75,10 @@ public class SettingsFragment extends Fragment {
         tv_address = binding.tvAddress;
         sw_gps = binding.swGps;
         sw_locationupdates = binding.swLocationsupdates;
-
+/*
         StrictMode.ThreadPolicy tp = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(tp);
-
+*/
         sw_gps.setOnClickListener(view -> {
             if (sw_gps.isChecked()) {
                 // most accurate - use GPS
@@ -161,25 +155,35 @@ public class SettingsFragment extends Fragment {
         // get the current location from the fused client
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // user provided permission
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
-                if (location == null)
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                        Criteria criteria = new Criteria();
-                        String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
-                        locationManager.requestLocationUpdates(bestProvider, 1000, 0, (LocationListener) this);
-                    }
-                // put the values of location into the UI
-                updateUIValues(location);
-            });
-        } else {
-            // permission not granted yet
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
-            }
+        //Not the best practices to get runtime permissions, but still here I ask permissions.
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
         }
+
+        //Instantiating the Location request and setting the priority and the interval I need to update the location.
+        locationRequest = locationRequest.create();
+        locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);   //how often location is checked
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        //instantiating the LocationCallBack
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null) {
+                    if (locationResult == null) {
+                        return;
+                    }
+                    //Showing the latitude, longitude and accuracy on the home screen.
+                    Location location = locationResult.getLocations().get(0);
+                    updateUIValues(location);
+                }
+            }
+        };
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+
 
     }
 
