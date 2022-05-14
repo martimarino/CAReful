@@ -14,7 +14,7 @@
             android:id="@+id/textView"
             android:layout_width="81dp"
             android:layout_height="58dp"
-            android:text="TextView"
+            android:text=""
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

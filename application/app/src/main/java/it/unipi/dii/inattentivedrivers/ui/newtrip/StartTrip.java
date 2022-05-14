@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -59,11 +60,11 @@ public class StartTrip extends AppCompatActivity {
                 if(sensorEvent.values[1] > 3){
                     for (int i=0; i<array.size()-1; i++){
                         if(array.get(i)>0 && array.get(i+1)<0){
-                            fallDetected = 1;
+                            fallDetected = 1;                       //negative acceleration
                         }
                         if(fallDetected==1){
                             if(array.get(i)<0 && array.get(i+1)>0){
-                                fallDetected = 2;
+                                fallDetected = 2;                   //positive acceleration
                                 break;
                             }
                         }
@@ -73,6 +74,8 @@ public class StartTrip extends AppCompatActivity {
                     array.clear();
                     fallDetected=0;
                     countFall = countFall + 1;
+                    TextView tv = findViewById(R.id.textView);
+                    tv.setText("Falls detected: " + Integer.toString(countFall));
                 }
             }
             @Override
