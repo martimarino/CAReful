@@ -24,73 +24,73 @@
         tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/phone"
         android:layout_width="72dp"
         android:layout_height="88dp"
         android:src="@drawable/telephone"
-        app:layout_constraintBottom_toTopOf="@+id/imageView10"
-        app:layout_constraintEnd_toStartOf="@+id/imageView7"
+        app:layout_constraintBottom_toTopOf="@+id/gps"
+        app:layout_constraintEnd_toStartOf="@+id/camera"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <ImageView
-        android:id="@+id/imageView10"
+        android:id="@+id/gps"
         android:layout_width="70dp"
         android:layout_height="87dp"
         android:src="@drawable/localization"
-        app:layout_constraintBottom_toTopOf="@+id/imageView12"
-        app:layout_constraintEnd_toStartOf="@+id/imageView9"
+        app:layout_constraintBottom_toTopOf="@+id/microphone"
+        app:layout_constraintEnd_toStartOf="@+id/gyroscope"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+        app:layout_constraintTop_toBottomOf="@+id/phone" />
 
     <ImageView
-        android:id="@+id/imageView11"
+        android:id="@+id/accelerometer"
         android:layout_width="76dp"
         android:layout_height="83dp"
         android:src="@drawable/shuttle"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView12"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+        app:layout_constraintStart_toEndOf="@+id/microphone"
+        app:layout_constraintTop_toBottomOf="@+id/gyroscope" />
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/microphone"
         android:layout_width="72dp"
         android:layout_height="81dp"
         android:src="@drawable/voice"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toStartOf="@+id/imageView11"
+        app:layout_constraintBottom_toTopOf="@+id/start"
+        app:layout_constraintEnd_toStartOf="@+id/accelerometer"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+        app:layout_constraintTop_toBottomOf="@+id/gps" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/gyroscope"
         android:layout_width="75dp"
         android:layout_height="85dp"
         android:src="@drawable/move"
-        app:layout_constraintBottom_toTopOf="@+id/imageView11"
+        app:layout_constraintBottom_toTopOf="@+id/accelerometer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView10"
-        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+        app:layout_constraintStart_toEndOf="@+id/gps"
+        app:layout_constraintTop_toBottomOf="@+id/camera" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/camera"
         android:layout_width="76dp"
         android:layout_height="88dp"
         android:src="@drawable/photo"
-        app:layout_constraintBottom_toTopOf="@+id/imageView9"
+        app:layout_constraintBottom_toTopOf="@+id/gyroscope"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintStart_toEndOf="@+id/phone"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/start"
         android:layout_width="189dp"
         android:layout_height="88dp"
         android:layout_marginBottom="84dp"
