@@ -2,6 +2,7 @@ package it.unipi.dii.inattentivedrivers.ui.newtrip;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -20,6 +21,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,14 +32,13 @@ import com.google.android.gms.tasks.Task;
 import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMapsBinding;
 
-
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private ActivityMapsBinding binding;
-    Location currentLocation;
+    public static Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
-    private static final int REQUEST_CODE=101;
+    private static final int REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +58,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Add a marker in Sydney and move the camera
         LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(current).title("Current location"));
+        //mMap.addMarker(new MarkerOptions().position(current).title("Current location"));
 
         // zoomLevel is set at 10 for a City-level view
-        float zoomLevel = 18;
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current,zoomLevel));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(current)
+                .zoom(20)
+                .bearing(currentLocation.getBearing())
+                        .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, zoomLevel));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            return;
+
+        mMap.setMyLocationEnabled(true);
 
     }
 
@@ -83,7 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if(location != null){
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), Double.toString(currentLocation.getLatitude()), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), Double.toString(currentLocation.getLatitude()), Toast.LENGTH_LONG).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.map);
                     assert supportMapFragment != null;

@@ -15,6 +15,7 @@ import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 public class HistoryFragment extends Fragment {
 
     private FragmentHistoryBinding binding;
+    //private List<>
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

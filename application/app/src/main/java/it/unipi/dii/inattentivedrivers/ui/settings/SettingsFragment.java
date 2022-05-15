@@ -67,7 +67,6 @@ public class SettingsFragment extends Fragment {
 
         settingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-
         /* ********************************************************** */
 
         tv_lat = binding.tvLat;
@@ -127,7 +126,7 @@ public class SettingsFragment extends Fragment {
         };
 
         if (sw_gps.isChecked())
-            tv_sensor.setText("Using GPS sensors");
+            tv_sensor.setText(R.string.switch_gps);
         else
             tv_sensor.setText("Using Towers + WiFi");
 
@@ -206,7 +205,6 @@ public class SettingsFragment extends Fragment {
             tv_address.setText("Unable to get street address");
         }
     }
-
 
 
     private void stopLocationUpdates() {

@@ -39,7 +39,7 @@ public class NewTripFragment extends Fragment {
         accelerometer = binding.accelerometer;
 
         start.setOnClickListener(view -> startTrip());
-        phone.setOnClickListener(view -> tryPhoneRestrictions());
+        phone.setOnClickListener(view -> trySmartphoneRestrictions());
         camera.setOnClickListener(view -> tryCamera());
         gps.setOnClickListener(view -> tryGps());
         gyroscope.setOnClickListener(view -> tryGyroscope());
@@ -66,12 +66,14 @@ public class NewTripFragment extends Fragment {
 
     }
 
-    private void tryPhoneRestrictions() {
-
+    private void trySmartphoneRestrictions() {
+        Intent intent = new Intent(getActivity(), SmartphoneActivity.class);
+        startActivity(intent);
     }
 
     private void startTrip() {
-
+        Intent intent = new Intent(getActivity(), StartTrip.class);
+        startActivity(intent);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class NewTripFragment extends Fragment {
     }
 
     public void tryAccelerometer(){
-        Intent intent = new Intent(getActivity(), StartTrip.class);
+        Intent intent = new Intent(getActivity(), AccelerometerActivity.class);
         startActivity(intent);
     }
 

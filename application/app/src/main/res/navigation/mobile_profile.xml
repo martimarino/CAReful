@@ -5,8 +5,6 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_newtrip">
 
-
-
     <fragment
         android:id="@+id/navigation_newtrip"
         android:name="it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment"
@@ -30,6 +28,5 @@
         android:name="it.unipi.dii.inattentivedrivers.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
-
 
 </navigation>
