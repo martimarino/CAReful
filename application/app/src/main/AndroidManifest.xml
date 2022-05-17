@@ -32,6 +32,8 @@
         <activity
             android:name=".ui.newtrip.MapsActivity"
             android:exported="false" />
+        <activity android:name=".ui.newtrip.StartTrip"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -2,15 +2,12 @@ package it.unipi.dii.inattentivedrivers.ui.newtrip;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -19,14 +16,11 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import it.unipi.dii.inattentivedrivers.R;
@@ -34,15 +28,19 @@ import it.unipi.dii.inattentivedrivers.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static GoogleMap mMap;
+    private GoogleMap mMap;
     private ActivityMapsBinding binding;
     public static Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
+    private LocationCallback locationCallback;
+    private LocationRequest locationRequest;
+    private boolean foregroundActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        foregroundActivity = false;
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -54,6 +52,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        System.out.println("******************ON MAP READY*******************");
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
@@ -63,7 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // zoomLevel is set at 10 for a City-level view
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(current)
-                .zoom(20)
+                .zoom(18)
                 .bearing(currentLocation.getBearing())
                         .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -90,43 +89,59 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(@NonNull @org.jetbrains.annotations.NotNull Location location) {
+        task.addOnSuccessListener(location -> {
 
-                if(location != null){
-                    currentLocation = location;
-                    //Toast.makeText(getApplicationContext(), Double.toString(currentLocation.getLatitude()), Toast.LENGTH_LONG).show();
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
-                            .findFragmentById(R.id.map);
-                    assert supportMapFragment != null;
-                    supportMapFragment.getMapAsync(MapsActivity.this);
-                }
+            if(location != null){
+                currentLocation = location;
+                System.out.println("************* getCurrentLocation *************");
+
+                SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                assert supportMapFragment != null;
+                supportMapFragment.getMapAsync(MapsActivity.this);
             }
         });
-        LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setInterval(60000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationCallback mLocationCallback = new LocationCallback() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Toast.makeText(getApplicationContext()," location result is  " + locationResult, Toast.LENGTH_LONG).show();
+                System.out.println("*********** onLocationResult **********");
+                //Toast.makeText(getApplicationContext()," location result is  " + locationResult, Toast.LENGTH_LONG).show();
 
                 if (locationResult == null) {
-                    Toast.makeText(getApplicationContext(),"current location is null ", Toast.LENGTH_LONG).show();
-
+                    //Toast.makeText(getApplicationContext(),"current location is null ", Toast.LENGTH_LONG).show();
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
-                        Toast.makeText(getApplicationContext(),"current location is " + location.getLongitude(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),"current location is " + location.getLongitude(), Toast.LENGTH_LONG).show();
 
                         //TODO: UI updates.
+                        currentLocation = locationResult.getLastLocation();
+
+                        LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(current)
+                                .zoom(18)
+                                .build();
+
+                        System.out.println("FOREGROUD: " + foregroundActivity);
+//                        System.out.println("MAP: " + mMap.toString());
+
+//                        assert  (mMap != null) ;
+
+                        if(foregroundActivity && mMap != null)
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                     }
                 }
             }
         };
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+
     }
 
     @Override
@@ -140,4 +155,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        foregroundActivity = false;
+        mMap = null;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        foregroundActivity = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        foregroundActivity = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        foregroundActivity = true;
+    }
+
 }
