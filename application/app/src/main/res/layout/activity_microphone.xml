@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.newtrip.Microphone">
+
+    <Button
+        android:id="@+id/record"
+        android:layout_width="153dp"
+        android:layout_height="143dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:onClick="record"
+        android:text="Record"
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="202dp"
+        tools:ignore="MissingConstraints,OnClick" />
+
+    <Button
+        android:id="@+id/listen"
+        android:layout_width="149dp"
+        android:layout_height="143dp"
+        android:layout_marginTop="208dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:onClick="listen"
+        android:text="Listen"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/checkbox_off_background"
+        tools:ignore="MissingConstraints,OnClick,SpeakableTextPresentCheck"
+        tools:layout_editor_absoluteX="217dp" />
+
+
+    <TextView
+        android:id="@+id/textActivityMicrophone"
+        android:layout_width="81dp"
+        android:layout_height="58dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.668"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

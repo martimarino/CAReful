@@ -1,20 +1,72 @@
 package it.unipi.dii.inattentivedrivers.ui.profile;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
 
+    EditText email;
+    EditText password;
+    EditText repeatPassword;
+    Button confirm;
+
+
     private FragmentProfileBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.)
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                checkData();
+            }
+        });
+    }
+
+    boolean isEmail(EditText text){
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
+
+    boolean isEmpty(EditText text){
+        CharSequence str = text.getText().toString();
+        return TextUtils.isEmpty(str);
+    }
+
+    void checkData(){
+        if (isEmpty(email)){
+            email.setError("Please insert the email");
+        }
+        if (isEmail(email) == false){
+            email.setError("Please insert a valid email");
+        }
+        if (isEmpty(password)){
+            password.setError("Please insert the passeord");
+        }
+        if (isEmpty(repeatPassword)){
+            repeatPassword.setError("Please insert the passeord");
+        }
+    }
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

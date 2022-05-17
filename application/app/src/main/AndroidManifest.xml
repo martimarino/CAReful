@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +26,9 @@
 
         <activity
             android:name=".ui.newtrip.AccelerometerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.newtrip.Microphone"
             android:exported="false" />
         <activity
             android:name=".ui.newtrip.SmartphoneActivity"
