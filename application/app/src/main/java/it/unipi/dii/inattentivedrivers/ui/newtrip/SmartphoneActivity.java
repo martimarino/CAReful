@@ -18,8 +18,8 @@ public class SmartphoneActivity extends AppCompatActivity implements LifecycleOb
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         resumeTimes++;
         Toast.makeText(getApplicationContext(), "Times resumed: " + resumeTimes,
                 Toast.LENGTH_LONG).show();

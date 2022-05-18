@@ -23,19 +23,93 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
+<!--***************************************************************-->
+
+    <ImageView
+        android:id="@+id/phone_off"
+        android:layout_width="72dp"
+        android:layout_height="88dp"
+        android:src="@drawable/phone_off"
+        app:layout_constraintBottom_toTopOf="@+id/localization_off"
+        app:layout_constraintEnd_toStartOf="@+id/camera_off"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/localization_off"
+        android:layout_width="70dp"
+        android:layout_height="87dp"
+        android:src="@drawable/localization_off"
+        app:layout_constraintBottom_toTopOf="@+id/microphone_off"
+        app:layout_constraintEnd_toStartOf="@+id/gyroscope_off"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_off"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/accelerometer_off"
+        android:layout_width="76dp"
+        android:layout_height="83dp"
+        android:src="@drawable/shuttle_off"
+        app:layout_constraintBottom_toTopOf="@+id/start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/microphone_off"
+        app:layout_constraintTop_toBottomOf="@+id/gyroscope_off"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/microphone_off"
+        android:layout_width="72dp"
+        android:layout_height="81dp"
+        android:src="@drawable/microphone_off"
+        app:layout_constraintBottom_toTopOf="@+id/start"
+        app:layout_constraintEnd_toStartOf="@+id/accelerometer_off"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/localization_off"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/gyroscope_off"
+        android:layout_width="75dp"
+        android:layout_height="85dp"
+        android:src="@drawable/move_off"
+        app:layout_constraintBottom_toTopOf="@+id/accelerometer_off"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/localization_off"
+        app:layout_constraintTop_toBottomOf="@+id/camera_off"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/camera_off"
+        android:layout_width="76dp"
+        android:layout_height="88dp"
+        android:src="@drawable/camera_off"
+        app:layout_constraintBottom_toTopOf="@+id/gyroscope_off"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/phone_off"
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/phone"
         android:layout_width="72dp"
         android:layout_height="88dp"
-        android:src="@drawable/telephone"
-        app:layout_constraintBottom_toTopOf="@+id/gps"
+        android:src="@drawable/phone"
+        app:layout_constraintBottom_toTopOf="@+id/localization"
         app:layout_constraintEnd_toStartOf="@+id/camera"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <ImageView
-        android:id="@+id/gps"
+        android:id="@+id/localization"
         android:layout_width="70dp"
         android:layout_height="87dp"
         android:src="@drawable/localization"
@@ -60,12 +134,12 @@
         android:id="@+id/microphone"
         android:layout_width="72dp"
         android:layout_height="81dp"
-        android:src="@drawable/voice"
+        android:src="@drawable/microphone"
         app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintEnd_toStartOf="@+id/accelerometer"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gps" />
+        app:layout_constraintTop_toBottomOf="@+id/localization" />
 
     <ImageView
         android:id="@+id/gyroscope"
@@ -75,14 +149,14 @@
         app:layout_constraintBottom_toTopOf="@+id/accelerometer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/gps"
+        app:layout_constraintStart_toEndOf="@+id/localization"
         app:layout_constraintTop_toBottomOf="@+id/camera" />
 
     <ImageView
         android:id="@+id/camera"
         android:layout_width="76dp"
         android:layout_height="88dp"
-        android:src="@drawable/photo"
+        android:src="@drawable/camera"
         app:layout_constraintBottom_toTopOf="@+id/gyroscope"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

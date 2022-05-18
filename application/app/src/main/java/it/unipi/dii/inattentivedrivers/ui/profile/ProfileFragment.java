@@ -16,7 +16,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import it.unipi.dii.inattentivedrivers.R;
+import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 import it.unipi.dii.inattentivedrivers.databinding.FragmentProfileBinding;
+import it.unipi.dii.inattentivedrivers.ui.history.HistoryViewModel;
 
 public class ProfileFragment extends Fragment {
 
@@ -31,14 +33,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.)
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                checkData();
-            }
-        });
     }
 
     boolean isEmail(EditText text){
@@ -62,11 +57,9 @@ public class ProfileFragment extends Fragment {
             password.setError("Please insert the passeord");
         }
         if (isEmpty(repeatPassword)){
-            repeatPassword.setError("Please insert the passeord");
+            repeatPassword.setError("Please insert the passewrd");
         }
     }
-
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +71,8 @@ public class ProfileFragment extends Fragment {
 
         final TextView textView = binding.textSignUp;
         profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        confirm.setOnClickListener(view -> checkData());
+
         return root;
     }
 /*
