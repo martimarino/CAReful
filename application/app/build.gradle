@@ -32,7 +32,9 @@ android {
     dataBinding {
         enabled = true
     }
-
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 dependencies {
@@ -51,6 +53,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.karumi:dexter:6.2.2'
     implementation "androidx.core:core-ktx:+"
-
+    implementation 'com.otaliastudios:cameraview:2.7.0'
+    implementation 'org.tensorflow:tensorflow-lite-task-vision:0.3.1'
+    implementation 'com.google.mlkit:face-detection:16.1.5'
 
 }

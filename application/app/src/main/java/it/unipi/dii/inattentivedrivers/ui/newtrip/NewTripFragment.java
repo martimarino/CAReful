@@ -155,7 +155,8 @@ public class NewTripFragment extends Fragment {
     }
 
     private void tryCamera() {
-
+        Intent intent = new Intent(getActivity(), CameraActivity.class);
+        startActivity(intent);
     }
 
     private void trySmartphoneRestrictions() {
