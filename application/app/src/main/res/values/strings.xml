@@ -4,7 +4,7 @@
     <string name="title_history">History</string>
     <string name="title_profile">Profile</string>
     <string name="password">Password</string>
-    <string name="confirm_signup"></string>
+    <string name="confirm_signup">Confirm</string>
     <string name="global_rank">Rank</string>
     <string name="e_mail">E-mail</string>
     <string name="signup">Registration</string>

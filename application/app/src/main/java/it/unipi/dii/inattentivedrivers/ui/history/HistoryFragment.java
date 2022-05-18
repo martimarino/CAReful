@@ -10,12 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.List;
+
 import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 
 public class HistoryFragment extends Fragment {
 
     private FragmentHistoryBinding binding;
-    //private List<>
+    private List<Trip> tripList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

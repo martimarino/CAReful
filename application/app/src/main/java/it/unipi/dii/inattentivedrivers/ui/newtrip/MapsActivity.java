@@ -64,7 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .target(current)
                 .zoom(18)
                 .bearing(currentLocation.getBearing())
-                        .build();
+                .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, zoomLevel));
@@ -76,8 +76,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void getCurrentLocation(){
-        if(ActivityCompat.checkSelfPermission(
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
@@ -91,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
 
-            if(location != null){
+            if (location != null) {
                 currentLocation = location;
                 System.out.println("************* getCurrentLocation *************");
 
@@ -130,12 +130,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .build();
 
                         System.out.println("FOREGROUD: " + foregroundActivity);
-//                        System.out.println("MAP: " + mMap.toString());
 
-//                        assert  (mMap != null) ;
-
-                        if(foregroundActivity && mMap != null)
+                        if (foregroundActivity && mMap != null) {
                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                return;
+                            }
+                            mMap.setMyLocationEnabled(true);
+                        }
                     }
                 }
             }
