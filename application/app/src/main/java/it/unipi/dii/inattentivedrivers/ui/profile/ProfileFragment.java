@@ -9,16 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.unipi.dii.inattentivedrivers.R;
-import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 import it.unipi.dii.inattentivedrivers.databinding.FragmentProfileBinding;
-import it.unipi.dii.inattentivedrivers.ui.history.HistoryViewModel;
 
 public class ProfileFragment extends Fragment {
 
@@ -54,10 +50,10 @@ public class ProfileFragment extends Fragment {
             email.setError("Please insert a valid email");
         }
         if (isEmpty(password)){
-            password.setError("Please insert the passeord");
+            password.setError("Please insert the password");
         }
         if (isEmpty(repeatPassword)){
-            repeatPassword.setError("Please insert the passewrd");
+            repeatPassword.setError("Please insert the password");
         }
     }
 
