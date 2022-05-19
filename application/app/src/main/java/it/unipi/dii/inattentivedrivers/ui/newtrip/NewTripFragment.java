@@ -141,7 +141,8 @@ public class NewTripFragment extends Fragment {
     }
 
     private void tryGyroscope() {
-
+        Intent intent = new Intent(getActivity(), AccelerometerActivity.class);
+        startActivity(intent);
     }
 
     public void tryAccelerometer(){
