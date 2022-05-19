@@ -1,11 +1,13 @@
 package it.unipi.dii.inattentivedrivers.ui.newtrip;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -22,7 +24,6 @@ public class AccelerometerActivity extends AppCompatActivity {
     private SensorManager sensorManager;
     private Sensor gyroscopeSensor;
     private SensorEventListener gyroscopeEventListener;
-    private ImageButton button;
     private ArrayList<Float> array;
     private int fallDetected;
     private int countFall;
@@ -31,14 +32,7 @@ public class AccelerometerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accelerometer_activity);
-        button = findViewById(R.id.button2);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openActivity();
-            }
-        });
+        setContentView(R.layout.start_trip);
         array = new ArrayList<>();
         fallDetected = 0;
         countFall = 0;
@@ -51,26 +45,39 @@ public class AccelerometerActivity extends AppCompatActivity {
         gyroscopeEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
+                int index = 0;
                 //Y-Axis
-                array.add(sensorEvent.values[1]);
-                if (array.size()>100){
+                if (array.size()<70){
+                    array.add(sensorEvent.values[1]);
+                }
+                else{
                     array.remove(0);
                     array.add(sensorEvent.values[1]);
                 }
-                if(sensorEvent.values[1] > 3){
-                    for (int i=0; i<array.size()-1; i++){
-                        if(array.get(i)>0 && array.get(i+1)<0){
-                            fallDetected = 1;                       //negative acceleration
+                for (int i=0; i<array.size()-1; i++){
+                    if(array.get(i)>0 && array.get(i+1)<0){
+                        fallDetected = 1;                       //negative acceleration
+                        break;
+                    }
+                    if(fallDetected==1){
+                        if(array.get(i)<0 && array.get(i+1)>0){
+                            fallDetected = 2;                   //positive acceleration
+                            index = i;
+                            break;
                         }
-                        if(fallDetected==1){
-                            if(array.get(i)<0 && array.get(i+1)>0){
-                                fallDetected = 2;                   //positive acceleration
+                    }
+                    if(fallDetected==2){
+                        for (int j = index; j< array.size()-1; j++){
+                            if(array.get(j)>3 && array.get(j+1)<3){
+                                fallDetected = 3;                //final acceleration
                                 break;
                             }
                         }
+
                     }
                 }
-                if (fallDetected==2){
+                if (fallDetected==3){
+                    //Log.d("array", String.valueOf(array));
                     array.clear();
                     fallDetected=0;
                     countFall = countFall + 1;
@@ -94,10 +101,5 @@ public class AccelerometerActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
         sensorManager.unregisterListener(gyroscopeEventListener);
-    }
-
-    public void openActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 }
