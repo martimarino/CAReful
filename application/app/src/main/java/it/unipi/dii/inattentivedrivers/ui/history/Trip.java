@@ -8,11 +8,11 @@ public class Trip {
 
     public LocalDateTime date;
     public float duration;
-    public float score;
+    public int score;
     public Location departure;
     public Location arrival;
 
-    public Trip (LocalDateTime l, float d, float s, Location point1, Location point2){
+    public Trip (LocalDateTime l, float d, int s, Location point1, Location point2){
         date = l;
         duration = d;
         score = s;
@@ -30,7 +30,7 @@ public class Trip {
         return duration;
     }
 
-    public float getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -50,7 +50,7 @@ public class Trip {
         this.duration = duration;
     }
 
-    public void setScore(float score) {
+    public void setScore(int score) {
         this.score = score;
     }
 

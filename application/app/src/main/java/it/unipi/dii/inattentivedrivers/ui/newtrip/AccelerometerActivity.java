@@ -32,7 +32,7 @@ public class AccelerometerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_trip);
+        setContentView(R.layout.accelerometer_activity);
         array = new ArrayList<>();
         fallDetected = 0;
         countFall = 0;

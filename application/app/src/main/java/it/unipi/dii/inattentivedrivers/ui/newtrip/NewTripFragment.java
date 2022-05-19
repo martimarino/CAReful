@@ -150,11 +150,6 @@ public class NewTripFragment extends Fragment {
         startActivity(intent);
     }
 
-    public void tryAccelerometer(){
-        Intent intent = new Intent(getActivity(), AccelerometerActivity.class);
-        startActivity(intent);
-    }
-
     private void tryGps() {
         Intent intent = new Intent(getActivity(), MapsActivity.class);
         startActivity(intent);

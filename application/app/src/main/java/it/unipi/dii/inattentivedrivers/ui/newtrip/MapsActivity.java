@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -16,11 +17,12 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 import it.unipi.dii.inattentivedrivers.R;
@@ -38,26 +40,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean foregroundActivity;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        foregroundActivity = false;
-
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getCurrentLocation();
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        System.out.println("******************ON MAP READY*******************");
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
         LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        //mMap.addMarker(new MarkerOptions().position(current).title("Current location"));
 
         // zoomLevel is set at 10 for a City-level view
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -73,6 +70,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
 
         mMap.setMyLocationEnabled(true);
+        mMap.addMarker(new MarkerOptions().position(current).title("Departure") .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
     }
 
@@ -93,8 +91,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (location != null) {
                 currentLocation = location;
-                System.out.println("************* getCurrentLocation *************");
-
                 SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
                 assert supportMapFragment != null;
@@ -108,17 +104,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                System.out.println("*********** onLocationResult **********");
-                //Toast.makeText(getApplicationContext()," location result is  " + locationResult, Toast.LENGTH_LONG).show();
 
-                if (locationResult == null) {
-                    //Toast.makeText(getApplicationContext(),"current location is null ", Toast.LENGTH_LONG).show();
+                if (locationResult == null)
                     return;
-                }
+
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
-                        //Toast.makeText(getApplicationContext(),"current location is " + location.getLongitude(), Toast.LENGTH_LONG).show();
-
                         //TODO: UI updates.
                         currentLocation = locationResult.getLastLocation();
 
@@ -166,12 +157,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        foregroundActivity = false;
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         foregroundActivity = false;
@@ -183,5 +168,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         foregroundActivity = true;
     }
-
 }
