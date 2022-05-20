@@ -10,12 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
