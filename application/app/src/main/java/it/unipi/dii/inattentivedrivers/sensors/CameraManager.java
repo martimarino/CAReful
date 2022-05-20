@@ -56,6 +56,7 @@ public class CameraManager {
 
     public CameraManager(CameraActivity cameraActivity, ActivityCameraBinding activityCameraBinding){
         drowsinessCounter = 0;
+        cameraVisible = true;
         this.cameraActivity = cameraActivity;
         this.activityCameraBinding = activityCameraBinding;
         initializeCamera(cameraActivity);
@@ -63,6 +64,7 @@ public class CameraManager {
 
     public CameraManager(StartTrip startTrip, StartTripBinding startTripBinding){
         drowsinessCounter = 0;
+        cameraVisible = false;
         this.startTrip = startTrip;
         this.startTripBinding = startTripBinding;
         initializeCamera(startTrip);
@@ -75,9 +77,9 @@ public class CameraManager {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         if(cameraVisible)
-                            setupTripCamera(activity);
-                        else
                             setupTryCamera(activity);
+                        else
+                            setupTripCamera(activity);
                     }
 
                     @Override

@@ -49,10 +49,10 @@ public class NewTripFragment extends Fragment {
         accelerometer_off = binding.accelerometerOff;
 
         setListeners();
+        start.setOnClickListener(view -> startTrip());
 
         developMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {  // Try every sensor
-                start.setOnClickListener(view -> startTrip());
                 phone.setOnClickListener(view -> trySmartphoneRestrictions());
                 camera.setOnClickListener(view -> tryCamera());
                 gps.setOnClickListener(view -> tryGps());
