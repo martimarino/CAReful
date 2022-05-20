@@ -20,8 +20,7 @@ public class MainActivity extends AppCompatActivity {
         it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        // Initialize NavBar menu
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_newtrip, R.id.navigation_history, R.id.navigation_profile)
                 .build();

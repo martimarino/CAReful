@@ -5,14 +5,14 @@ import android.os.Handler;
 
 import java.io.IOException;
 
-public class Microphone {
+public class MicrophoneManager {
 
     public MediaRecorder recorder;
 
     private final double referenceAmplitude = 2700.0;  //0.0001
     private final int AUDIO_RECORDING_DELAY = 1000;
 
-    public Microphone(){
+    public MicrophoneManager(){
         recorder = null;
         startRecording();
     }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -14,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentNewtripBinding;
-import it.unipi.dii.inattentivedrivers.R;
 
 public class NewTripFragment extends Fragment {
 
@@ -48,16 +48,26 @@ public class NewTripFragment extends Fragment {
         microphone_off = binding.microphoneOff;
         accelerometer_off = binding.accelerometerOff;
 
-        start.setOnClickListener(view -> startTrip());
-        phone.setOnClickListener(view -> trySmartphoneRestrictions());
-        camera.setOnClickListener(view -> tryCamera());
-        gps.setOnClickListener(view -> tryGps());
-        gyroscope.setOnClickListener(view -> tryGyroscope());
-        microphone.setOnClickListener(view -> tryMicrophone());
-        accelerometer.setOnClickListener(view -> tryAccelerometer());
+        setListeners();
 
-        // Listeners to change image when sensor is selected
+        developMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {  // Try every sensor
+                start.setOnClickListener(view -> startTrip());
+                phone.setOnClickListener(view -> trySmartphoneRestrictions());
+                camera.setOnClickListener(view -> tryCamera());
+                gps.setOnClickListener(view -> tryGps());
+                gyroscope.setOnClickListener(view -> tryGyroscope());
+                microphone.setOnClickListener(view -> tryMicrophone());
+                accelerometer.setOnClickListener(view -> tryAccelerometer());
+            } else {    // Listeners to change image when sensor is selected
+                setListeners();
+            }   //end else
+        });   // end listener
 
+        return root;
+    }
+
+    private void setListeners(){
         phone.setOnClickListener(v -> {
             phone.setVisibility(View.INVISIBLE);
             phone_off.setVisibility(View.VISIBLE);
@@ -130,22 +140,10 @@ public class NewTripFragment extends Fragment {
             accelerometer.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "Accelerometer sensor on", Toast.LENGTH_SHORT).show();
         });
-
-        developMode.setOnClickListener(v ->{
-            start.setOnClickListener(view -> startTrip());
-            phone.setOnClickListener(view -> trySmartphoneRestrictions());
-            camera.setOnClickListener(view -> tryCamera());
-            gps.setOnClickListener(view -> tryGps());
-            gyroscope.setOnClickListener(view -> tryGyroscope());
-            microphone.setOnClickListener(view -> tryMicrophone());
-            accelerometer.setOnClickListener(view -> tryAccelerometer());
-        });
-
-        return root;
     }
 
     private void tryMicrophone() {
-        Intent intent = new Intent(getActivity(), Microphone.class);
+        Intent intent = new Intent(getActivity(), MicrophoneActivity.class);
         startActivity(intent);
     }
 

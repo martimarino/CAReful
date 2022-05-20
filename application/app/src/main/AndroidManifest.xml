@@ -28,7 +28,7 @@
             android:name=".ui.newtrip.AccelerometerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.newtrip.Microphone"
+            android:name=".ui.newtrip.MicrophoneActivity"
             android:exported="false" />
         <activity
             android:name=".ui.newtrip.CameraActivity"

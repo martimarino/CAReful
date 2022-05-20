@@ -1,26 +1,26 @@
 package it.unipi.dii.inattentivedrivers.sensors;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.os.Build;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
 import java.util.ArrayList;
 
+public class AccelerometerManager {
 
-public class Accelerometer {
-
-    private SensorEventListener accelerometerEventListener;
-    private ArrayList<Float> array;
-    private int fallDetected;
+    public SensorEventListener accelerometerEventListener;
+    public ArrayList<Float> array;
+    public int fallDetected;
     public static int countFall;
+    public SensorManager sensorManager;
+    public Sensor accelerometerSensor;
 
-    public Accelerometer(Context context) {
+    public AccelerometerManager(Activity activity) {
 
         array = new ArrayList<>();
         fallDetected = 0;
@@ -63,7 +63,7 @@ public class Accelerometer {
                 }
                 if (fallDetected == 3) {
                     //Log.d("array", String.valueOf(array));
-                    Toast.makeText(context, "Count fall: " + Accelerometer.countFall, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Count fall: " + AccelerometerManager.countFall, Toast.LENGTH_SHORT).show();
 
                     Log.d("count fall: ", String.valueOf(countFall));
                     array.clear();

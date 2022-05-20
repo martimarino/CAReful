@@ -8,35 +8,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.Manifest;
-import android.hardware.SensorManager;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioRecord;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import it.unipi.dii.inattentivedrivers.MainActivity;
 import it.unipi.dii.inattentivedrivers.R;
 
 
-public class Microphone extends AppCompatActivity {
+public class MicrophoneActivity extends AppCompatActivity {
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MediaRecorder mRecorder = null;
@@ -53,7 +42,7 @@ public class Microphone extends AppCompatActivity {
     private final int AUDIO_RECORDING_DELAY = 500;
 
     private void makeToast(String text) {
-        Toast.makeText(Microphone.this, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MicrophoneActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
     @Override
