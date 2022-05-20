@@ -1,7 +1,9 @@
 package it.unipi.dii.inattentivedrivers.ui.profile;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import it.unipi.dii.inattentivedrivers.R;
+import it.unipi.dii.inattentivedrivers.databinding.ActivityLoginBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
 
 public class Login extends AppCompatActivity {
@@ -31,8 +34,8 @@ public class Login extends AppCompatActivity {
         signin = (Button) findViewById(R.id.signin);
 
         signup.setOnClickListener(view -> {
-           Intent intent = new Intent(Login.this, ProfileActivity.class);
-           startActivity(intent);
+            Intent intent = new Intent(Login.this, ProfileActivity.class);
+            startActivity(intent);
         });
 
         signin.setOnClickListener(view -> {
