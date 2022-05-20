@@ -23,9 +23,9 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_profile);
 
         databaseHelper = new DatabaseHelper(this);
-        username = (EditText)findViewById(R.id.editTextUsername);
-        name = (EditText)findViewById(R.id.editTextName);
-        surname = (EditText)findViewById(R.id.editTextSurname);
+//        username = (EditText)findViewById(R.id.editTextUsername);
+//        name = (EditText)findViewById(R.id.editTextName);
+//        surname = (EditText)findViewById(R.id.editTextSurname);
         email = (EditText)findViewById(R.id.editTextEmailAddress);
         password = (EditText)findViewById(R.id.editTextPassword);
         repeat_password = (EditText)findViewById(R.id.editTextRepeatPassword);

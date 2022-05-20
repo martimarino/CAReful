@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
@@ -83,7 +84,6 @@ public class CameraActivity extends AppCompatActivity{
                         makeToast("Permissions Required!");
                     }
                 }).check();
-
     }
 
     private void makeToast(String text) {
@@ -93,6 +93,7 @@ public class CameraActivity extends AppCompatActivity{
     private void setupCamera() {
         binding.cameraView.setLifecycleOwner(this);
         binding.cameraView.setFacing(Facing.FRONT);
+        binding.cameraView.setVisibility(View.INVISIBLE);
         Log.d("fps", String.valueOf(binding.cameraView.getPreviewFrameRate()));
         binding.cameraView.setPreviewFrameRate(10f);
         Log.d("fps", String.valueOf(binding.cameraView.getPreviewFrameRate()));
@@ -101,9 +102,7 @@ public class CameraActivity extends AppCompatActivity{
             public void process(@NonNull Frame frame) {
                 processImage(getInputImageFromFrame(frame));
             }
-
         });
-
     }
 
     private void processImage(InputImage inputImage) {
@@ -127,6 +126,8 @@ public class CameraActivity extends AppCompatActivity{
 
     private void processResults(List<Face> faces) {
         for (Face face : faces) {
+            Log.d("back", "camera running");
+
             rotX = face.getHeadEulerAngleX();
             rotY = face.getHeadEulerAngleY();  // Head is rotated to the right rotY degrees
             rotZ = face.getHeadEulerAngleZ();  // Head is tilted sideways rotZ degrees
@@ -172,7 +173,7 @@ public class CameraActivity extends AppCompatActivity{
             if(rightEyeOpenProb<0.5){
                 drowsinessCounter = drowsinessCounter + 1;
                 if(drowsinessCounter == 20){
-                    makeToast("Sveglia rincoglionito");
+                    makeToast("Drowsiness detected");
                 }
             }
             else{

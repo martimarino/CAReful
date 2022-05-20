@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -25,10 +24,6 @@ public class NewTripFragment extends Fragment {
     ImageView phone_off, camera_off, gps_off, gyroscope_off, microphone_off, accelerometer_off;
     Button start;
     Switch developMode;
-
-    public NewTripFragment() {
-
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,12 +48,21 @@ public class NewTripFragment extends Fragment {
         microphone_off = binding.microphoneOff;
         accelerometer_off = binding.accelerometerOff;
 
+        start.setOnClickListener(view -> startTrip());
+        phone.setOnClickListener(view -> trySmartphoneRestrictions());
+        camera.setOnClickListener(view -> tryCamera());
+        gps.setOnClickListener(view -> tryGps());
+        gyroscope.setOnClickListener(view -> tryGyroscope());
+        microphone.setOnClickListener(view -> tryMicrophone());
+        accelerometer.setOnClickListener(view -> tryAccelerometer());
 
         // Listeners to change image when sensor is selected
+
         phone.setOnClickListener(v -> {
             phone.setVisibility(View.INVISIBLE);
             phone_off.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "Control on exiting app off", Toast.LENGTH_SHORT).show();
+
         });
 
         phone_off.setOnClickListener(v -> {

@@ -13,7 +13,6 @@ public class SmartphoneActivity extends AppCompatActivity implements LifecycleOb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.start_trip);
 
     }
 
