@@ -48,21 +48,32 @@ public class NewTripFragment extends Fragment {
         microphone_off = binding.microphoneOff;
         accelerometer_off = binding.accelerometerOff;
 
-        start.setOnClickListener(view -> startTrip());
-        phone.setOnClickListener(view -> trySmartphoneRestrictions());
-        camera.setOnClickListener(view -> tryCamera());
-        gps.setOnClickListener(view -> tryGps());
-        gyroscope.setOnClickListener(view -> tryGyroscope());
-        microphone.setOnClickListener(view -> tryMicrophone());
-        accelerometer.setOnClickListener(view -> tryAccelerometer());
-
         // Listeners to change image when sensor is selected
+        setVisibility();
+
+        developMode.setOnClickListener(v ->{
+            if (developMode.isChecked()) {
+                start.setOnClickListener(view -> startTrip());
+                phone.setOnClickListener(view -> trySmartphoneRestrictions());
+                camera.setOnClickListener(view -> tryCamera());
+                gps.setOnClickListener(view -> tryGps());
+                gyroscope.setOnClickListener(view -> tryGyroscope());
+                microphone.setOnClickListener(view -> tryMicrophone());
+                accelerometer.setOnClickListener(view -> tryAccelerometer());
+            }
+            else{
+                setVisibility();
+            }
+        });
+        return root;
+    }
+
+    private void setVisibility(){
 
         phone.setOnClickListener(v -> {
             phone.setVisibility(View.INVISIBLE);
             phone_off.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "Control on exiting app off", Toast.LENGTH_SHORT).show();
-
         });
 
         phone_off.setOnClickListener(v -> {
@@ -130,18 +141,6 @@ public class NewTripFragment extends Fragment {
             accelerometer.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "Accelerometer sensor on", Toast.LENGTH_SHORT).show();
         });
-
-        developMode.setOnClickListener(v ->{
-            start.setOnClickListener(view -> startTrip());
-            phone.setOnClickListener(view -> trySmartphoneRestrictions());
-            camera.setOnClickListener(view -> tryCamera());
-            gps.setOnClickListener(view -> tryGps());
-            gyroscope.setOnClickListener(view -> tryGyroscope());
-            microphone.setOnClickListener(view -> tryMicrophone());
-            accelerometer.setOnClickListener(view -> tryAccelerometer());
-        });
-
-        return root;
     }
 
     private void tryMicrophone() {
