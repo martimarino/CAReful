@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.hardware.Camera;
+import android.hardware.camera2.CaptureRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
@@ -35,6 +38,7 @@ import com.otaliastudios.cameraview.frame.Frame;
 import com.otaliastudios.cameraview.frame.FrameProcessor;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -93,9 +97,7 @@ public class CameraActivity extends AppCompatActivity{
     private void setupCamera() {
         binding.cameraView.setLifecycleOwner(this);
         binding.cameraView.setFacing(Facing.FRONT);
-        Log.d("fps", String.valueOf(binding.cameraView.getPreviewFrameRate()));
-        binding.cameraView.setPreviewFrameRate(10f);
-        Log.d("fps", String.valueOf(binding.cameraView.getPreviewFrameRate()));
+        binding.cameraView.setVisibility(View.INVISIBLE);
         binding.cameraView.addFrameProcessor(new FrameProcessor() {
             @Override
             public void process(@NonNull Frame frame) {
@@ -133,17 +135,17 @@ public class CameraActivity extends AppCompatActivity{
 
             if (face.getTrackingId() != null) {
                 id = face.getTrackingId();
-                Log.d("id", String.valueOf(id));
+                //Log.d("id", String.valueOf(id));
             }
 
             if (face.getRightEyeOpenProbability() != null) {
                 rightEyeOpenProb = face.getRightEyeOpenProbability();
-                Log.d("righteyeopen", String.valueOf(rightEyeOpenProb));
+                //Log.d("righteyeopen", String.valueOf(rightEyeOpenProb));
             }
 
             if (face.getLeftEyeOpenProbability() != null) {
                 leftEyeOpenProb = face.getLeftEyeOpenProbability();
-                Log.d("lefteyeopen", String.valueOf(leftEyeOpenProb));
+                //Log.d("lefteyeopen", String.valueOf(leftEyeOpenProb));
             }
 
             if(binding.parentLayout.getChildCount() > 1) {
@@ -163,16 +165,16 @@ public class CameraActivity extends AppCompatActivity{
             Draw element = new Draw(this, boundingBox, String.valueOf(rotX), String.valueOf(rotY), String.valueOf(rotZ), String.valueOf(rightEyeOpenProb), String.valueOf(leftEyeOpenProb));
             binding.parentLayout.addView(element);
 
-            Log.d("euler x", String.valueOf(rotX));
+            /*Log.d("euler x", String.valueOf(rotX));
             Log.d("euler y", String.valueOf(rotY));
             Log.d("euler z", String.valueOf(rotZ));
             Log.d("--------------", "----------------------------------------------");
-            Log.d("--------------", "----------------------------------------------");
+            Log.d("--------------", "----------------------------------------------");*/
 
             if(rightEyeOpenProb<0.5){
                 drowsinessCounter = drowsinessCounter + 1;
                 if(drowsinessCounter == 20){
-                    makeToast("Sveglia rincoglionito");
+                    makeToast("Drowsiness detected");
                 }
             }
             else{

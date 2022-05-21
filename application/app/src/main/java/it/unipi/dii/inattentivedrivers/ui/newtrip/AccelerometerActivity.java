@@ -23,22 +23,24 @@ public class AccelerometerActivity extends AppCompatActivity {
     private SensorEventListener accelerometerEventListener;
     private SensorEventListener gyroscopeEventListener;
     private ArrayList<Float> array;
-    private int fallDetected;
+    //private int fallDetected;
     private int countFall;
     private boolean usageDetected;
+    private boolean fall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.accelerometer_activity);
         array = new ArrayList<>();
-        fallDetected = 0;
+        //fallDetected = 0;
         countFall = 0;
         usageDetected = false;
+        fall = false;
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        if (accelerometerSensor == null || gyroscopeSensor == null){
+        if (accelerometerSensor == null){
             Toast.makeText(this, "The device has no Gyroscope or Accelerometer", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -80,14 +82,40 @@ public class AccelerometerActivity extends AppCompatActivity {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 int index = 0;
+                double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
+                //Log.d("magnitude", String.valueOf(magnitude));
                 //Y-Axis
-                if (array.size()<70){
-                    array.add(sensorEvent.values[1]);
+                if (array.size() < 8) {
+                    array.add((float) magnitude);
+                } else {
+                    array.clear();
+                    array.add((float) magnitude);
                 }
-                else{
-                    array.remove(0);
-                    array.add(sensorEvent.values[1]);
+
+                for (int i = 0; i < array.size(); i++) {
+                    //Log.d("primo for", String.valueOf(array));
+                    if (array.get(i) < 5.0) {
+                        for (int j = i + 1; j < array.size(); j++) {
+                            if (array.get(j) > 18.0) {
+                                //Log.d("secondo for", String.valueOf(array));
+                                fall = true;
+                                break;
+                            }
+                        }
+                    }
                 }
+
+                if (fall==true) {
+                    Log.d("array", String.valueOf(array));
+                    array.clear();
+                    fall = false;
+                    //allDetected = 0;
+                    countFall = countFall + 1;
+                    TextView tv = findViewById(R.id.textView);
+                    tv.setText("Falls detected: " + Integer.toString(countFall));
+                }
+            }
+                /*
                 for (int i=0; i<array.size()-1; i++){
                     if(array.get(i)>0 && array.get(i+1)<0){
                         fallDetected = 1;                       //negative acceleration
@@ -118,6 +146,8 @@ public class AccelerometerActivity extends AppCompatActivity {
                     tv.setText("Falls detected: " + Integer.toString(countFall));
                 }
             }
+
+                 */
             @Override
             public void onAccuracyChanged(Sensor sensor, int i) {
             }
