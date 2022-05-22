@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="20dp"
-    tools:context=".ui.profile.ProfileFragment">
+    tools:context=".ui.profile.ProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,6 +23,56 @@
             android:gravity="center"
             android:text="@string/signup"
             android:textSize="24sp" />
+
+
+        <TextView
+            android:id="@+id/textUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/username"/>
+
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:inputType="textPersonName"
+            tools:ignore="LabelFor" />
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/name"/>
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:inputType="textPersonName"
+            tools:ignore="LabelFor" />
+
+        <TextView
+            android:id="@+id/textSurame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/surname"/>
+
+        <EditText
+            android:id="@+id/editTextSurname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:inputType="textPersonName"
+            tools:ignore="LabelFor" />
+
 
         <TextView
             android:id="@+id/textEmail"
@@ -74,17 +124,18 @@
             android:ems="10"
             android:inputType="textPassword"
             android:minHeight="48dp"
+
             tools:ignore="LabelFor"
             tools:layout_editor_absoluteX="186dp" />
 
         <Button
-            android:id="@+id/rank"
+            android:id="@+id/signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:text="@string/confirm"
+            android:text="@string/signup"
             android:textSize="18sp"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -92,13 +143,13 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/login"
+            android:id="@+id/signin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:text="@string/login"
+            android:text="@string/signin"
             android:textSize="18sp"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -17,9 +17,9 @@
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
 
-    <fragment
+    <activity
         android:id="@+id/navigation_profile"
-        android:name="it.unipi.dii.inattentivedrivers.ui.profile.ProfileFragment"
+        android:name="it.unipi.dii.inattentivedrivers.ui.profile.ProfileActivity"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -15,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentNewtripBinding;
+import it.unipi.dii.inattentivedrivers.R;
 
 public class NewTripFragment extends Fragment {
 
@@ -48,31 +48,32 @@ public class NewTripFragment extends Fragment {
         microphone_off = binding.microphoneOff;
         accelerometer_off = binding.accelerometerOff;
 
-        setListeners();
-        start.setOnClickListener(view -> startTrip());
+        // Listeners to change image when sensor is selected
+        setVisibility();
 
-        developMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {  // Try every sensor
+        developMode.setOnClickListener(v ->{
+            if (developMode.isChecked()) {
+                start.setOnClickListener(view -> startTrip());
                 phone.setOnClickListener(view -> trySmartphoneRestrictions());
                 camera.setOnClickListener(view -> tryCamera());
                 gps.setOnClickListener(view -> tryGps());
                 gyroscope.setOnClickListener(view -> tryGyroscope());
                 microphone.setOnClickListener(view -> tryMicrophone());
                 accelerometer.setOnClickListener(view -> tryAccelerometer());
-            } else {    // Listeners to change image when sensor is selected
-                setListeners();
-            }   //end else
-        });   // end listener
-
+            }
+            else{
+                setVisibility();
+            }
+        });
         return root;
     }
 
-    private void setListeners(){
+    private void setVisibility(){
+
         phone.setOnClickListener(v -> {
             phone.setVisibility(View.INVISIBLE);
             phone_off.setVisibility(View.VISIBLE);
             Toast.makeText(getContext(), "Control on exiting app off", Toast.LENGTH_SHORT).show();
-
         });
 
         phone_off.setOnClickListener(v -> {
@@ -143,7 +144,7 @@ public class NewTripFragment extends Fragment {
     }
 
     private void tryMicrophone() {
-        Intent intent = new Intent(getActivity(), MicrophoneActivity.class);
+        Intent intent = new Intent(getActivity(), Microphone.class);
         startActivity(intent);
     }
 
