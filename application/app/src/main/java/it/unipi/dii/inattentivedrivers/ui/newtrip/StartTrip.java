@@ -62,11 +62,11 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         //acc = new AccelerometerManager(this);
         cam = new CameraManager(this, binding);
 
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        System.out.println("******************ON MAP READY*******************");
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera

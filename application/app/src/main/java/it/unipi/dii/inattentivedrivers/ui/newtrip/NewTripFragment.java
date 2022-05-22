@@ -144,7 +144,7 @@ public class NewTripFragment extends Fragment {
     }
 
     private void tryMicrophone() {
-        Intent intent = new Intent(getActivity(), Microphone.class);
+        Intent intent = new Intent(getActivity(), MicrophoneActivity.class);
         startActivity(intent);
     }
 
