@@ -1,7 +1,9 @@
 package it.unipi.dii.inattentivedrivers;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -12,12 +14,15 @@ import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static ActivityMainBinding binding;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Initialize NavBar menu

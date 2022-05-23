@@ -8,9 +8,9 @@ import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
 import it.unipi.dii.inattentivedrivers.sensors.CameraManager;
 
 public class CameraActivity extends AppCompatActivity {
+
     public static ActivityCameraBinding binding;
     CameraManager cam;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

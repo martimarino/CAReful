@@ -11,91 +11,91 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
+        android:fontFamily="@font/regular"
+        android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="Select the sensors you want to activate and start your trip!"
         android:textSize="20dp"
-        android:gravity="center_horizontal"
-        android:fontFamily="@font/regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-<!--***************************************************************-->
+    <!--***************************************************************-->
 
     <ImageView
         android:id="@+id/phone_off"
         android:layout_width="72dp"
         android:layout_height="88dp"
         android:src="@drawable/phone_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/localization_off"
         app:layout_constraintEnd_toStartOf="@+id/camera_off"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <ImageView
         android:id="@+id/localization_off"
         android:layout_width="70dp"
         android:layout_height="87dp"
         android:src="@drawable/localization_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/microphone_off"
         app:layout_constraintEnd_toStartOf="@+id/gyroscope_off"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone_off"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/phone_off" />
 
     <ImageView
         android:id="@+id/accelerometer_off"
         android:layout_width="76dp"
         android:layout_height="83dp"
         android:src="@drawable/shuttle_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/microphone_off"
-        app:layout_constraintTop_toBottomOf="@+id/gyroscope_off"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/gyroscope_off" />
 
     <ImageView
         android:id="@+id/microphone_off"
         android:layout_width="72dp"
         android:layout_height="81dp"
         android:src="@drawable/microphone_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/start"
         app:layout_constraintEnd_toStartOf="@+id/accelerometer_off"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/localization_off"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/localization_off" />
 
     <ImageView
         android:id="@+id/gyroscope_off"
         android:layout_width="75dp"
         android:layout_height="85dp"
         android:src="@drawable/move_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/accelerometer_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/localization_off"
-        app:layout_constraintTop_toBottomOf="@+id/camera_off"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/camera_off" />
 
     <ImageView
         android:id="@+id/camera_off"
         android:layout_width="76dp"
         android:layout_height="88dp"
         android:src="@drawable/camera_off"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/gyroscope_off"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/phone_off"
-        app:layout_constraintTop_toBottomOf="@+id/description"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
     <ImageView
         android:id="@+id/phone"
@@ -180,14 +180,13 @@
         android:id="@+id/developMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="142dp"
-        android:layout_marginTop="592dp"
-        android:layout_marginEnd="142dp"
         android:text="developMode"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/start"
+        app:layout_constraintVertical_bias="0.1"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

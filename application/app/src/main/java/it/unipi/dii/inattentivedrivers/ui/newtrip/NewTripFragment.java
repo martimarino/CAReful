@@ -53,7 +53,6 @@ public class NewTripFragment extends Fragment {
 
         developMode.setOnClickListener(v ->{
             if (developMode.isChecked()) {
-                start.setOnClickListener(view -> startTrip());
                 phone.setOnClickListener(view -> trySmartphoneRestrictions());
                 camera.setOnClickListener(view -> tryCamera());
                 gps.setOnClickListener(view -> tryGps());
@@ -69,6 +68,8 @@ public class NewTripFragment extends Fragment {
     }
 
     private void setVisibility(){
+
+        start.setOnClickListener(view -> startTrip());
 
         phone.setOnClickListener(v -> {
             phone.setVisibility(View.INVISIBLE);

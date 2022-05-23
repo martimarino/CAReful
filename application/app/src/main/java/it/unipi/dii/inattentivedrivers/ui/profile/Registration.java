@@ -7,12 +7,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
 
-public class ProfileActivity extends AppCompatActivity {
+public class Registration extends AppCompatActivity {
 
     DatabaseHelper databaseHelper;
     EditText username, name, surname, email, password, repeat_password;
@@ -35,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         signin.setOnClickListener(view -> {
-            Intent intent = new Intent(ProfileActivity.this, Login.class);
+            Intent intent = new Intent(Registration.this, Login.class);
             startActivity(intent);
         });
 
@@ -51,10 +50,10 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
                 if (password_.equals(repeat_password_)) {
-                    Boolean checkusername = databaseHelper.CheckUsername(username_);
-                    if (checkusername == true) {
-                        Boolean insert = databaseHelper.Insert(username_, name_, surname_, email_, password_, repeat_password_ );
-                        if (insert == true) {
+                    boolean checkusername = databaseHelper.CheckUsername(username_);
+                    if (checkusername) {
+                        boolean insert = databaseHelper.Insert(username_, name_, surname_, email_, password_, repeat_password_ );
+                        if (insert) {
                             Toast.makeText(getApplicationContext(), "Registered", Toast.LENGTH_SHORT).show();
                             username.setText(username_);
                             name.setText(name_);

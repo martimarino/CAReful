@@ -19,7 +19,7 @@
 
     <activity
         android:id="@+id/navigation_profile"
-        android:name="it.unipi.dii.inattentivedrivers.ui.profile.ProfileActivity"
+        android:name="it.unipi.dii.inattentivedrivers.ui.profile.Registration"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
