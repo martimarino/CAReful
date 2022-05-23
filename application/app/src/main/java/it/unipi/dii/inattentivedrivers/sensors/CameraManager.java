@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
+import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 import com.karumi.dexter.Dexter;
@@ -53,12 +54,23 @@ public class CameraManager {
     float rightEyeOpenProb;
     float leftEyeOpenProb;
     int drowsinessCounter;
+    int turnedHead;
 
     public CameraManager(CameraActivity cameraActivity, ActivityCameraBinding activityCameraBinding){
         drowsinessCounter = 0;
+        turnedHead = 0;
         cameraVisible = true;
         this.cameraActivity = cameraActivity;
         this.activityCameraBinding = activityCameraBinding;
+        realTimeOpts =
+                new FaceDetectorOptions.Builder()
+                        .setContourMode(FaceDetectorOptions.CONTOUR_MODE_NONE)
+                        .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                        .enableTracking()
+                        .build();
+
+        faceDetector = FaceDetection.getClient(realTimeOpts);
         initializeCamera(cameraActivity);
     }
 
@@ -98,6 +110,7 @@ public class CameraManager {
         CameraActivity.binding.cameraView.setFacing(Facing.FRONT);
         Log.d("fps", String.valueOf(CameraActivity.binding.cameraView.getPreviewFrameRate()));
         CameraActivity.binding.cameraView.setPreviewFrameRate(10f);
+        CameraActivity.binding.cameraView.setPreviewFrameRateExact(true);
         Log.d("fps", String.valueOf(CameraActivity.binding.cameraView.getPreviewFrameRate()));
         CameraActivity.binding.cameraView.addFrameProcessor(new FrameProcessor() {
             @Override
@@ -113,6 +126,7 @@ public class CameraManager {
         StartTrip.binding.cameraView.setVisibility(View.INVISIBLE);
         Log.d("fps", String.valueOf(StartTrip.binding.cameraView.getPreviewFrameRate()));
         StartTrip.binding.cameraView.setPreviewFrameRate(10f);
+        StartTrip.binding.cameraView.setPreviewFrameRateExact(true);
         Log.d("fps", String.valueOf(StartTrip.binding.cameraView.getPreviewFrameRate()));
         StartTrip.binding.cameraView.addFrameProcessor(new FrameProcessor() {
             @Override
@@ -207,7 +221,7 @@ public class CameraManager {
 
             if(cameraVisible) {
                 Draw element = new Draw(activity, boundingBox, String.valueOf(rotX), String.valueOf(rotY), String.valueOf(rotZ), String.valueOf(rightEyeOpenProb), String.valueOf(leftEyeOpenProb));
-                StartTrip.binding.parentLayout.addView(element);
+                CameraActivity.binding.parentLayout.addView(element);
             }
 
             Log.d("euler x", String.valueOf(rotX));
@@ -216,7 +230,7 @@ public class CameraManager {
             Log.d("--------------", "----------------------------------------------");
             Log.d("--------------", "----------------------------------------------");
 
-            if(rightEyeOpenProb<0.5){
+            if(rightEyeOpenProb<0.5 && leftEyeOpenProb<0.5){
                 drowsinessCounter = drowsinessCounter + 1;
                 if(drowsinessCounter == 20){
                     makeToast("Drowsiness detected", activity);
@@ -224,6 +238,16 @@ public class CameraManager {
             }
             else{
                 drowsinessCounter = 0;
+            }
+
+            if(rotY<-30.0 || rotY>30.0){
+                turnedHead = turnedHead + 1;
+                if(turnedHead == 20){
+                    makeToast("Head turned", activity);
+                }
+            }
+            else{
+                turnedHead = 0;
             }
         }
 
