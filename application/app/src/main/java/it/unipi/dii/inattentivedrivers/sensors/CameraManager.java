@@ -35,6 +35,11 @@ import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
 public class CameraManager {
 
+    public static final double DROWSINESS_THRESHOLD = 0.5;
+    public static final double DROWSINESS_SECONDS = 2;
+    public static final double TURNED_HEAD_THRESHOLD = 30.0;
+    public static final double TURNED_HEAD_SECONDS= 3;
+
     boolean cameraVisible;
 
     CameraActivity cameraActivity;
@@ -54,11 +59,11 @@ public class CameraManager {
     float rightEyeOpenProb;
     float leftEyeOpenProb;
     int drowsinessCounter;
-    int turnedHead;
+    int turnedHeadCounter;
 
     public CameraManager(CameraActivity cameraActivity, ActivityCameraBinding activityCameraBinding){
         drowsinessCounter = 0;
-        turnedHead = 0;
+        turnedHeadCounter = 0;
         cameraVisible = true;
         this.cameraActivity = cameraActivity;
         this.activityCameraBinding = activityCameraBinding;
@@ -230,9 +235,9 @@ public class CameraManager {
             Log.d("--------------", "----------------------------------------------");
             Log.d("--------------", "----------------------------------------------");
 
-            if(rightEyeOpenProb<0.5 && leftEyeOpenProb<0.5){
+            if(rightEyeOpenProb<DROWSINESS_THRESHOLD && leftEyeOpenProb<DROWSINESS_THRESHOLD){
                 drowsinessCounter = drowsinessCounter + 1;
-                if(drowsinessCounter == 20){
+                if(drowsinessCounter == DROWSINESS_SECONDS*10){
                     makeToast("Drowsiness detected", activity);
                 }
             }
@@ -240,14 +245,14 @@ public class CameraManager {
                 drowsinessCounter = 0;
             }
 
-            if(rotY<-30.0 || rotY>30.0){
-                turnedHead = turnedHead + 1;
-                if(turnedHead == 20){
+            if(rotY<-TURNED_HEAD_THRESHOLD || rotY>TURNED_HEAD_THRESHOLD){
+                turnedHeadCounter = turnedHeadCounter + 1;
+                if(turnedHeadCounter == TURNED_HEAD_SECONDS*10){
                     makeToast("Head turned", activity);
                 }
             }
             else{
-                turnedHead = 0;
+                turnedHeadCounter = 0;
             }
         }
 
