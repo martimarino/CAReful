@@ -23,6 +23,7 @@ import it.unipi.dii.inattentivedrivers.sensors.GpsManager;
 import it.unipi.dii.inattentivedrivers.sensors.MicrophoneManager;
 import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
 
+
 public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
     MotionManager mot;
@@ -46,7 +47,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         setContentView(binding.getRoot());
 
         gps = new GpsManager(this, foregroundActivity, mMap);
-        mot = new MotionManager();
+        mot = new MotionManager(this);
         cam = new CameraManager(this, binding);
         //mic = new MicrophoneManager(this);
 

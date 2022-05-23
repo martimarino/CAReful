@@ -5,7 +5,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 
 import it.unipi.dii.inattentivedrivers.R;
 
-public class AccelerometerActivity extends AppCompatActivity {
+public class MotionActivity extends AppCompatActivity {
 
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
@@ -30,7 +29,7 @@ public class AccelerometerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.accelerometer_activity);
+        setContentView(R.layout.motion_activity);
         array = new ArrayList<>();
         fallDetected = 0;
         countFall = 0;

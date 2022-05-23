@@ -235,7 +235,7 @@ public class CameraManager {
 
             if(cameraVisible) {
                 Draw element = new Draw(activity, boundingBox, String.valueOf(rotX), String.valueOf(rotY), String.valueOf(rotZ), String.valueOf(rightEyeOpenProb), String.valueOf(leftEyeOpenProb));
-                StartTrip.binding.parentLayout.addView(element);
+                CameraActivity.binding.parentLayout.addView(element);
             }
 
             Log.d("euler x", String.valueOf(rotX));

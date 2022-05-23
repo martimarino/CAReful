@@ -25,7 +25,7 @@
             android:value="AIzaSyDAkLOZtsU4ngCW1HTyjz6J6TDtt4sm3CA" />
 
         <activity
-            android:name=".ui.newtrip.AccelerometerActivity"
+            android:name=".ui.newtrip.MotionActivity"
             android:exported="false" />
         <activity
             android:name=".ui.newtrip.MicrophoneActivity"
