@@ -23,14 +23,16 @@ import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
 public class MicrophoneManager {
 
-    public MediaRecorder mRecorder;
-
     MicrophoneActivity microphoneActivity;
     ActivityMicrophoneBinding activityMicrophoneBinding;
 
     StartTrip startTrip;
 
-    private final double referenceAmplitude = 2700.0;  //0.0001
+    public MediaRecorder mRecorder;
+
+    private String[] permissions = {Manifest.permission.RECORD_AUDIO};
+
+    private final double referenceAmplitude = 2700.0;
     private final int AUDIO_RECORDING_DELAY = 1000;
     double mThreshold = 80;
     int decibelCounter = 0;
@@ -46,6 +48,10 @@ public class MicrophoneManager {
         this.startTrip = startTrip;
         mRecorder = null;
         initializeMicrophone(startTrip);
+    }
+
+    private void makeToast(String text, Activity activity) {
+        Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
     }
 
     public void initializeMicrophone(Activity activity) {
@@ -64,10 +70,6 @@ public class MicrophoneManager {
                 }).check();
     }
 
-    private void makeToast(String text, Activity activity) {
-        Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
-    }
-
     private void startRecording(Activity activity) {
 
         mRecorder = new MediaRecorder();
@@ -83,7 +85,6 @@ public class MicrophoneManager {
             e.printStackTrace();
         }
         mRecorder.start();
-
 
         final Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -106,5 +107,4 @@ public class MicrophoneManager {
             }
         }, AUDIO_RECORDING_DELAY);
     }
-
 }
