@@ -24,7 +24,6 @@
             android:text="@string/signup"
             android:textSize="24sp" />
 
-
         <TextView
             android:id="@+id/textUsername"
             android:layout_width="wrap_content"
@@ -34,7 +33,7 @@
 
         <EditText
             android:id="@+id/editTextUsername"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"
@@ -50,7 +49,7 @@
 
         <EditText
             android:id="@+id/editTextName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"
@@ -66,7 +65,7 @@
 
         <EditText
             android:id="@+id/editTextSurname"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"
@@ -83,7 +82,7 @@
 
         <EditText
             android:id="@+id/editTextEmailAddress"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"
@@ -99,7 +98,7 @@
 
         <EditText
             android:id="@+id/editTextPassword"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"
@@ -118,13 +117,12 @@
 
         <EditText
             android:id="@+id/editTextRepeatPassword"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:ems="10"
             android:inputType="textPassword"
             android:minHeight="48dp"
-
             tools:ignore="LabelFor"
             tools:layout_editor_absoluteX="186dp" />
 

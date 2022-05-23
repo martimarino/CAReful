@@ -84,7 +84,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onPause() {
         super.onPause();
-//        mot.sensorManager.unregisterListener(acc.accelerometerEventListener);
+        mot.sensorManager.unregisterListener(mot.accelerometerEventListener);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             Log.d("Resume times: ", String.valueOf(resumeTimes));
             Toast.makeText(StartTrip.this, "Resume detected", Toast.LENGTH_SHORT).show();
         }
-//        mot.sensorManager.registerListener(acc.accelerometerEventListener, acc.accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        mot.sensorManager.registerListener(mot.accelerometerEventListener, mot.accelerometerSensor, MotionManager.sensorManager.SENSOR_DELAY_FASTEST);
         foregroundActivity = true;
     }
 

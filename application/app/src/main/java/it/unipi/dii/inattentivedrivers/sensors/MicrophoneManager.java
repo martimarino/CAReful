@@ -82,9 +82,7 @@ public class MicrophoneManager {
         mRecorder.setOutputFile("/dev/null");
         try {
             mRecorder.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         mRecorder.start();

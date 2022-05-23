@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.profile.Login">
 
     <LinearLayout
@@ -13,51 +13,62 @@
         android:paddingLeft="70dp"
         android:paddingRight="70dp">
 
+        <TextView
+            android:id="@+id/textSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/semibold"
+            android:gravity="center"
+            android:text="@string/signin"
+            android:textSize="24sp" />
+
         <EditText
             android:id="@+id/username"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:ems="10"
             android:hint="Username"
             android:inputType="text"
-            tools:layout_editor_absoluteX="93dp"
-            tools:layout_editor_absoluteY="150dp" />
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/password"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/username"
-            android:layout_centerHorizontal="true"
-            android:ems="10"
             android:hint="Password"
             android:inputType="textPassword"
-            tools:layout_editor_absoluteX="93dp"
-            tools:layout_editor_absoluteY="234dp" />
+            android:layout_marginTop="20dp"
+
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/signin"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/password"
-            android:layout_centerHorizontal="true"
-            android:ems="10"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="vertical"
             android:text="Sign in"
-            tools:layout_editor_absoluteX="118dp"
-            tools:layout_editor_absoluteY="386dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/signup"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:ems="10"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="vertical"
             android:text="Sign up"
-            tools:layout_editor_absoluteX="118dp"
-            tools:layout_editor_absoluteY="485dp" />
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
 
