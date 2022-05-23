@@ -28,6 +28,7 @@ public class MicrophoneManager {
 
     StartTrip startTrip;
 
+    boolean decibelVisible;
     public MediaRecorder mRecorder;
 
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -41,11 +42,13 @@ public class MicrophoneManager {
         this.microphoneActivity = microphoneActivity;
         this.activityMicrophoneBinding = activityMicrophoneBinding;
         mRecorder = null;
+        decibelVisible = true;
         initializeMicrophone(microphoneActivity);
     }
 
     public MicrophoneManager(StartTrip startTrip){
         this.startTrip = startTrip;
+        decibelVisible = false;
         mRecorder = null;
         initializeMicrophone(startTrip);
     }
@@ -102,7 +105,9 @@ public class MicrophoneManager {
                 } else decibelCounter = 0;
 
                 Log.d("amplitude", String.valueOf(decibel));
-                activityMicrophoneBinding.textActivityMicrophone.setText("Decibel: " + String.format(Locale.US, "%.1f", decibel));
+                if (decibelVisible) {
+                    activityMicrophoneBinding.textActivityMicrophone.setText("Decibel: " + String.format(Locale.US, "%.1f", decibel));
+                }
                 mHandler.postDelayed(this, AUDIO_RECORDING_DELAY);
             }
         }, AUDIO_RECORDING_DELAY);
