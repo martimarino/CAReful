@@ -1,5 +1,7 @@
 package it.unipi.dii.inattentivedrivers.sensors;
 
+import static android.content.Context.SENSOR_SERVICE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -7,78 +9,166 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import it.unipi.dii.inattentivedrivers.R;
+import it.unipi.dii.inattentivedrivers.databinding.AccelerometerActivityBinding;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.AccelerometerActivity;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
+
 public class AccelerometerManager {
 
+    public AccelerometerActivityBinding accelerometerActivityBinding;
     public SensorEventListener accelerometerEventListener;
-    public ArrayList<Float> array;
-    public int fallDetected;
-    public static int countFall;
+    public SensorEventListener gyroscopeEventListener;
+    public AccelerometerActivity accelerometerActivity;
     public SensorManager sensorManager;
     public Sensor accelerometerSensor;
+    public Sensor gyroscopeSensor;
+    public StartTrip startTrip;
+    public Context context;
+    public ArrayList<Float> array;
+    public static int countFall;
+    public boolean fall;
+    public boolean usageDetected;
+    public static final double highThreshold = 10.0;
+    public static final double lowThreshold = 8.0;
+    public static final int size = 8;
 
-    public AccelerometerManager(Activity activity) {
 
+    public AccelerometerManager(AccelerometerActivity accelerometerActivity, AccelerometerActivityBinding accelerometerActivityBinding, Context context) {
         array = new ArrayList<>();
-        fallDetected = 0;
+        fall = false;
         countFall = 0;
-
+        this.accelerometerActivity = accelerometerActivity;
+        this.accelerometerActivityBinding = accelerometerActivityBinding;
+        this.context = context;
+        sensorManager = (SensorManager) this.context.getSystemService(SENSOR_SERVICE);
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        if (accelerometerSensor == null){
+            Toast.makeText(accelerometerActivity,"The device has no Accelerometer", Toast.LENGTH_SHORT).show();
+        }
         accelerometerEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
-                Log.d("count fall: ", String.valueOf(countFall));
-
-                int index = 0;
-                //Y-Axis
-                if (array.size() < 70) {
-                    array.add(sensorEvent.values[1]);
+                double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
+                if (array.size() < size) {
+                    array.add((float) magnitude);
                 } else {
-                    array.remove(0);
-                    array.add(sensorEvent.values[1]);
+                    array.clear();
+                    array.add((float) magnitude);
                 }
-                for (int i = 0; i < array.size() - 1; i++) {
-                    if (array.get(i) > 0 && array.get(i + 1) < 0) {
-                        fallDetected = 1;                       //negative acceleration
-                        break;
-                    }
-                    if (fallDetected == 1) {
-                        if (array.get(i) < 0 && array.get(i + 1) > 0) {
-                            fallDetected = 2;                   //positive acceleration
-                            index = i;
-                            break;
-                        }
-                    }
-                    if (fallDetected == 2) {
-                        for (int j = index; j < array.size() - 1; j++) {
-                            if (array.get(j) > 3 && array.get(j + 1) < 3) {
-                                fallDetected = 3;                //final acceleration
+
+                for (int i = 0; i < array.size(); i++) {
+                    if (array.get(i) < lowThreshold) {
+                        for (int j = i + 1; j < array.size(); j++) {
+                            if (array.get(j) > highThreshold) {
+                                fall = true;
                                 break;
                             }
                         }
-
                     }
                 }
-                if (fallDetected == 3) {
-                    //Log.d("array", String.valueOf(array));
-                    Toast.makeText(activity, "Count fall: " + AccelerometerManager.countFall, Toast.LENGTH_SHORT).show();
 
-                    Log.d("count fall: ", String.valueOf(countFall));
+                if (fall==true) {
+                    Log.d("vettore", String.valueOf(array));
                     array.clear();
-                    fallDetected = 0;
+                    fall = false;
+                    countFall = countFall + 1;
+                    TextView tv = accelerometerActivityBinding.textView;
+                    tv.setText("Falls detected: " + Integer.toString(countFall));
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+
+        gyroscopeEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                if(sensorEvent.values[0]>1.5f){
+                    usageDetected = true;
+                }
+                if(sensorEvent.values[0]<-1.5f){
+                    usageDetected = true;
+                }
+                if(sensorEvent.values[1]>1.5f){
+                    usageDetected = true;
+                }
+                if(sensorEvent.values[1]<-1.5f){
+                    usageDetected = true;
+                }
+                if(sensorEvent.values[2]>1.5f){
+                    usageDetected = true;
+                }
+                if(sensorEvent.values[2]<-1.5f){
+                    usageDetected = true;
+                }
+
+                if (usageDetected==true){
+                    TextView tv = accelerometerActivityBinding.textView2;
+                    tv.setText("Usage detected: " + usageDetected);
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    public AccelerometerManager(StartTrip startTrip) {
+        array = new ArrayList<>();
+        fall = false;
+        countFall = 0;
+        this.startTrip = startTrip;
+        accelerometerEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
+                if (array.size() < size) {
+                    array.add((float) magnitude);
+                } else {
+                    array.clear();
+                    array.add((float) magnitude);
+                }
+
+                for (int i = 0; i < array.size(); i++) {
+                    if (array.get(i) < lowThreshold) {
+                        for (int j = i + 1; j < array.size(); j++) {
+                            if (array.get(j) > highThreshold) {
+                                fall = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (fall==true) {
+                    array.clear();
+                    fall = false;
                     countFall = countFall + 1;
                 }
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+            public void onAccuracyChanged(Sensor sensor, int i) {
             }
-
         };
-
     }
 
+    public static int getCountFall() {
+        return countFall;
+    }
+
+
+    // RICORDARE ONPAUSE E ONRESUME!!!!!!!!!!!!!!!!!!!!!!
 }
