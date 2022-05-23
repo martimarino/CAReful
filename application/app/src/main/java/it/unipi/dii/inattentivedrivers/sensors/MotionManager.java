@@ -20,12 +20,12 @@ import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 public class MotionManager {
 
     public MotionActivityBinding motionActivityBinding;
-    public SensorEventListener accelerometerEventListener;
-    public SensorEventListener gyroscopeEventListener;
+    public static SensorEventListener accelerometerEventListener;
+    public static SensorEventListener gyroscopeEventListener;
     public MotionActivity motionActivity;
-    public SensorManager sensorManager;
-    public Sensor accelerometerSensor;
-    public Sensor gyroscopeSensor;
+    public static SensorManager sensorManager;
+    public static Sensor accelerometerSensor;
+    public static Sensor gyroscopeSensor;
     public StartTrip startTrip;
     public Context context;
     public ArrayList<Float> array;
@@ -35,7 +35,6 @@ public class MotionManager {
     public static final double highThreshold = 10.0;
     public static final double lowThreshold = 8.0;
     public static final int size = 8;
-
 
     public MotionManager(MotionActivity motionActivity, MotionActivityBinding motionActivityBinding, Context context) {
         array = new ArrayList<>();
