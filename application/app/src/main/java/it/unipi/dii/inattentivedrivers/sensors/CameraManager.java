@@ -84,6 +84,15 @@ public class CameraManager {
         cameraVisible = false;
         this.startTrip = startTrip;
         this.startTripBinding = startTripBinding;
+        realTimeOpts =
+                new FaceDetectorOptions.Builder()
+                        .setContourMode(FaceDetectorOptions.CONTOUR_MODE_NONE)
+                        .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                        .enableTracking()
+                        .build();
+
+        faceDetector = FaceDetection.getClient(realTimeOpts);
         initializeCamera(startTrip);
     }
 
@@ -226,7 +235,7 @@ public class CameraManager {
 
             if(cameraVisible) {
                 Draw element = new Draw(activity, boundingBox, String.valueOf(rotX), String.valueOf(rotY), String.valueOf(rotZ), String.valueOf(rightEyeOpenProb), String.valueOf(leftEyeOpenProb));
-                CameraActivity.binding.parentLayout.addView(element);
+                StartTrip.binding.parentLayout.addView(element);
             }
 
             Log.d("euler x", String.valueOf(rotX));

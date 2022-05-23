@@ -97,8 +97,6 @@ public class GpsManager {
                                     .zoom(18)
                                     .build();
 
-                            System.out.println("FOREGROUD: " + foregroundActivity);
-
                             if (foregroundActivity && mMap != null) {
                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                                 if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
