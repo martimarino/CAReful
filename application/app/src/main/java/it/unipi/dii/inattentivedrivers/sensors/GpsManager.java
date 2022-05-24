@@ -143,8 +143,8 @@ public class GpsManager {
             }
 
             if(diff_vector_lat_2 == 1000) {     //first difference vector null
-                diff_vector_lat_2 = currentLocation.getLatitude() - prev.getLatitude();
-                diff_vector_lon_2 = currentLocation.getLongitude() - prev.getLongitude();
+                diff_vector_lat_2 = Math.abs(currentLocation.getLatitude() - prev.getLatitude());
+                diff_vector_lon_2 = Math.abs(currentLocation.getLongitude() - prev.getLongitude());
                 prev = currentLocation;
                 return false;
             }
@@ -152,8 +152,8 @@ public class GpsManager {
             diff_vector_lat_1 = diff_vector_lat_2;
             diff_vector_lon_1 = diff_vector_lon_2;
 
-            diff_vector_lat_2 = currentLocation.getLatitude() - prev.getLatitude();
-            diff_vector_lon_2 = currentLocation.getLongitude() - prev.getLongitude();
+            diff_vector_lat_2 = Math.abs(currentLocation.getLatitude() - prev.getLatitude());
+            diff_vector_lon_2 = Math.abs(currentLocation.getLongitude() - prev.getLongitude());
             prev = currentLocation;
             return true;
 
@@ -186,6 +186,7 @@ public class GpsManager {
                 return val;
             }
             array.add(val);
+            Log.d("vect", String.valueOf(array));
 
             //similar -> 1   dissimilar -> 0
 
