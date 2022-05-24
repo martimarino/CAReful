@@ -88,8 +88,8 @@ public class GpsManager {
             }
 
             locationRequest = LocationRequest.create();
-            locationRequest.setInterval(1000);
-            locationRequest.setFastestInterval(1000);
+            locationRequest.setInterval(5000);
+            locationRequest.setFastestInterval(5000);
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             locationCallback = new LocationCallback() {
                 @Override
@@ -102,8 +102,15 @@ public class GpsManager {
                         if (location != null) {
                             //TODO: UI updates.
                             currentLocation = locationResult.getLastLocation();
-                            String twisty = Double.toString(calculateRoadTortuosity());
-                            Log.d("bearing", twisty);
+                            double rt = calculateRoadTortuosity();
+                            String twisty = "";
+                            Log.d("tortuosity", String.valueOf(rt));
+                            if(rt == 999){
+                                twisty = "Start";
+                            }
+                            else{
+                                twisty = String.valueOf(rt);
+                            }
                             Toast.makeText(activity.getApplicationContext(), twisty, Toast.LENGTH_SHORT).show();
 
                             LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -128,18 +135,18 @@ public class GpsManager {
 
         }
 
-        public void calculateDifference(){
+        public boolean calculateDifference(){
 
             if(prev == null) {       //first vector missing
                 prev = currentLocation;
-                return;
+                return false;
             }
 
             if(diff_vector_lat_2 == 1000) {     //first difference vector null
                 diff_vector_lat_2 = currentLocation.getLatitude() - prev.getLatitude();
                 diff_vector_lon_2 = currentLocation.getLongitude() - prev.getLongitude();
                 prev = currentLocation;
-                return;
+                return false;
             }
 
             diff_vector_lat_1 = diff_vector_lat_2;
@@ -148,12 +155,16 @@ public class GpsManager {
             diff_vector_lat_2 = currentLocation.getLatitude() - prev.getLatitude();
             diff_vector_lon_2 = currentLocation.getLongitude() - prev.getLongitude();
             prev = currentLocation;
+            return true;
 
         }
 
         public double calculateCosineSimilarity() {
 
-            calculateDifference();
+            boolean difference = calculateDifference();
+            if (difference == false) {
+                return 999;
+            }
 
             double prev_module = Math.sqrt((diff_vector_lat_1*diff_vector_lat_1) + (diff_vector_lon_1*diff_vector_lon_1));
             double actual_module = Math.sqrt((diff_vector_lat_2*diff_vector_lat_2) + (diff_vector_lon_2*diff_vector_lon_2));
@@ -169,7 +180,12 @@ public class GpsManager {
 
             if(array.size() == 10)      //circular array
                 array.remove(0);
-            array.add(calculateCosineSimilarity());
+
+            double val = calculateCosineSimilarity();
+            if (val == 999){
+                return val;
+            }
+            array.add(val);
 
             //similar -> 1   dissimilar -> 0
 
