@@ -23,7 +23,6 @@ import it.unipi.dii.inattentivedrivers.sensors.GpsManager;
 import it.unipi.dii.inattentivedrivers.sensors.MicrophoneManager;
 import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
 
-
 public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
     MotionManager mot;
@@ -73,12 +72,11 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         });
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
         gps.setMap(this, mMap);
-
     }
 
     @Override

@@ -34,16 +34,13 @@
             android:name=".ui.newtrip.CameraActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.newtrip.SmartphoneActivity"
-            android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
-            android:exported="false"/>
-        <activity
             android:name=".ui.newtrip.MapsActivity"
             android:exported="false" />
         <activity android:name=".ui.newtrip.StartTrip"
             android:exported="false" />
         <activity android:name=".ui.profile.SignInSignUp"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

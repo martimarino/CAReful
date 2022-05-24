@@ -115,7 +115,7 @@ public class CameraManager {
                 }).check();
     }
 
-    private void makeToast(String text, Activity activity) {
+    public static void makeToast(String text, Activity activity) {
         Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
     }
 

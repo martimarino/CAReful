@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
@@ -21,6 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
@@ -32,9 +37,17 @@ public class GpsManager {
     private static LocationCallback locationCallback;
     private static LocationRequest locationRequest;
 
+    private Location prev = null;
+    double diff_vector_lat_1, diff_vector_lon_1;
+    double diff_vector_lat_2 = 1000, diff_vector_lon_2;
+
+    ArrayList<Double> array;
+
+
     public GpsManager(Activity activity, boolean foregroundActivity, GoogleMap mMap) {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
+        array = new ArrayList<>(10);
         getCurrentLocation(activity, foregroundActivity, mMap);
 
     }
@@ -75,8 +88,8 @@ public class GpsManager {
             }
 
             locationRequest = LocationRequest.create();
-            locationRequest.setInterval(5000);
-            locationRequest.setFastestInterval(5000);
+            locationRequest.setInterval(1000);
+            locationRequest.setFastestInterval(1000);
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             locationCallback = new LocationCallback() {
                 @Override
@@ -89,6 +102,9 @@ public class GpsManager {
                         if (location != null) {
                             //TODO: UI updates.
                             currentLocation = locationResult.getLastLocation();
+                            String twisty = Double.toString(calculateRoadTortuosity());
+                            Log.d("bearing", twisty);
+                            Toast.makeText(activity.getApplicationContext(), twisty, Toast.LENGTH_SHORT).show();
 
                             LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
@@ -111,5 +127,61 @@ public class GpsManager {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
         }
+
+        public void calculateDifference(){
+
+            if(prev == null) {       //first vector missing
+                prev = currentLocation;
+                return;
+            }
+
+            if(diff_vector_lat_2 == 1000) {     //first difference vector null
+                diff_vector_lat_2 = currentLocation.getLatitude() - prev.getLatitude();
+                diff_vector_lon_2 = currentLocation.getLongitude() - prev.getLongitude();
+                prev = currentLocation;
+                return;
+            }
+
+            diff_vector_lat_1 = diff_vector_lat_2;
+            diff_vector_lon_1 = diff_vector_lon_2;
+
+            diff_vector_lat_2 = currentLocation.getLatitude() - prev.getLatitude();
+            diff_vector_lon_2 = currentLocation.getLongitude() - prev.getLongitude();
+            prev = currentLocation;
+
+        }
+
+        public double calculateCosineSimilarity() {
+
+            calculateDifference();
+
+            double prev_module = Math.sqrt((diff_vector_lat_1*diff_vector_lat_1) + (diff_vector_lon_1*diff_vector_lon_1));
+            double actual_module = Math.sqrt((diff_vector_lat_2*diff_vector_lat_2) + (diff_vector_lon_2*diff_vector_lon_2));
+
+            double scalar_product = (diff_vector_lat_1 * diff_vector_lat_2) + (diff_vector_lon_1 * diff_vector_lon_2);
+            double similarity = scalar_product / (prev_module * actual_module);
+
+            return similarity;
+
+        }
+
+        private double calculateRoadTortuosity() {
+
+            if(array.size() == 10)      //circular array
+                array.remove(0);
+            array.add(calculateCosineSimilarity());
+
+            //similar -> 1   dissimilar -> 0
+
+            double avg, sum = 0;
+            for(int i = 0; i < array.size(); i++) {
+                sum += array.get(i);
+            }
+            avg = sum/array.size();
+
+            return avg;
+
+        }
+
 
     }
