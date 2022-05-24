@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="20dp"
-    tools:context=".ui.profile.Registration">
+    tools:context=".ui.profile.SignInSignUp">
 
     <LinearLayout
+        android:id="@+id/container_signup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -127,7 +128,7 @@
             tools:layout_editor_absoluteX="186dp" />
 
         <Button
-            android:id="@+id/signup"
+            android:id="@+id/signup_reg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -141,10 +142,9 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/signin"
+            android:id="@+id/signin_reg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical"
             android:text="@string/signin"
@@ -153,6 +153,73 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_signin"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp">
+
+        <TextView
+            android:id="@+id/textSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/semibold"
+            android:gravity="center"
+            android:text="@string/signin"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:inputType="text"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_marginTop="20dp"
+
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/signin_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:text="Sign in"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/signup_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:text="Sign up"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

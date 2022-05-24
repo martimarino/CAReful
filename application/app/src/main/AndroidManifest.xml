@@ -42,9 +42,7 @@
             android:exported="false" />
         <activity android:name=".ui.newtrip.StartTrip"
             android:exported="false" />
-        <activity android:name=".ui.profile.Registration"
-            android:exported="false" />
-        <activity android:name=".ui.profile.Login"
+        <activity android:name=".ui.profile.SignInSignUp"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
