@@ -35,8 +35,9 @@ public class MicrophoneManager {
 
     private final double referenceAmplitude = 2700.0;
     private final int AUDIO_RECORDING_DELAY = 500;
-    double mThreshold = 80;
+    double mThreshold = 40;
     int decibelCounter = 0;
+    int noiseDetections = 0;
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
         this.microphoneActivity = microphoneActivity;
@@ -97,12 +98,13 @@ public class MicrophoneManager {
                     Log.d("amplitude", "too much noise");
                     decibelCounter = decibelCounter + 1;
                     if (decibelCounter == 5) {
-                        makeToast("Noise detected", activity);
-                        Log.d("amplitude", "Noise detected");
+                        noiseDetections += 1;
+                        Log.d("Noise detection", String.valueOf(noiseDetections));
+                        if (decibelVisible) {
+                            makeToast("Noise detected", activity);
+                        }
                     }
                 } else decibelCounter = 0;
-
-                Log.d("amplitude", String.valueOf(decibel));
                 if (decibelVisible) {
                     activityMicrophoneBinding.textActivityMicrophone.setText("Decibel: " + String.format(Locale.US, "%.1f", decibel));
                 }
