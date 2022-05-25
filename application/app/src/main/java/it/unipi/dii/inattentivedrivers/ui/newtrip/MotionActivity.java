@@ -26,8 +26,10 @@ public class MotionActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        MotionManager.sensorManager.registerListener(MotionManager.accelerometerEventListener, MotionManager.accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        MotionManager.sensorManager.registerListener(MotionManager.gyroscopeEventListener, MotionManager.gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        MotionManager.sensorManager.registerListener(MotionManager.accelerometerEventListener, MotionManager.accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        MotionManager.sensorManager.registerListener(MotionManager.gyroscopeEventListener, MotionManager.gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        MotionManager.sensorManager.registerListener(MotionManager.magnetometerEventListener, MotionManager.magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
 
@@ -36,5 +38,7 @@ public class MotionActivity extends AppCompatActivity {
         super.onPause();
         MotionManager.sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
         MotionManager.sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
+        MotionManager.sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
+
     }
 }

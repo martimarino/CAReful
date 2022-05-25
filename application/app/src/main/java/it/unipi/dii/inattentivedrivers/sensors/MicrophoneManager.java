@@ -34,7 +34,7 @@ public class MicrophoneManager {
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
 
     private final double referenceAmplitude = 2700.0;
-    private final int AUDIO_RECORDING_DELAY = 1000;
+    private final int AUDIO_RECORDING_DELAY = 500;
     double mThreshold = 80;
     int decibelCounter = 0;
 

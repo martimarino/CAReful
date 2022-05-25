@@ -48,7 +48,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         gps = new GpsManager(this, foregroundActivity, mMap);
         mot = new MotionManager(this, getApplicationContext());
         cam = new CameraManager(this, binding);
-        //mic = new MicrophoneManager(this);
+        mic = new MicrophoneManager(this);
 
         createTask();
 
@@ -83,6 +83,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     protected void onPause() {
         super.onPause();
         mot.sensorManager.unregisterListener(mot.accelerometerEventListener);
+        mot.sensorManager.unregisterListener(mot.gyroscopeEventListener);
+        mot.sensorManager.unregisterListener(mot.magnetometerEventListener);
+
     }
 
     @Override
@@ -93,7 +96,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             Log.d("Resume times: ", String.valueOf(resumeTimes));
             Toast.makeText(StartTrip.this, "Resume detected", Toast.LENGTH_SHORT).show();
         }
-        mot.sensorManager.registerListener(mot.accelerometerEventListener, mot.accelerometerSensor, MotionManager.sensorManager.SENSOR_DELAY_FASTEST);
+        mot.sensorManager.registerListener(mot.accelerometerEventListener, mot.accelerometerSensor, MotionManager.sensorManager.SENSOR_DELAY_NORMAL);
+        mot.sensorManager.registerListener(mot.gyroscopeEventListener, mot.gyroscopeSensor, MotionManager.sensorManager.SENSOR_DELAY_NORMAL);
+        mot.sensorManager.registerListener(mot.magnetometerEventListener, mot.magnetometerSensor, MotionManager.sensorManager.SENSOR_DELAY_NORMAL);
         foregroundActivity = true;
     }
 

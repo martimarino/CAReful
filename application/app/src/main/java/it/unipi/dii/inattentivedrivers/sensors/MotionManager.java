@@ -34,34 +34,41 @@ public class MotionManager {
     public StartTrip startTrip;
     public Context context;
     public ArrayList<Float> array;
+    public ArrayList<Float> azimuts;
     public static int countFall;
     public boolean fall;
     public boolean usageDetected;
     public static final double highThreshold = 18.0;
     public static final double lowThreshold = 5.0;
+    public static final float tol = 0.15F;
     public static final int size = 8;
     public static float azimut;
-    float[] mGeomagnetic;
-    float[] mGravity;
+    public float[] mGeomagnetic;
+    public float[] mGravity;
+    public static int riskIndex;
+
+
+
 
     public MotionManager(MotionActivity motionActivity, MotionActivityBinding motionActivityBinding, Context context) {
         array = new ArrayList<>();
+        azimuts = new ArrayList<>();
         fall = false;
         countFall = 0;
         this.motionActivity = motionActivity;
         this.motionActivityBinding = motionActivityBinding;
         this.context = context;
 
-        final Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Log.d("azimut", String.valueOf(azimut));
-                Toast.makeText(motionActivity, String.valueOf(azimut), Toast.LENGTH_SHORT).show();
-                mHandler.postDelayed(this, 100);
-            }
-        }, 100);
-        initializeMotion(motionActivity);
+//        final Handler mHandler = new Handler();
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //Log.d("azimut", String.valueOf(azimut));
+//                //Toast.makeText(motionActivity, String.valueOf(azimut), Toast.LENGTH_SHORT).show();
+//                mHandler.postDelayed(this, 100);
+//            }
+//        }, 100);
+        initializeMotion(this.motionActivity);
     }
 
     public void initializeMotion(Activity activity){
@@ -78,9 +85,9 @@ public class MotionManager {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 mGravity = sensorEvent.values;
-                if (mGravity != null && mGeomagnetic != null){
-                    getOrientation();
-                }
+//                if (mGravity != null && mGeomagnetic != null){
+//                    getOrientation();
+//                }
                 double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
                 if (array.size() < size) {
                     array.add((float) magnitude);
@@ -162,7 +169,7 @@ public class MotionManager {
             public void onSensorChanged(SensorEvent sensorEvent) {
                 mGeomagnetic = sensorEvent.values;
                 if (mGravity != null && mGeomagnetic != null){
-                    getOrientation();
+                    getOrientation(activity);
                 }
             }
 
@@ -171,20 +178,43 @@ public class MotionManager {
             }
         };
 
-        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL );
+        sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL );
+        sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL );
 
     }
 
-    public void getOrientation(){
+    public void getOrientation(Activity activity){
         float R[] = new float[9];
         float I[] = new float[9];
         boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
         if (success) {
             float orientation[] = new float[3];
             SensorManager.getOrientation(R, orientation);
-            azimut = orientation[0]; // orientation contains: azimut, pitch and roll
+            azimut = Math.abs(orientation[0]); // orientation contains: azimut, pitch and roll
+            azimuts.add(azimut);
+            if(azimuts.size()==100){
+                float sum = 0;
+                Log.d("azimuts", String.valueOf(azimuts));
+                for (int i = 0; i<azimuts.size()-1; i++){
+                    if (Math.abs(azimuts.get(i) - azimuts.get(i+1)) > tol){
+                        sum = sum + Math.abs(azimuts.get(i) - azimuts.get(i+1));
+                    }
+                }
+                if (sum<10){
+                    riskIndex = 1;
+                }
+                else if (sum>=10 && sum<=60) {
+                    riskIndex = 2;
+                }
+                else{
+                    riskIndex = 3;
+                }
+                Toast.makeText(activity,"Questo è il valore di sum puttana la madonna: " + String.valueOf(sum), Toast.LENGTH_LONG).show();
+                Log.d("sum", String.valueOf(sum));
+                Log.d("riskIndex", String.valueOf(riskIndex));
+                azimuts.clear();
+            }
         }
 
 
@@ -194,12 +224,22 @@ public class MotionManager {
     public MotionManager(StartTrip startTrip, Context context) {
 
         array = new ArrayList<>();
+        azimuts = new ArrayList<>();
         fall = false;
         countFall = 0;
         this.startTrip = startTrip;
         this.context = context;
 
-        initializeMotion(startTrip);
+//        final Handler mHandler = new Handler();
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                //Log.d("azimut", String.valueOf(azimut));
+//                Toast.makeText(startTrip, String.valueOf(azimut), Toast.LENGTH_SHORT).show();
+//                mHandler.postDelayed(this, 100);
+//            }
+//        }, 100);
+        initializeMotion(this.startTrip);
     }
 
     public static int getCountFall() {
