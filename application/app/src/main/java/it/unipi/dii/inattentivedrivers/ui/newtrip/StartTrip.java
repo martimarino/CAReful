@@ -63,7 +63,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         gps = new GpsManager(this);
         mot = new MotionManager(this, getApplicationContext());
         cam = new CameraManager(this, binding);
-        //mic = new MicrophoneManager(this);
+        mic = new MicrophoneManager(this);
 
         getCurrentLocation();
         startAttentionDetection();

@@ -70,6 +70,7 @@ public class CameraManager {
         turnedHeadCounterDetection = 0;
         drowsinessCounter = 0;
         turnedHeadCounter = 0;
+        id = -1;
         cameraVisible = true;
         this.cameraActivity = cameraActivity;
         this.activityCameraBinding = activityCameraBinding;
@@ -90,6 +91,7 @@ public class CameraManager {
         turnedHeadCounterDetection = 0;
         drowsinessCounter = 0;
         turnedHeadCounter = 0;
+        id = -1;
         cameraVisible = false;
         this.startTrip = startTrip;
         this.startTripBinding = startTripBinding;
@@ -195,16 +197,16 @@ public class CameraManager {
 
     private void processResults(List<Face> faces, Activity activity) {
         for (Face face : faces) {
-            //Log.d("back", "camera running");
+            if (id == -1){
+                id = face.getTrackingId();
+                Log.d("id", String.valueOf(id));
+
+            }
 
             rotX = face.getHeadEulerAngleX();
             rotY = face.getHeadEulerAngleY();
             rotZ = face.getHeadEulerAngleZ();
 
-            if (face.getTrackingId() != null) {
-                id = face.getTrackingId();
-                //Log.d("id", String.valueOf(id));
-            }
 
             if (face.getRightEyeOpenProbability() != null) {
                 rightEyeOpenProb = face.getRightEyeOpenProbability();
@@ -260,6 +262,9 @@ public class CameraManager {
                     if(activity instanceof CameraActivity) {
                         makeToast("Drowsiness detected", activity);
                     }
+                    else{
+                        Log.d("dormi", "si");
+                    }
                 }
             }
             else{
@@ -273,13 +278,16 @@ public class CameraManager {
                     if(activity instanceof CameraActivity) {
                         makeToast("Head turned", activity);
                     }
+                    else{
+                        Log.d("head turned", "si");
+                    }
                 }
             }
             else{
                 turnedHeadCounterDetection = 0;
             }
+            break;
         }
-
     }
 
 }

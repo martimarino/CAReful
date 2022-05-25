@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import it.unipi.dii.inattentivedrivers.databinding.MotionActivityBinding;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.CameraActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
@@ -116,11 +117,9 @@ public class MotionManager {
                         TextView tv = motionActivityBinding.textView;
                         tv.setText("Falls detected: " + Integer.toString(countFall));
                     }
-                    /* togliere il commento per stampare il toast anche su startrip
                     else {
-                        Toast.makeText(activity,"Fall detected", Toast.LENGTH_SHORT).show();
+                        Log.d("caduto", "si");
                     }
-                    */
                 }
             }
 
@@ -156,7 +155,7 @@ public class MotionManager {
                         TextView tv = motionActivityBinding.textView2;
                         tv.setText("Usage detected: " + usageDetected);
                     } else {
-                        //Toast.makeText(activity,"Usage detected", Toast.LENGTH_SHORT).show();
+                        Log.d("usato", "si");
                     }
                     usageDetected = false;
                 }
@@ -213,9 +212,11 @@ public class MotionManager {
                 else{
                     curvatureIndex = 3;
                 }
-                Toast.makeText(activity,"Sum: " + String.valueOf(sum) + " CurvatureIndex: " + String.valueOf(curvatureIndex), Toast.LENGTH_LONG).show();
-                //Log.d("sum", String.valueOf(sum));
-                //Log.d("riskIndex", String.valueOf(curvatureIndex));
+                if(activity instanceof MotionActivity) {
+                    Toast.makeText(activity,"Sum: " + String.valueOf(sum) + " CurvatureIndex: " + String.valueOf(curvatureIndex), Toast.LENGTH_LONG).show();
+                }
+                Log.d("sum", String.valueOf(sum));
+                Log.d("riskIndex", String.valueOf(curvatureIndex));
                 azimuts.clear();
             }
         }
