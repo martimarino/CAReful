@@ -45,7 +45,7 @@ public class MotionManager {
     public static float azimut;
     public float[] mGeomagnetic;
     public float[] mGravity;
-    public static int riskIndex;
+    public static int curvatureIndex;
 
 
 
@@ -78,8 +78,8 @@ public class MotionManager {
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        if (accelerometerSensor == null){
-            Toast.makeText(activity,"The device has no Accelerometer", Toast.LENGTH_SHORT).show();
+        if (accelerometerSensor == null || gyroscopeSensor == null && magnetometerSensor == null){
+            Toast.makeText(activity,"The device has no sensors to detect motion", Toast.LENGTH_SHORT).show();
         }
         accelerometerEventListener = new SensorEventListener() {
             @Override
@@ -108,16 +108,19 @@ public class MotionManager {
                 }
 
                 if (fall==true) {
-                    Log.d("vettore", String.valueOf(array));
+                    //Log.d("vettore", String.valueOf(array));
                     array.clear();
                     fall = false;
                     countFall = countFall + 1;
                     if (activity instanceof MotionActivity) {
                         TextView tv = motionActivityBinding.textView;
                         tv.setText("Falls detected: " + Integer.toString(countFall));
-                    } else {
+                    }
+                    /* togliere il commento per stampare il toast anche su startrip
+                    else {
                         Toast.makeText(activity,"Fall detected", Toast.LENGTH_SHORT).show();
                     }
+                    */
                 }
             }
 
@@ -178,9 +181,9 @@ public class MotionManager {
             }
         };
 
-        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL );
-        sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL );
-        sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL );
+        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
 
@@ -202,17 +205,17 @@ public class MotionManager {
                     }
                 }
                 if (sum<10){
-                    riskIndex = 1;
+                    curvatureIndex = 1;
                 }
                 else if (sum>=10 && sum<=60) {
-                    riskIndex = 2;
+                    curvatureIndex = 2;
                 }
                 else{
-                    riskIndex = 3;
+                    curvatureIndex = 3;
                 }
-                Toast.makeText(activity,"Questo è il valore di sum puttana la madonna: " + String.valueOf(sum), Toast.LENGTH_LONG).show();
-                Log.d("sum", String.valueOf(sum));
-                Log.d("riskIndex", String.valueOf(riskIndex));
+                Toast.makeText(activity,"Sum: " + String.valueOf(sum) + " CurvatureIndex: " + String.valueOf(curvatureIndex), Toast.LENGTH_LONG).show();
+                //Log.d("sum", String.valueOf(sum));
+                //Log.d("riskIndex", String.valueOf(curvatureIndex));
                 azimuts.clear();
             }
         }

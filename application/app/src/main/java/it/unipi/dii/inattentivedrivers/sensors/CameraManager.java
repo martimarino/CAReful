@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import java.util.List;
 import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
 import it.unipi.dii.inattentivedrivers.databinding.StartTripBinding;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.CameraActivity;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
 public class CameraManager {
@@ -58,10 +60,14 @@ public class CameraManager {
     int id;
     float rightEyeOpenProb;
     float leftEyeOpenProb;
+    int drowsinessCounterDetection;
+    int turnedHeadCounterDetection;
     int drowsinessCounter;
     int turnedHeadCounter;
 
     public CameraManager(CameraActivity cameraActivity, ActivityCameraBinding activityCameraBinding){
+        drowsinessCounterDetection = 0;
+        turnedHeadCounterDetection = 0;
         drowsinessCounter = 0;
         turnedHeadCounter = 0;
         cameraVisible = true;
@@ -80,7 +86,10 @@ public class CameraManager {
     }
 
     public CameraManager(StartTrip startTrip, StartTripBinding startTripBinding){
+        drowsinessCounterDetection = 0;
+        turnedHeadCounterDetection = 0;
         drowsinessCounter = 0;
+        turnedHeadCounter = 0;
         cameraVisible = false;
         this.startTrip = startTrip;
         this.startTripBinding = startTripBinding;
@@ -186,25 +195,25 @@ public class CameraManager {
 
     private void processResults(List<Face> faces, Activity activity) {
         for (Face face : faces) {
-            Log.d("back", "camera running");
+            //Log.d("back", "camera running");
 
             rotX = face.getHeadEulerAngleX();
-            rotY = face.getHeadEulerAngleY();  // Head is rotated to the right rotY degrees
-            rotZ = face.getHeadEulerAngleZ();  // Head is tilted sideways rotZ degrees
+            rotY = face.getHeadEulerAngleY();
+            rotZ = face.getHeadEulerAngleZ();
 
             if (face.getTrackingId() != null) {
                 id = face.getTrackingId();
-                Log.d("id", String.valueOf(id));
+                //Log.d("id", String.valueOf(id));
             }
 
             if (face.getRightEyeOpenProbability() != null) {
                 rightEyeOpenProb = face.getRightEyeOpenProbability();
-                Log.d("righteyeopen", String.valueOf(rightEyeOpenProb));
+                //Log.d("righteyeopen", String.valueOf(rightEyeOpenProb));
             }
 
             if (face.getLeftEyeOpenProbability() != null) {
                 leftEyeOpenProb = face.getLeftEyeOpenProbability();
-                Log.d("lefteyeopen", String.valueOf(leftEyeOpenProb));
+                //Log.d("lefteyeopen", String.valueOf(leftEyeOpenProb));
             }
 
             if(cameraVisible) {
@@ -226,42 +235,48 @@ public class CameraManager {
                 boundingBox.right = StartTrip.binding.parentLayout.getWidth() - boundingBox.right;
             }
             //Log.d("MainActivity", "processResults: " + i.getLabels().toString());
-            String text = "Undefined";
+            //String text = "Undefined";
             /*if(i.getLabels().size() != 0) {
                 text = i.getLabels().get(0).getText();
             }*/
 
-            text = String.valueOf(rotX) + " | " + String.valueOf(rotY) + " | " + String.valueOf(rotZ) + " | " + String.valueOf(rightEyeOpenProb);
+            //text = String.valueOf(rotX) + " | " + String.valueOf(rotY) + " | " + String.valueOf(rotZ) + " | " + String.valueOf(rightEyeOpenProb);
 
             if(cameraVisible) {
                 Draw element = new Draw(activity, boundingBox, String.valueOf(rotX), String.valueOf(rotY), String.valueOf(rotZ), String.valueOf(rightEyeOpenProb), String.valueOf(leftEyeOpenProb));
                 CameraActivity.binding.parentLayout.addView(element);
             }
-
+            /*
             Log.d("euler x", String.valueOf(rotX));
             Log.d("euler y", String.valueOf(rotY));
             Log.d("euler z", String.valueOf(rotZ));
             Log.d("--------------", "----------------------------------------------");
             Log.d("--------------", "----------------------------------------------");
-
+            */
             if(rightEyeOpenProb<DROWSINESS_THRESHOLD && leftEyeOpenProb<DROWSINESS_THRESHOLD){
-                drowsinessCounter = drowsinessCounter + 1;
-                if(drowsinessCounter == DROWSINESS_SECONDS*10){
-                    makeToast("Drowsiness detected", activity);
+                drowsinessCounterDetection = drowsinessCounterDetection + 1;
+                if(drowsinessCounterDetection == DROWSINESS_SECONDS*10){
+                    drowsinessCounter = drowsinessCounter + 1;
+                    if(activity instanceof CameraActivity) {
+                        makeToast("Drowsiness detected", activity);
+                    }
                 }
             }
             else{
-                drowsinessCounter = 0;
+                drowsinessCounterDetection = 0;
             }
 
             if(rotY<-TURNED_HEAD_THRESHOLD || rotY>TURNED_HEAD_THRESHOLD){
-                turnedHeadCounter = turnedHeadCounter + 1;
-                if(turnedHeadCounter == TURNED_HEAD_SECONDS*10){
-                    makeToast("Head turned", activity);
+                turnedHeadCounterDetection = turnedHeadCounterDetection + 1;
+                if(turnedHeadCounterDetection == TURNED_HEAD_SECONDS*10){
+                    turnedHeadCounter = turnedHeadCounter + 1;
+                    if(activity instanceof CameraActivity) {
+                        makeToast("Head turned", activity);
+                    }
                 }
             }
             else{
-                turnedHeadCounter = 0;
+                turnedHeadCounterDetection = 0;
             }
         }
 
