@@ -210,7 +210,7 @@ public class MotionManager {
                 else{
                     riskIndex = 3;
                 }
-                Toast.makeText(activity,"Questo è il valore di sum puttana la madonna: " + String.valueOf(sum), Toast.LENGTH_LONG).show();
+                Toast.makeText(activity,"Questo è il valore di sum: " + String.valueOf(sum), Toast.LENGTH_LONG).show();
                 Log.d("sum", String.valueOf(sum));
                 Log.d("riskIndex", String.valueOf(riskIndex));
                 azimuts.clear();
