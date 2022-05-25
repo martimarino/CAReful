@@ -43,7 +43,6 @@ public class GpsManager {
 
     ArrayList<Double> array;
 
-
     public GpsManager(Activity activity, boolean foregroundActivity, GoogleMap mMap) {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
@@ -102,7 +101,7 @@ public class GpsManager {
                         if (location != null) {
                             //TODO: UI updates.
                             currentLocation = locationResult.getLastLocation();
-                            double rt = calculateRoadTortuosity();
+                            /*double rt = calculateRoadTortuosity();
                             String twisty = "";
                             Log.d("tortuosity", String.valueOf(rt));
                             if(rt == 999){
@@ -112,7 +111,7 @@ public class GpsManager {
                                 twisty = String.valueOf(rt);
                             }
                             Toast.makeText(activity.getApplicationContext(), twisty, Toast.LENGTH_SHORT).show();
-
+                            */
                             LatLng current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
                             CameraPosition cameraPosition = new CameraPosition.Builder()

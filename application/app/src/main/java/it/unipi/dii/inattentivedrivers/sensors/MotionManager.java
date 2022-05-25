@@ -8,11 +8,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import it.unipi.dii.inattentivedrivers.databinding.MotionActivityBinding;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
@@ -23,19 +25,24 @@ public class MotionManager {
     public MotionActivityBinding motionActivityBinding;
     public static SensorEventListener accelerometerEventListener;
     public static SensorEventListener gyroscopeEventListener;
+    public static SensorEventListener magnetometerEventListener;
     public MotionActivity motionActivity;
     public static SensorManager sensorManager;
     public static Sensor accelerometerSensor;
     public static Sensor gyroscopeSensor;
+    public static Sensor magnetometerSensor;
     public StartTrip startTrip;
     public Context context;
     public ArrayList<Float> array;
     public static int countFall;
     public boolean fall;
     public boolean usageDetected;
-    public static final double highThreshold = 10.0;
-    public static final double lowThreshold = 8.0;
+    public static final double highThreshold = 18.0;
+    public static final double lowThreshold = 5.0;
     public static final int size = 8;
+    public static float azimut;
+    float[] mGeomagnetic;
+    float[] mGravity;
 
     public MotionManager(MotionActivity motionActivity, MotionActivityBinding motionActivityBinding, Context context) {
         array = new ArrayList<>();
@@ -45,6 +52,15 @@ public class MotionManager {
         this.motionActivityBinding = motionActivityBinding;
         this.context = context;
 
+        final Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Log.d("azimut", String.valueOf(azimut));
+                Toast.makeText(motionActivity, String.valueOf(azimut), Toast.LENGTH_SHORT).show();
+                mHandler.postDelayed(this, 100);
+            }
+        }, 100);
         initializeMotion(motionActivity);
     }
 
@@ -53,12 +69,18 @@ public class MotionManager {
         sensorManager = (SensorManager) this.context.getSystemService(SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
         if (accelerometerSensor == null){
             Toast.makeText(activity,"The device has no Accelerometer", Toast.LENGTH_SHORT).show();
         }
         accelerometerEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
+                mGravity = sensorEvent.values;
+                if (mGravity != null && mGeomagnetic != null){
+                    getOrientation();
+                }
                 double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
                 if (array.size() < size) {
                     array.add((float) magnitude);
@@ -134,8 +156,39 @@ public class MotionManager {
             public void onAccuracyChanged(Sensor sensor, int i) {
             }
         };
+
+        magnetometerEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                mGeomagnetic = sensorEvent.values;
+                if (mGravity != null && mGeomagnetic != null){
+                    getOrientation();
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+
         sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
+    }
+
+    public void getOrientation(){
+        float R[] = new float[9];
+        float I[] = new float[9];
+        boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+        if (success) {
+            float orientation[] = new float[3];
+            SensorManager.getOrientation(R, orientation);
+            azimut = orientation[0]; // orientation contains: azimut, pitch and roll
+        }
+
+
+
     }
 
     public MotionManager(StartTrip startTrip, Context context) {
@@ -153,6 +206,9 @@ public class MotionManager {
         return countFall;
     }
 
+    public static float getAzimut() {
+        return azimut;
+    }
 
     // RICORDARE ONPAUSE E ONRESUME!!!!!!!!!!!!!!!!!!!!!!
 }
