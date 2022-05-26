@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -35,9 +37,14 @@ public class GpsManager {
     public static Location currentLocation;
     public static FusedLocationProviderClient fusedLocationProviderClient;
     public LatLng current;
+    ArrayList arr;
+    int size;
+    float avgSpeed;
 
 
     public GpsManager(Activity activity) {
+        size = StartTrip.samplingPeriod / MapsActivity.getInterval();
+        arr = new ArrayList(size);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
     }
 
@@ -59,4 +66,31 @@ public class GpsManager {
         }
     }
 
+    public void calculateAvgSpeed() {
+
+        if(arr.size() == size) {
+            float s = 0;
+            for(int i = 0; i < arr.size(); i++)
+                s = s + (Float) arr.get(i);
+            arr.clear();
+            avgSpeed = s/size;
+        } else {
+            arr.add(currentLocation.getSpeed());
+        }
+    }
+
+    public float getAvgSpeed() {
+        if (avgSpeed<=30){
+            return 1;
+        }
+        else if (avgSpeed>30 && avgSpeed<=70){
+            return 2;
+        }
+        else if (avgSpeed>70 && avgSpeed<=90){
+            return 3;
+        }
+        else{
+            return 4;
+        }
+    }
 }

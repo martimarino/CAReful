@@ -34,6 +34,8 @@ import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
 
 public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
+    boolean camSelected, gpsSelected, motSelected, micSelected;
+
     MotionManager mot;
     CameraManager cam;
     GpsManager gps;
@@ -51,7 +53,10 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     public int resumeTimes = -1;        //avoid first activity start call
 
     Timer t;
+    public float disattentionLevel;
+    public float prevDisattentionLevel = 0;
     public int attentionLevel = 100;
+    public static int samplingPeriod = 60;     //in seconds
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,10 +65,25 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         binding = StartTripBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        gps = new GpsManager(this);
-        mot = new MotionManager(this, getApplicationContext());
-        cam = new CameraManager(this, binding);
-        mic = new MicrophoneManager(this);
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            micSelected = extras.getBoolean("mic");
+            gpsSelected = extras.getBoolean("gps");
+            camSelected = extras.getBoolean("cam");
+            motSelected = extras.getBoolean("mot");
+        }
+
+        if(micSelected)
+            mic = new MicrophoneManager(this);
+
+        if(gpsSelected)
+            gps = new GpsManager(this);
+        if(motSelected)
+            mot = new MotionManager(this, getApplicationContext());
+
+        if(camSelected)
+            cam = new CameraManager(this, binding);
 
         getCurrentLocation();
         startAttentionDetection();
@@ -77,11 +97,34 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void run() {
 
-                attentionLevel--;
+                    /*
+    alfa = 0.5
+
+    Iold = 70  =>  v * t *(testa +, occhi, mic, caduta, gyro) da 0 a 1 min
+    Inew = 78  =>  alfa*(v1 * t1 *(testa1, occhi1, mic1, caduta1, gyro1) + (1-alfa)*Iold
+    Inew1= 60  =>  alfa*(v2 * t2 *(testa1, occhi1, mic1, caduta1, gyro1) + (1-alfa)*Inew
+     */
+                float alpha = 0.5f;
+
+                int noise = mic.getNoiseDetections();
+                int drow = cam.getDrowsinessCounter();
+                int head = cam.getTurnedHeadCounter();
+                int fall = mot.getUsageCounter();
+                int usage = mot.getCountFall();
+                float curv = mot.getCurvatureIndex();
+                float speed = gps.getAvgSpeed();
+
+                // 0 < disattentioLevel < 700
+                disattentionLevel = (float) (speed * curv * (head + drow + 0.75*(usage) + 0.5*(noise + fall)));
+                disattentionLevel = (int) (alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel);
+                prevDisattentionLevel = disattentionLevel;
+
+                attentionLevel = (int) (100 - (disattentionLevel/7));
+
                 binding.determinateBar.setProgress(attentionLevel);
 
             }
-        }, 5000,5000);
+        }, 10,60000);
     }
 
     @Override
@@ -119,8 +162,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(5000);
+        locationRequest.setInterval(MapsActivity.getInterval() * 1000);
+        locationRequest.setFastestInterval(MapsActivity.getInterval() * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationCallback = new LocationCallback() {
             @Override
@@ -134,6 +177,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                         //TODO: UI updates.
                         gps.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(StartTrip.this, mMap, foregroundActivity);
+                        gps.calculateAvgSpeed();
                     }
                 }
             }

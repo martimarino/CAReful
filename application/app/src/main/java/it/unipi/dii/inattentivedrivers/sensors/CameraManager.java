@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,15 +31,14 @@ import java.util.List;
 import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
 import it.unipi.dii.inattentivedrivers.databinding.StartTripBinding;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.CameraActivity;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
 public class CameraManager {
 
-    public static final double DROWSINESS_THRESHOLD = 0.5;
+    public static final double DROWSINESS_PERCENTAGE_THRESHOLD = 0.5;
     public static final double DROWSINESS_SECONDS = 2;
-    public static final double TURNED_HEAD_THRESHOLD = 30.0;
-    public static final double TURNED_HEAD_SECONDS= 3;
+    public static final double TURNED_HEAD_ANGLE_THRESHOLD = 40.0;
+    public static final double TURNED_HEAD_SECONDS= 6;
 
     boolean cameraVisible;
 
@@ -255,7 +253,7 @@ public class CameraManager {
             Log.d("--------------", "----------------------------------------------");
             Log.d("--------------", "----------------------------------------------");
             */
-            if(rightEyeOpenProb<DROWSINESS_THRESHOLD && leftEyeOpenProb<DROWSINESS_THRESHOLD){
+            if(rightEyeOpenProb< DROWSINESS_PERCENTAGE_THRESHOLD && leftEyeOpenProb< DROWSINESS_PERCENTAGE_THRESHOLD){
                 drowsinessCounterDetection = drowsinessCounterDetection + 1;
                 if(drowsinessCounterDetection == DROWSINESS_SECONDS*10){
                     drowsinessCounter = drowsinessCounter + 1;
@@ -271,7 +269,7 @@ public class CameraManager {
                 drowsinessCounterDetection = 0;
             }
 
-            if(rotY<-TURNED_HEAD_THRESHOLD || rotY>TURNED_HEAD_THRESHOLD){
+            if(rotY<-TURNED_HEAD_ANGLE_THRESHOLD || rotY> TURNED_HEAD_ANGLE_THRESHOLD){
                 turnedHeadCounterDetection = turnedHeadCounterDetection + 1;
                 if(turnedHeadCounterDetection == TURNED_HEAD_SECONDS*10){
                     turnedHeadCounter = turnedHeadCounter + 1;
@@ -290,4 +288,11 @@ public class CameraManager {
         }
     }
 
+    public int getDrowsinessCounter() {
+        return drowsinessCounter;
+    }
+
+    public int getTurnedHeadCounter() {
+        return turnedHeadCounter;
+    }
 }

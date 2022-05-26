@@ -136,6 +136,10 @@ public class NewTripFragment extends Fragment {
 
     private void startTrip() {
         Intent intent = new Intent(getActivity(), StartTrip.class);
+        intent.putExtra("mic", binding.microphone.getVisibility() == View.VISIBLE);
+        intent.putExtra("gps", binding.localization.getVisibility() == View.VISIBLE);
+        intent.putExtra("cam", binding.camera.getVisibility() == View.VISIBLE);
+        intent.putExtra("mot", binding.motion.getVisibility() == View.VISIBLE);
         startActivity(intent);
     }
 

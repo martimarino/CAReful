@@ -33,11 +33,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
-//    FusedLocationProviderClient fusedLocationProviderClient;
     private static final int REQUEST_CODE = 101;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
     private boolean foregroundActivity;
+    public static int interval = 5;
 
     GpsManager gps;
 
@@ -86,8 +86,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(5000);
+        locationRequest.setInterval(interval * 1000);
+        locationRequest.setFastestInterval(interval * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationCallback = new LocationCallback() {
             @Override
@@ -138,5 +138,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         foregroundActivity = true;
+    }
+
+    public static int getInterval() {
+        return interval;
     }
 }

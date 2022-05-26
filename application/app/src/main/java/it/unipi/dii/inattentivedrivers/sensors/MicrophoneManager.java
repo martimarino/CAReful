@@ -35,8 +35,8 @@ public class MicrophoneManager {
 
     private final double referenceAmplitude = 2700.0;
     private final int AUDIO_RECORDING_DELAY = 500;
-    double mThreshold = 40;
-    int decibelCounter = 0;
+    double mThreshold = 150;
+    public int decibelCounter = 0;
     int noiseDetections = 0;
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
@@ -111,5 +111,9 @@ public class MicrophoneManager {
                 mHandler.postDelayed(this, AUDIO_RECORDING_DELAY);
             }
         }, AUDIO_RECORDING_DELAY);
+    }
+
+    public int getNoiseDetections() {
+        return noiseDetections;
     }
 }

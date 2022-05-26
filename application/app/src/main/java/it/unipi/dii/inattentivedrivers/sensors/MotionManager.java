@@ -23,6 +23,7 @@ import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
 public class MotionManager {
 
+    public static final float usageThreshold = 1.9f;
     public MotionActivityBinding motionActivityBinding;
     public static SensorEventListener accelerometerEventListener;
     public static SensorEventListener gyroscopeEventListener;
@@ -36,19 +37,18 @@ public class MotionManager {
     public Context context;
     public ArrayList<Float> array;
     public ArrayList<Float> azimuts;
-    public static int countFall;
+    public int countFall;
+    public int usageCounter;
     public boolean fall;
     public boolean usageDetected;
     public static final double highThreshold = 18.0;
     public static final double lowThreshold = 5.0;
     public static final float tol = 0.15F;
     public static final int size = 8;
-    public static float azimut;
+    public float azimut;
     public float[] mGeomagnetic;
     public float[] mGravity;
-    public static int curvatureIndex;
-
-
+    public int curvatureIndex;
 
 
     public MotionManager(MotionActivity motionActivity, MotionActivityBinding motionActivityBinding, Context context) {
@@ -131,31 +131,32 @@ public class MotionManager {
         gyroscopeEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
-                if(sensorEvent.values[0]>1.5f){
+                if(sensorEvent.values[0]> usageThreshold){
                     usageDetected = true;
                 }
-                if(sensorEvent.values[0]<-1.5f){
+                if(sensorEvent.values[0]<-usageThreshold){
                     usageDetected = true;
                 }
-                if(sensorEvent.values[1]>1.5f){
+                if(sensorEvent.values[1]>usageThreshold){
                     usageDetected = true;
                 }
-                if(sensorEvent.values[1]<-1.5f){
+                if(sensorEvent.values[1]<-usageThreshold){
                     usageDetected = true;
                 }
-                if(sensorEvent.values[2]>1.5f){
+                if(sensorEvent.values[2]>usageThreshold){
                     usageDetected = true;
                 }
-                if(sensorEvent.values[2]<-1.5f){
+                if(sensorEvent.values[2]<-usageThreshold){
                     usageDetected = true;
                 }
 
                 if (usageDetected==true){
+                    usageCounter++;
                     if(activity instanceof MotionActivity) {
                         TextView tv = motionActivityBinding.textView2;
-                        tv.setText("Usage detected: " + usageDetected);
+                        tv.setText("Number of usage detected: " + usageCounter);
                     } else {
-                        Log.d("usato", "si");
+                        Log.d("used", String.valueOf(usageCounter));
                     }
                     usageDetected = false;
                 }
@@ -195,7 +196,7 @@ public class MotionManager {
             SensorManager.getOrientation(R, orientation);
             azimut = Math.abs(orientation[0]); // orientation contains: azimut, pitch and roll
             azimuts.add(azimut);
-            if(azimuts.size()==100){
+            if(azimuts.size()==300){
                 float sum = 0;
                 Log.d("azimuts", String.valueOf(azimuts));
                 for (int i = 0; i<azimuts.size()-1; i++){
@@ -246,12 +247,16 @@ public class MotionManager {
         initializeMotion(this.startTrip);
     }
 
-    public static int getCountFall() {
+    public int getCountFall() {
         return countFall;
     }
 
-    public static float getAzimut() {
-        return azimut;
+    public int getUsageCounter() {
+        return usageCounter;
+    }
+
+    public int getCurvatureIndex() {
+        return curvatureIndex;
     }
 
     // RICORDARE ONPAUSE E ONRESUME!!!!!!!!!!!!!!!!!!!!!!

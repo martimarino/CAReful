@@ -22,13 +22,7 @@ public class MotionActivity extends AppCompatActivity {
         mot = new MotionManager(this, binding, getApplicationContext());
     }
 
-    /*
-    alfa = 0.5
 
-    Iold = 70  =>  v * t *(testa +, occhi, mic, caduta, gyro) da 0 a 1 min
-    Inew = 78  =>  alfa*(v1 * t1 *(testa1, occhi1, mic1, caduta1, gyro1) + (1-alfa)*Iold
-    Inew1= 60  =>  alfa*(v2 * t2 *(testa1, occhi1, mic1, caduta1, gyro1) + (1-alfa)*Inew
-     */
 
 
     @Override
