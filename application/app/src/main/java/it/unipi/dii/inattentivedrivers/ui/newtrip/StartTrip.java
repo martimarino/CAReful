@@ -83,6 +83,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
         if(gpsSelected)
             gps = new GpsManager(this);
+
         if(motSelected)
             mot = new MotionManager(this, getApplicationContext());
 
@@ -215,11 +216,20 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (REQUEST_CODE) {
+        switch (requestCode) {
             case REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getCurrentLocation();
                 }
+                break;
+            case MicrophoneManager.REQUEST_RECORD_AUDIO:
+                if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    mic.initializeMicrophone(this);
+                }else{
+                    Toast.makeText(this , "Permission to use the microphone denied...", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
                 break;
         }
     }
