@@ -79,7 +79,7 @@ public class GpsManager {
         }
     }
 
-    public float getAvgSpeed() {
+    public int getAvgSpeed() {
         if (avgSpeed<=30){
             return 1;
         }

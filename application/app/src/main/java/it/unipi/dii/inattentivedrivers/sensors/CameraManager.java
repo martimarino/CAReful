@@ -261,7 +261,7 @@ public class CameraManager {
                         makeToast("Drowsiness detected", activity);
                     }
                     else{
-                        Log.d("dormi", "si");
+                        Log.d("drowsiness", "detected");
                     }
                 }
             }
@@ -294,5 +294,13 @@ public class CameraManager {
 
     public int getTurnedHeadCounter() {
         return turnedHeadCounter;
+    }
+
+    public void setDrowsinessCounter(int drowsinessCounter) {
+        this.drowsinessCounter = drowsinessCounter;
+    }
+
+    public void setTurnedHeadCounter(int turnedHeadCounter) {
+        this.turnedHeadCounter = turnedHeadCounter;
     }
 }

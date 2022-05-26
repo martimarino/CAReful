@@ -57,6 +57,10 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     public float prevDisattentionLevel = 0;
     public int attentionLevel = 100;
     public static int samplingPeriod = 60;     //in seconds
+    float alpha = 0.7f;
+    int noise, drow, head, fall, usage;
+    float curv, speed;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,31 +101,28 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void run() {
 
-                    /*
-    alfa = 0.5
+                noise = mic.getNoiseDetections();       //12
+                drow = cam.getDrowsinessCounter();      //30
+                head = cam.getTurnedHeadCounter();      //12
+                usage = (mot.getUsageDetected()) ? 1 : 0;        //1
+                fall = mot.getCountFall();             //5
+                curv = mot.getCurvatureIndex();         // 1 - 3
+                speed = gps.getAvgSpeed();          //1 - 4
 
-    Iold = 70  =>  v * t *(testa +, occhi, mic, caduta, gyro) da 0 a 1 min
-    Inew = 78  =>  alfa*(v1 * t1 *(testa1, occhi1, mic1, caduta1, gyro1) + (1-alfa)*Iold
-    Inew1= 60  =>  alfa*(v2 * t2 *(testa1, occhi1, mic1, caduta1, gyro1) + (1-alfa)*Inew
-     */
-                float alpha = 0.5f;
-
-                int noise = mic.getNoiseDetections();
-                int drow = cam.getDrowsinessCounter();
-                int head = cam.getTurnedHeadCounter();
-                int fall = mot.getUsageCounter();
-                int usage = mot.getCountFall();
-                float curv = mot.getCurvatureIndex();
-                float speed = gps.getAvgSpeed();
-
-                // 0 < disattentioLevel < 700
-                disattentionLevel = (float) (speed * curv * (head + drow + 0.75*(usage) + 0.5*(noise + fall)));
+                // 0 < disattentioLevel < 1700
+                disattentionLevel = (float) (speed * curv * (3*(head + drow) + 2*(usage) + 1*(noise + fall)));
                 disattentionLevel = (int) (alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel);
                 prevDisattentionLevel = disattentionLevel;
 
-                attentionLevel = (int) (100 - (disattentionLevel/7));
+                attentionLevel = (int) (100 - (disattentionLevel/17));
 
                 binding.determinateBar.setProgress(attentionLevel);
+
+                mic.setNoiseDetections(0);
+                cam.setDrowsinessCounter(0);
+                cam.setTurnedHeadCounter(0);
+                mot.setUsageDetected(false);
+                mot.setCountFall(0);
 
             }
         }, 10,60000);
@@ -175,6 +176,31 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
                         //TODO: UI updates.
+
+                        Log.d("Attention level: ", String.valueOf(attentionLevel));
+                        Log.d("Prev disatttention: ", String.valueOf(prevDisattentionLevel));
+                        Log.d("Disattention level: ", String.valueOf(disattentionLevel));
+                        Log.d("Speed: ", String.valueOf(speed));
+                        Log.d("Noise: ", String.valueOf(noise));
+                        Log.d("Head: ", String.valueOf(head));
+                        Log.d("Drow: ", String.valueOf(drow));
+                        Log.d("Curve: ", String.valueOf(curv));
+                        Log.d("Usage: ", String.valueOf(usage));
+                        Log.d("Fall: ", String.valueOf(fall));
+
+                        Toast.makeText(getApplicationContext(),
+                                "att: " + attentionLevel
+                                + ", disatt: " + prevDisattentionLevel
+                                + ", prevDis: " + disattentionLevel
+                                + ", speed: " + speed
+                                + ", noise: " + noise
+                                + ", head: " + head
+                                + ", drow: " + drow
+                                + ", curve: " + curv
+                                + ", usage: " + usage
+                                + ", fall: " + fall,
+                                Toast.LENGTH_SHORT).show();
+
                         gps.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(StartTrip.this, mMap, foregroundActivity);
                         gps.calculateAvgSpeed();

@@ -35,7 +35,7 @@ public class MicrophoneManager {
 
     private final double referenceAmplitude = 2700.0;
     private final int AUDIO_RECORDING_DELAY = 500;
-    double mThreshold = 150;
+    double mThreshold = 40;
     public int decibelCounter = 0;
     int noiseDetections = 0;
 
@@ -115,5 +115,9 @@ public class MicrophoneManager {
 
     public int getNoiseDetections() {
         return noiseDetections;
+    }
+
+    public void setNoiseDetections(int noiseDetections) {
+        this.noiseDetections = noiseDetections;
     }
 }

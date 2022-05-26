@@ -8,16 +8,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import it.unipi.dii.inattentivedrivers.databinding.MotionActivityBinding;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.CameraActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
@@ -38,7 +35,6 @@ public class MotionManager {
     public ArrayList<Float> array;
     public ArrayList<Float> azimuts;
     public int countFall;
-    public int usageCounter;
     public boolean fall;
     public boolean usageDetected;
     public static final double highThreshold = 18.0;
@@ -151,14 +147,12 @@ public class MotionManager {
                 }
 
                 if (usageDetected==true){
-                    usageCounter++;
                     if(activity instanceof MotionActivity) {
                         TextView tv = motionActivityBinding.textView2;
-                        tv.setText("Number of usage detected: " + usageCounter);
+                        tv.setText("Number of usage detected: " + usageDetected);
                     } else {
-                        Log.d("used", String.valueOf(usageCounter));
+                        Log.d("used", String.valueOf(usageDetected));
                     }
-                    usageDetected = false;
                 }
             }
 
@@ -235,15 +229,6 @@ public class MotionManager {
         this.startTrip = startTrip;
         this.context = context;
 
-//        final Handler mHandler = new Handler();
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                //Log.d("azimut", String.valueOf(azimut));
-//                Toast.makeText(startTrip, String.valueOf(azimut), Toast.LENGTH_SHORT).show();
-//                mHandler.postDelayed(this, 100);
-//            }
-//        }, 100);
         initializeMotion(this.startTrip);
     }
 
@@ -251,12 +236,24 @@ public class MotionManager {
         return countFall;
     }
 
-    public int getUsageCounter() {
-        return usageCounter;
-    }
-
     public int getCurvatureIndex() {
         return curvatureIndex;
+    }
+
+    public boolean getUsageDetected() {
+        return usageDetected;
+    }
+
+    public void setCountFall(int countFall) {
+        this.countFall = countFall;
+    }
+
+    public void setCurvatureIndex(int curvatureIndex) {
+        this.curvatureIndex = curvatureIndex;
+    }
+
+    public void setUsageDetected(boolean usageDetected) {
+        this.usageDetected = usageDetected;
     }
 
     // RICORDARE ONPAUSE E ONRESUME!!!!!!!!!!!!!!!!!!!!!!
