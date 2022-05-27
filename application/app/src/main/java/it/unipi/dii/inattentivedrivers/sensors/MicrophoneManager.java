@@ -33,14 +33,14 @@ public class MicrophoneManager {
 
     int noiseDetections = 0;
     int noiseCounter;   //when > noiseThreshold -> noiseDetections++
-    int counterThreshold = 5;
-    double decibelThreshold = 40.0;
+    static int counterThreshold = 5;
+    static double decibelThreshold = 40.0;
 
     public static final int REQUEST_RECORD_AUDIO = 200;
 
 
     private static final String recPermission = Manifest.permission.RECORD_AUDIO;
-    public String[] sendRecPermission = {recPermission};
+    public static String[] sendRecPermission = {recPermission};
 
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){

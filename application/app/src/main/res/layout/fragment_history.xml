@@ -4,50 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
     tools:context=".ui.history.HistoryFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="107dp">
 
+        <TableLayout
+            android:id="@+id/tripList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="20dp"
+            android:stretchColumns="1">
 
-<!--        <TableLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:stretchColumns="1">-->
-
-<!--            <TableRow>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/timeDeparture"-->
-<!--                    android:padding="3dip"-->
-<!--                    android:text="" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/timeArrival"-->
-<!--                    android:layout_height="87dp"-->
-<!--                    android:padding="3dip"-->
-<!--                    android:text="" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/score"-->
-<!--                    android:padding="3dip"-->
-<!--                    android:text="" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/departure"-->
-<!--                    android:padding="3dip"-->
-<!--                    android:text="" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/arrival"-->
-<!--                    android:padding="3dip"-->
-<!--                    android:text="" />-->
-
-<!--            </TableRow>-->
-<!--        </TableLayout>-->
+        </TableLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

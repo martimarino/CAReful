@@ -11,12 +11,12 @@ import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 
 public class Trip {
 
-    public String timeDeparture;
-    public String timeArrival;
-    public String score;
-    public String departure;
-    public String arrival;
-    public Context context;
+    String timeDeparture;
+    String timeArrival;
+    String score;
+    String departure;
+    String arrival;
+    Context context;
     DatabaseHelper databaseHelper;
 
     public Trip (String t1, String t2, String s, String point1, String point2, Context context){
@@ -65,7 +65,6 @@ public class Trip {
     public void setTimeArrival(LocalDateTime timeArrival) {
         this.timeArrival = String.valueOf(timeArrival);
     }
-
 
     public void setScore(int score) {
         this.score = String.valueOf(score);

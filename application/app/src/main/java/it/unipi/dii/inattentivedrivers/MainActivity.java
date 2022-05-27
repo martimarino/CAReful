@@ -15,6 +15,8 @@ import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     public static ActivityMainBinding binding;
+    public static AppBarConfiguration appBarConfiguration;
+    public static NavController navController;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -26,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Initialize NavBar menu
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+        appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_newtrip, R.id.navigation_history, R.id.navigation_profile)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 

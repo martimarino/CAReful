@@ -37,7 +37,6 @@ public class GpsManager {
     int size;
     float avgSpeed;
 
-
     public GpsManager(Activity activity) {
         size = StartTrip.samplingPeriod / MapsActivity.getInterval();
         arr = new ArrayList(size);

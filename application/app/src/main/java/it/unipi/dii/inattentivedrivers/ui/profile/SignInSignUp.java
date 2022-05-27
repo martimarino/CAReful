@@ -1,6 +1,5 @@
 package it.unipi.dii.inattentivedrivers.ui.profile;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
-import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 import it.unipi.dii.inattentivedrivers.databinding.FragmentSigninSignupBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
-import it.unipi.dii.inattentivedrivers.ui.history.HistoryFragment;
 import it.unipi.dii.inattentivedrivers.ui.history.Trip;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 
@@ -88,8 +84,6 @@ public class SignInSignUp extends Fragment {
             }
         });
 
-
-
         signin_login.setOnClickListener(view -> {
             String username_ = username_login.getText().toString();
             String password_ = password_login.getText().toString();
@@ -101,7 +95,6 @@ public class SignInSignUp extends Fragment {
                     NewTripFragment.session.arrayList = arrayList;
                 }
                 Toast.makeText(getContext(), "Login Successful\nSee your history in the HistoryFragment", Toast.LENGTH_SHORT).show();
-
             }else{
                 Toast.makeText(getContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
