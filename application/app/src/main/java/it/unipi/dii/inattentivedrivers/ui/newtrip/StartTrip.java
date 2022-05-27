@@ -62,6 +62,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     float curv, speed;
 
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -78,10 +80,12 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             motSelected = extras.getBoolean("mot");
         }
 
-        if(micSelected)
+        if(micSelected) {
             mic = new MicrophoneManager(this);
+            ActivityCompat.requestPermissions(this, mic.sendRecPermission, MicrophoneManager.REQUEST_RECORD_AUDIO);
+        }
 
-        if(gpsSelected)
+            if(gpsSelected)
             gps = new GpsManager(this);
 
         if(motSelected)

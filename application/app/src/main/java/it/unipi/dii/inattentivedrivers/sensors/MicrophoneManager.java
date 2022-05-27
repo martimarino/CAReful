@@ -11,6 +11,7 @@ import org.tensorflow.lite.task.audio.classifier.AudioClassifier;
 import org.tensorflow.lite.task.audio.classifier.Classifications;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,14 +28,18 @@ public class MicrophoneManager {
 
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
 
-    int noiseDetections = 0;
     private String modelPath = "lite-model_yamnet_classification_tflite_1.tflite";
     private float probabilityThreshold = 0.3f;
+    String noiseType;
+    int noiseDetections = 0;
+    int noiseCounter;   //when > noiseThreshold -> noiseDetections++
+    int noiseTreshold = 5;
 
     public static final int REQUEST_RECORD_AUDIO = 200;
     private AudioClassifier classifier;
     private TensorAudio tensor;
     private AudioRecord record;
+
 
     private static final String recPermission = Manifest.permission.RECORD_AUDIO;
     public String[] sendRecPermission = {recPermission};
@@ -63,21 +68,29 @@ public class MicrophoneManager {
                     tensor.load(record);
                     List<Classifications> output = classifier.classify(tensor);
                     Category category = output.get(0).getCategories().get(0);
-                    String outputStr;
-                    outputStr = "Class: " + category.getLabel() + ", Score: " + category.getScore() +"\n";
-                    if(activity instanceof MicrophoneActivity) {
-                        activityMicrophoneBinding.textActivityMicrophone.setText(outputStr);
+                    noiseType = category.getLabel();
+                    Log.d("Class", category.getLabel());
+                    String outputStr = "";
+                    if(Objects.equals(noiseType, "Music") || Objects.equals(noiseType, "Speech")) {
+                        outputStr = "Class: " + noiseType;
+                        noiseCounter++;
+                        if (noiseCounter == noiseTreshold) {
+                            noiseDetections++;
+                            noiseCounter = 0;
+                        }
                     }
-                    else{
+                    if (activity instanceof MicrophoneActivity) {
+                        activityMicrophoneBinding.textActivityMicrophone.setText(outputStr);
+                    } else {
                         Log.d("Microphone detected: ", category.getLabel());
                     }
                 }
             };
             t = new Timer();
-            t.schedule(task, 1, 500);
+            t.schedule(task, 1, 1000);
         } catch (Exception e) {
             e.printStackTrace();
-//            activityMicrophoneBinding.textActivityMicrophone.setText(e.getMessage());
+            activityMicrophoneBinding.textActivityMicrophone.setText(e.getMessage());
         }
     }
 
