@@ -109,51 +109,54 @@ public class MotionManager {
             return;
         }
 
-        if (accGyro) {
-            accelerometerEventListener = new SensorEventListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onSensorChanged(SensorEvent sensorEvent) {
-                    mGravity = sensorEvent.values;
+        accelerometerEventListener = new SensorEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                mGravity = sensorEvent.values;
 
-                    double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
-                    if (array.size() < size) {
-                        array.add((float) magnitude);
-                    } else {
-                        array.clear();
-                        array.add((float) magnitude);
-                    }
+                double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
+                if (array.size() < size) {
+                    array.add((float) magnitude);
+                } else {
+                    array.clear();
+                    array.add((float) magnitude);
+                }
 
-                    for (int i = 0; i < array.size(); i++) {
-                        if (array.get(i) < lowThreshold) {
-                            for (int j = i + 1; j < array.size(); j++) {
-                                if (array.get(j) > highThreshold) {
-                                    fall = true;
-                                    break;
-                                }
+                for (int i = 0; i < array.size(); i++) {
+                    if (array.get(i) < lowThreshold) {
+                        for (int j = i + 1; j < array.size(); j++) {
+                            if (array.get(j) > highThreshold) {
+                                fall = true;
+                                break;
                             }
                         }
                     }
+                }
 
-                    if (fall == true) {
-                        array.clear();
-                        fall = false;
-                        countFall = countFall + 1;
-                        if (activity instanceof MotionActivity) {
-                            TextView tv = motionActivityBinding.tvFalls;
-                            tv.setText("Falls detected: " + Integer.toString(countFall));
-                        } else {
-                            Log.d("Fall detection:", String.valueOf(countFall));
-                        }
+                if (fall) {
+                    array.clear();
+                    fall = false;
+                    countFall = countFall + 1;
+                    if (activity instanceof MotionActivity) {
+                        TextView tv = motionActivityBinding.tvFalls;
+                        tv.setText("Falls detected: " + Integer.toString(countFall));
+                    } else {
+                        Log.d("Fall detection:", String.valueOf(countFall));
                     }
                 }
+            }
 
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int i) {
-                }
-            };
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
+
+        if(accGyro) {
             gyroscopeEventListener = new SensorEventListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onSensorChanged(SensorEvent sensorEvent) {
                     if ((sensorEvent.values[0] > usageThreshold) ||
@@ -164,7 +167,7 @@ public class MotionManager {
                             (sensorEvent.values[2] < -usageThreshold))
                         usageDetected = true;
 
-                    if (usageDetected == true) {
+                    if (usageDetected) {
                         if (activity instanceof MotionActivity) {
                             TextView tv = motionActivityBinding.tvUsages;
                             tv.setText("Usage detected: " + usageDetected);
@@ -178,7 +181,6 @@ public class MotionManager {
                 public void onAccuracyChanged(Sensor sensor, int i) {
                 }
             };
-            sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
             sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
@@ -187,8 +189,9 @@ public class MotionManager {
             magnetometerEventListener = new SensorEventListener() {
                 @Override
                 public void onSensorChanged(SensorEvent sensorEvent) {
-                    mGravity = sensorEvent.values;
+
                     mGeomagnetic = sensorEvent.values;
+
                     if (mGravity != null && mGeomagnetic != null) {
                         getOrientation(activity);
                     }
@@ -208,15 +211,16 @@ public class MotionManager {
         float R[] = new float[9];
         float I[] = new float[9];
         boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-        if (success) {  activityMapsBinding.tvTortuosity.setText("CIAO");
-            float orientation[] = new float[3];
+
+        if (success) {
+            float[] orientation = new float[3];
             SensorManager.getOrientation(R, orientation);
             azimut = Math.abs(orientation[0]); // orientation contains: azimut, pitch and roll
             azimuts.add(azimut);
-            if(azimuts.size()==300){
+            if(azimuts.size() == 300){
                 float sum = 0;
                 Log.d("azimuts", String.valueOf(azimuts));
-                for (int i = 0; i<azimuts.size()-1; i++){
+                for (int i = 0; i < azimuts.size()-1; i++){
                     if (Math.abs(azimuts.get(i) - azimuts.get(i+1)) > tol){
                         sum = sum + Math.abs(azimuts.get(i) - azimuts.get(i+1));
                     }

@@ -108,12 +108,18 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void run() {
 
-                noise = mic.getNoiseDetections();       //12
-                drow = cam.getDrowsinessCounter();      //30
-                head = cam.getTurnedHeadCounter();      //12
-                usage = (mot.getUsageDetected()) ? 1 : 0;        //1
-                fall = mot.getCountFall();             //5
-                curv = mot.getCurvatureIndex();         // 1 - 3
+                if(micSelected)
+                    noise = mic.getNoiseDetections();       //12
+                if(camSelected) {
+                    drow = cam.getDrowsinessCounter();      //30
+                    head = cam.getTurnedHeadCounter();      //12
+                }
+                if(motSelected) {
+                    usage = (mot.getUsageDetected()) ? 1 : 0;        //1
+                    fall = mot.getCountFall();             //5
+                }
+                if(magSelected)
+                    curv = mot.getCurvatureIndex();         // 1 - 3
                 speed = gps.getAvgSpeed();          //1 - 4
 
                 // 0 < disattentioLevel < 1700
@@ -127,12 +133,16 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 anim.setDuration(3000);
                 progressBar.startAnimation(anim);
 
-                mic.setNoiseDetections(0);
-                cam.setDrowsinessCounter(0);
-                cam.setTurnedHeadCounter(0);
-                mot.setUsageDetected(false);
-                mot.setCountFall(0);
-
+                if(micSelected)
+                    mic.setNoiseDetections(0);
+                if(camSelected) {
+                    cam.setDrowsinessCounter(0);
+                    cam.setTurnedHeadCounter(0);
+                }
+                if(motSelected) {
+                    mot.setUsageDetected(false);
+                    mot.setCountFall(0);
+                }
             }
         }, 10,60000);
     }
