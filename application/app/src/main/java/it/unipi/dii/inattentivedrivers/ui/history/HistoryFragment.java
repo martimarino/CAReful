@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 import it.unipi.dii.inattentivedrivers.ui.profile.Session;
 import it.unipi.dii.inattentivedrivers.ui.profile.SignInSignUp;
 
@@ -31,10 +32,10 @@ public class HistoryFragment extends Fragment {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        if (SignInSignUp.session.arrayList == null){
+        if (NewTripFragment.session.arrayList == null){
             Log.d("ArrayList", "ArrayList empty");
         } else {
-            Log.d("ArrayList", String.valueOf(SignInSignUp.session.getArrayList()));
+            Log.d("ArrayList", String.valueOf(NewTripFragment.session.getArrayList()));
         }
         // history = binding.history;
 

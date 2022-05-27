@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentNewtripBinding;
+import it.unipi.dii.inattentivedrivers.ui.profile.Session;
 
 public class NewTripFragment extends Fragment {
 
@@ -24,12 +25,17 @@ public class NewTripFragment extends Fragment {
     Button start;
     Switch developMode;
 
+    public static Session session;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentNewtripBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        if (session == null) {
+            session = new Session("anonymous", null);
+        }
         start = binding.start;
         developMode = binding.developMode;
 

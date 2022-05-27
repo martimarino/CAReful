@@ -20,10 +20,10 @@ import it.unipi.dii.inattentivedrivers.databinding.FragmentSigninSignupBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
 import it.unipi.dii.inattentivedrivers.ui.history.HistoryFragment;
 import it.unipi.dii.inattentivedrivers.ui.history.Trip;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 
 public class SignInSignUp extends Fragment {
 
-    public static Session session;
     DatabaseHelper databaseHelper;
     EditText username, name, surname, email, password, repeat_password, username_login, password_login;
     Button signup_reg, signin_reg, signin_login, signup_login;
@@ -95,10 +95,10 @@ public class SignInSignUp extends Fragment {
             String password_ = password_login.getText().toString();
             Boolean checklogin = databaseHelper.CheckLogin(username_, password_);
             if(checklogin == true){
-                session = new Session(username_, null);
+                NewTripFragment.session.username = username_;
                 ArrayList<Trip> arrayList = databaseHelper.retrieveHistory(username_);
                 if (arrayList.size() > 0){
-                    session.arrayList = arrayList;
+                    NewTripFragment.session.arrayList = arrayList;
                 }
                 Toast.makeText(getContext(), "Login Successful\nSee your history in the HistoryFragment", Toast.LENGTH_SHORT).show();
 

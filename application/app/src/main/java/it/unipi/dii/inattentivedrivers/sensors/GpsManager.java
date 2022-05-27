@@ -99,14 +99,15 @@ public class GpsManager {
             }
             else {
                 if (addresses.size() > 0) {
-//                    yourtextfieldname.setText(addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality() +", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
-                    return  addresses.get(0).getFeatureName() + addresses.get(0).getAdminArea() + addresses.get(0).getLocality();
+                    String addr = addresses.get(0).getAddressLine(0);
+                    return addr;
                 }
             }
         }
         catch (Exception e) {
             e.printStackTrace(); // getFromLocation() may sometimes fail
+            return e.getMessage();
         }
-        return "";
+        return null;
     }
 }

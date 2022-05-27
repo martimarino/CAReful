@@ -7,8 +7,7 @@ import android.widget.Toast;
 import java.time.LocalDateTime;
 
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
-import it.unipi.dii.inattentivedrivers.ui.profile.Session;
-import it.unipi.dii.inattentivedrivers.ui.profile.SignInSignUp;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 
 public class Trip {
 
@@ -28,8 +27,6 @@ public class Trip {
         arrival = point2;
         this.context = context;
         databaseHelper = new DatabaseHelper(context);
-        //how many times you have been distracted for every sensor
-        //or for how much time
     }
 
     public Trip (String t1, String t2, String s, String point1, String point2){
@@ -38,11 +35,9 @@ public class Trip {
         score = s;
         departure = point1;
         arrival = point2;
-        //how many times you have been distracted for every sensor
-        //or for how much time
     }
 
-    public String getTimeDeperture() {
+    public String getTimeDeparture() {
         return timeDeparture;
     }
 
@@ -85,9 +80,12 @@ public class Trip {
     }
 
     public void insertData() {
-        databaseHelper.insertHistory(SignInSignUp.session.username, String.valueOf(getTimeDeperture()),
-                String.valueOf(getTimeArrival()), String.valueOf(getScore()),
-                getDeparture(), getArrival());
+        if (databaseHelper.checkUsername(NewTripFragment.session.username) == false) {
+            databaseHelper.insertHistory(NewTripFragment.session.username, String.valueOf(getTimeDeparture()),
+                    String.valueOf(getTimeArrival()), String.valueOf(getScore()),
+                    getDeparture(), getArrival());
+        } else {
+            Toast.makeText(context, "Please sign in to save your next trip!", Toast.LENGTH_SHORT).show();
+        }
     }
-
 }

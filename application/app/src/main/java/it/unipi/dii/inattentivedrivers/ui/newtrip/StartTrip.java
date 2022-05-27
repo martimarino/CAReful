@@ -72,7 +72,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     Button stop;
     public LocalDateTime timeDeparture;
     public LocalDateTime timeArrival;
-    public float duration;
     public int score;
     public String departure = null;
     public String arrival;
@@ -108,7 +107,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         }
 
         if(motSelected)
-            mot = new MotionManager(this, getApplicationContext());
+            mot = new MotionManager(this, getApplicationContext(), motSelected, magSelected);
         
         gps = new GpsManager(this);
         getCurrentLocation();
@@ -169,13 +168,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                     mot.setUsageDetected(false);
                     mot.setCountFall(0);
                 }
-
-                mic.setNoiseDetections(0);
-                cam.setDrowsinessCounter(0);
-                cam.setTurnedHeadCounter(0);
-                mot.setUsageDetected(false);
-                mot.setCountFall(0);
-
             }
         }, 10,60000);
     }
@@ -189,8 +181,10 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             score = (int)progressBar;
             Trip trip = new Trip(String.valueOf(timeDeparture), String.valueOf(timeArrival), String.valueOf(score), departure, arrival, getApplicationContext());
             trip.insertData();
+            if(motSelected || magSelected)
+                mot.unregisterListeners(motSelected, magSelected);
+            this.onBackPressed();
         });
-
     }
 
     @Override
@@ -293,7 +287,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         resumeTimes++;
         if(resumeTimes > 0) {
             Log.d("Resume times: ", String.valueOf(resumeTimes));
-            Toast.makeText(StartTrip.this, "Resume detected", Toast.LENGTH_SHORT).show();
             if(motSelected || magSelected)
                 mot.registerListeners(motSelected, magSelected);
         }
@@ -329,16 +322,5 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         Log.d("Usage: ", String.valueOf(usage));
         Log.d("Fall: ", String.valueOf(fall));
 
-        Toast.makeText(getApplicationContext(),
-                "att: " + attentionLevel
-                        + ", disatt: " + prevDisattentionLevel
-                        + ", avg: " + speed
-                        + ", db: " + noise
-                        + ", h: " + head
-                        + ", d: " + drow
-                        + ", c: " + curv
-                        + ", u: " + usage
-                        + ", f: " + fall,
-                Toast.LENGTH_SHORT).show();
     }
 }
