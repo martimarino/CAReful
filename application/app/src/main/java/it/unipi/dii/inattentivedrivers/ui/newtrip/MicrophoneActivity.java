@@ -16,12 +16,6 @@ public class MicrophoneActivity extends AppCompatActivity {
     ActivityMicrophoneBinding binding;
     MicrophoneManager mic;
 
-    // TODO 2.1: defines the model to be used
-    private String modelPath = "lite-model_yamnet_classification_tflite_1.tflite";
-
-    // TODO 2.2: defining the minimum threshold
-    private float probabilityThreshold = 0.3f;
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
