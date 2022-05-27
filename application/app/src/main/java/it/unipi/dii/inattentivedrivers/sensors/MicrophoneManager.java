@@ -3,9 +3,13 @@ package it.unipi.dii.inattentivedrivers.sensors;
 import android.Manifest;
 import android.app.Activity;
 import android.media.MediaRecorder;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -13,6 +17,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +43,7 @@ public class MicrophoneManager {
     double mThreshold = 40;
     public int decibelCounter = 0;
     int noiseDetections = 0;
+    String mFileName;
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
         this.microphoneActivity = microphoneActivity;
@@ -62,6 +68,7 @@ public class MicrophoneManager {
         Dexter.withContext(activity)
                 .withPermissions(new String[]{Manifest.permission.RECORD_AUDIO})
                 .withListener(new MultiplePermissionsListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                         startRecording(activity);
@@ -74,6 +81,7 @@ public class MicrophoneManager {
                 }).check();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void startRecording(Activity activity) {
 
         mRecorder = new MediaRecorder();

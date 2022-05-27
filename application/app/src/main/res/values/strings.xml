@@ -20,4 +20,5 @@
     <string name="name">Name</string>
     <string name="username">Username</string>
     <string name="signin">Sign in</string>
+    <string name="title_stoptrip">STOP TRIP</string>
 </resources>

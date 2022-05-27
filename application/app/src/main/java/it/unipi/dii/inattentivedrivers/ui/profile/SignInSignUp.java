@@ -1,5 +1,6 @@
 package it.unipi.dii.inattentivedrivers.ui.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +12,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+
+import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
+import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 import it.unipi.dii.inattentivedrivers.databinding.FragmentSigninSignupBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
+import it.unipi.dii.inattentivedrivers.ui.history.HistoryFragment;
+import it.unipi.dii.inattentivedrivers.ui.history.Trip;
 
 public class SignInSignUp extends Fragment {
 
+    public static Session session;
     DatabaseHelper databaseHelper;
-    EditText username, name, surname, email, password, repeat_password;
+    EditText username, name, surname, email, password, repeat_password, username_login, password_login;
     Button signup_reg, signin_reg, signin_login, signup_login;
 
     FragmentSigninSignupBinding binding;
@@ -39,6 +47,8 @@ public class SignInSignUp extends Fragment {
         signin_reg = binding.signinReg;
         signin_login = binding.signinLogin;
         signup_login = binding.signupLogin;
+        username_login = binding.username;
+        password_login = binding.password;
 
         signin_reg.setOnClickListener(view -> {
             binding.containerSignup.setVisibility(View.INVISIBLE);
@@ -57,7 +67,7 @@ public class SignInSignUp extends Fragment {
                 Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
                 if (password_.equals(repeat_password_)) {
-                    boolean checkusername = databaseHelper.CheckUsername(username_);
+                    boolean checkusername = databaseHelper.checkUsername(username_);
                     if (checkusername) {
                         boolean insert = databaseHelper.Insert(username_, name_, surname_, email_, password_, repeat_password_ );
                         if (insert) {
@@ -78,12 +88,20 @@ public class SignInSignUp extends Fragment {
             }
         });
 
+
+
         signin_login.setOnClickListener(view -> {
-            String username_ = username.getText().toString();
-            String password_ = password.getText().toString();
+            String username_ = username_login.getText().toString();
+            String password_ = password_login.getText().toString();
             Boolean checklogin = databaseHelper.CheckLogin(username_, password_);
-            if(checklogin){
-                Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+            if(checklogin == true){
+                session = new Session(username_, null);
+                ArrayList<Trip> arrayList = databaseHelper.retrieveHistory(username_);
+                if (arrayList.size() > 0){
+                    session.arrayList = arrayList;
+                }
+                Toast.makeText(getContext(), "Login Successful\nSee your history in the HistoryFragment", Toast.LENGTH_SHORT).show();
+
             }else{
                 Toast.makeText(getContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
             }

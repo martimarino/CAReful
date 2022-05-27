@@ -3,12 +3,15 @@ package it.unipi.dii.inattentivedrivers.ui.newtrip;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -22,6 +25,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,6 +36,8 @@ import it.unipi.dii.inattentivedrivers.sensors.CameraManager;
 import it.unipi.dii.inattentivedrivers.sensors.GpsManager;
 import it.unipi.dii.inattentivedrivers.sensors.MicrophoneManager;
 import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
+import it.unipi.dii.inattentivedrivers.ui.history.Trip;
+
 
 public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -55,13 +62,23 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     Timer t;
     public float disattentionLevel;
     public float prevDisattentionLevel = 0;
-    public int attentionLevel = 100;
+    public float attentionLevel = 100f;
     public static int samplingPeriod = 60;     //in seconds
     float alpha = 0.7f;
-    int noise, drow, head, fall, usage;
+    float noise, drow, head, fall, usage;
     float curv, speed;
+    float progressBar;
+
+    Button stop;
+    public LocalDateTime timeDeparture;
+    public LocalDateTime timeArrival;
+    public float duration;
+    public int score;
+    public String departure = null;
+    public String arrival;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -70,6 +87,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         setContentView(binding.getRoot());
 
         Bundle extras = getIntent().getExtras();
+
+        timeDeparture = LocalDateTime.now();
+        score = 0;
 
         if (extras != null) {
             micSelected = extras.getBoolean("mic");
@@ -83,12 +103,14 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
         if(gpsSelected)
             gps = new GpsManager(this);
+
         if(motSelected)
             mot = new MotionManager(this, getApplicationContext());
 
         if(camSelected)
             cam = new CameraManager(this, binding);
 
+        setStopButton();
         getCurrentLocation();
         startAttentionDetection();
 
@@ -101,22 +123,21 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void run() {
 
-                noise = mic.getNoiseDetections();       //12
-                drow = cam.getDrowsinessCounter();      //30
-                head = cam.getTurnedHeadCounter();      //12
-                usage = (mot.getUsageDetected()) ? 1 : 0;        //1
-                fall = mot.getCountFall();             //5
+                noise = mic.getNoiseDetections();       // 12/30
+                drow = cam.getDrowsinessCounter();      // 30/30
+                head = cam.getTurnedHeadCounter();      // 12/30
+                usage = (mot.getUsageDetected()) ? 1 : 0;        // 1/30
+                fall = mot.getCountFall();             // 5/30
                 curv = mot.getCurvatureIndex();         // 1 - 3
-                speed = gps.getAvgSpeed();          //1 - 4
+                speed = gps.getAvgSpeed();          // 1 - 4
 
-                // 0 < disattentioLevel < 1700
-                disattentionLevel = (float) (speed * curv * (3*(head + drow) + 2*(usage) + 1*(noise + fall)));
-                disattentionLevel = (int) (alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel);
+                disattentionLevel = (float) ((speed/4 + curv/3)* (head/12 + drow/30 + usage + noise/12 + fall/5));
+                disattentionLevel = (float) (alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel);
                 prevDisattentionLevel = disattentionLevel;
+                attentionLevel = (float) (10 - (disattentionLevel));
 
-                attentionLevel = (int) (100 - (disattentionLevel/17));
-
-                binding.determinateBar.setProgress(attentionLevel);
+                progressBar = (float) attentionLevel *100 / 10;
+                binding.determinateBar.setProgress((int)progressBar);
 
                 mic.setNoiseDetections(0);
                 cam.setDrowsinessCounter(0);
@@ -126,6 +147,19 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
             }
         }, 10,60000);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setStopButton() {
+        stop = binding.stop;
+        stop.setOnClickListener(view -> {
+            arrival = gps.getAddress(this);
+            timeArrival = LocalDateTime.now();
+            score = (int)progressBar;
+            Trip trip = new Trip(String.valueOf(timeDeparture), String.valueOf(timeArrival), String.valueOf(score), departure, arrival, getApplicationContext());
+            trip.insertData();
+        });
+
     }
 
     @Override
@@ -153,6 +187,10 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         task.addOnSuccessListener(location -> {
 
             if (location != null) {
+                gps.currentLocation = location;
+                if (departure == null){
+                    departure = gps.getAddress(this);
+                }
                 gps.currentLocation = location;
                 SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
@@ -190,8 +228,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
                         Toast.makeText(getApplicationContext(),
                                 "att: " + attentionLevel
-                                + ", disatt: " + prevDisattentionLevel
-                                + ", prevDis: " + disattentionLevel
+                                + ", disatt: " + disattentionLevel
+                                + ", prevDis: " + prevDisattentionLevel
+                                        + ", progressBar: " + progressBar
                                 + ", speed: " + speed
                                 + ", noise: " + noise
                                 + ", head: " + head
@@ -261,4 +300,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         foregroundActivity = false;
         mMap = null;
     }
+
+
+
 }

@@ -3,6 +3,8 @@ package it.unipi.dii.inattentivedrivers.sensors;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,6 +29,8 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MapsActivity;
@@ -34,7 +38,7 @@ import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
 public class GpsManager {
 
-    public static Location currentLocation;
+    public Location currentLocation;
     public static FusedLocationProviderClient fusedLocationProviderClient;
     public LatLng current;
     ArrayList arr;
@@ -92,5 +96,25 @@ public class GpsManager {
         else{
             return 4;
         }
+    }
+
+    public String getAddress(Activity activity) {
+        try {
+            Geocoder geo = new Geocoder(activity.getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geo.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+            if (addresses.isEmpty()) {
+                return "Waiting for Location";
+            }
+            else {
+                if (addresses.size() > 0) {
+//                    yourtextfieldname.setText(addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality() +", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName());
+                    return  addresses.get(0).getFeatureName() + addresses.get(0).getAdminArea() + addresses.get(0).getLocality();
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace(); // getFromLocation() may sometimes fail
+        }
+        return "";
     }
 }
