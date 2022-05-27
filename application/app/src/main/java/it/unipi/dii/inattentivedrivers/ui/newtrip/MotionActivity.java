@@ -5,18 +5,18 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.unipi.dii.inattentivedrivers.databinding.MotionActivityBinding;
+import it.unipi.dii.inattentivedrivers.databinding.ActivityMotionBinding;
 import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
 
 public class MotionActivity extends AppCompatActivity {
 
     MotionManager mot;
-    MotionActivityBinding binding;
+    ActivityMotionBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        binding = MotionActivityBinding.inflate(getLayoutInflater());
+        binding = ActivityMotionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mot = new MotionManager(this, binding, getApplicationContext());

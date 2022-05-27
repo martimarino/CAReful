@@ -2,6 +2,7 @@ package it.unipi.dii.inattentivedrivers.ui.newtrip;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -87,8 +88,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, mic.sendRecPermission, MicrophoneManager.REQUEST_RECORD_AUDIO);
         }
 
-            if(gpsSelected)
-            gps = new GpsManager(this);
+        gps = new GpsManager(this);
+        getCurrentLocation();
 
         if(motSelected)
             mot = new MotionManager(this, getApplicationContext());
@@ -96,7 +97,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         if(camSelected)
             cam = new CameraManager(this, binding);
 
-        getCurrentLocation();
         startAttentionDetection();
 
     }
@@ -115,6 +115,30 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 fall = mot.getCountFall();             //5
                 curv = mot.getCurvatureIndex();         // 1 - 3
                 speed = gps.getAvgSpeed();          //1 - 4
+
+                Log.d("Attention level: ", String.valueOf(attentionLevel));
+                Log.d("Prev disatttention: ", String.valueOf(prevDisattentionLevel));
+                Log.d("Disattention level: ", String.valueOf(disattentionLevel));
+                Log.d("Speed: ", String.valueOf(speed));
+                Log.d("Noise: ", String.valueOf(noise));
+                Log.d("Head: ", String.valueOf(head));
+                Log.d("Drow: ", String.valueOf(drow));
+                Log.d("Curve: ", String.valueOf(curv));
+                Log.d("Usage: ", String.valueOf(usage));
+                Log.d("Fall: ", String.valueOf(fall));
+
+                Toast.makeText(getApplicationContext(),
+                        "att: " + attentionLevel
+                                + ", disatt: " + prevDisattentionLevel
+                                + ", prevDis: " + disattentionLevel
+                                + ", speed: " + speed
+                                + ", noise: " + noise
+                                + ", head: " + head
+                                + ", drow: " + drow
+                                + ", curve: " + curv
+                                + ", usage: " + usage
+                                + ", fall: " + fall,
+                        Toast.LENGTH_SHORT).show();
 
                 // 0 < disattentioLevel < 1700
                 disattentionLevel = (float) (speed * curv * (3*(head + drow) + 2*(usage) + 1*(noise + fall)));
@@ -186,30 +210,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                     if (location != null) {
                         //TODO: UI updates.
 
-                        Log.d("Attention level: ", String.valueOf(attentionLevel));
-                        Log.d("Prev disatttention: ", String.valueOf(prevDisattentionLevel));
-                        Log.d("Disattention level: ", String.valueOf(disattentionLevel));
-                        Log.d("Speed: ", String.valueOf(speed));
-                        Log.d("Noise: ", String.valueOf(noise));
-                        Log.d("Head: ", String.valueOf(head));
-                        Log.d("Drow: ", String.valueOf(drow));
-                        Log.d("Curve: ", String.valueOf(curv));
-                        Log.d("Usage: ", String.valueOf(usage));
-                        Log.d("Fall: ", String.valueOf(fall));
-
-                        Toast.makeText(getApplicationContext(),
-                                "att: " + attentionLevel
-                                + ", disatt: " + prevDisattentionLevel
-                                + ", prevDis: " + disattentionLevel
-                                + ", speed: " + speed
-                                + ", noise: " + noise
-                                + ", head: " + head
-                                + ", drow: " + drow
-                                + ", curve: " + curv
-                                + ", usage: " + usage
-                                + ", fall: " + fall,
-                                Toast.LENGTH_SHORT).show();
-
                         gps.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(StartTrip.this, mMap, foregroundActivity);
                         gps.calculateAvgSpeed();
@@ -245,9 +245,11 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onPause() {
         super.onPause();
-        MotionManager.sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
-        MotionManager.sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
-        MotionManager.sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
+        if(motSelected) {
+            MotionManager.sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
+            MotionManager.sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
+            MotionManager.sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
+        }
     }
 
     @Override
@@ -258,9 +260,11 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             Log.d("Resume times: ", String.valueOf(resumeTimes));
             Toast.makeText(StartTrip.this, "Resume detected", Toast.LENGTH_SHORT).show();
         }
-        mot.sensorManager.registerListener(mot.accelerometerEventListener, mot.accelerometerSensor, MotionManager.sensorManager.SENSOR_DELAY_NORMAL);
-        mot.sensorManager.registerListener(mot.gyroscopeEventListener, mot.gyroscopeSensor, MotionManager.sensorManager.SENSOR_DELAY_NORMAL);
-        mot.sensorManager.registerListener(mot.magnetometerEventListener, mot.magnetometerSensor, MotionManager.sensorManager.SENSOR_DELAY_NORMAL);
+        if(motSelected) {
+            MotionManager.sensorManager.registerListener(MotionManager.accelerometerEventListener, MotionManager.accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            MotionManager.sensorManager.registerListener(MotionManager.gyroscopeEventListener, MotionManager.gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            MotionManager.sensorManager.registerListener(MotionManager.magnetometerEventListener, MotionManager.magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
         foregroundActivity = true;
     }
 
