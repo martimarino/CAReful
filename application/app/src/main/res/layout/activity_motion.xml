@@ -11,8 +11,8 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="81dp"
+            android:id="@+id/tvFalls"
+            android:layout_width="150dp"
             android:layout_height="58dp"
             android:text=""
             android:textAlignment="center"
@@ -24,8 +24,8 @@
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="81dp"
+            android:id="@+id/tvUsages"
+            android:layout_width="150dp"
             android:layout_height="58dp"
             android:text=""
             android:textAlignment="center"

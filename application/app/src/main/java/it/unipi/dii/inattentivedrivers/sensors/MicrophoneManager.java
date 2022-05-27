@@ -1,26 +1,13 @@
 package it.unipi.dii.inattentivedrivers.sensors;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.media.AudioFormat;
 import android.media.MediaRecorder;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import androidx.core.app.ActivityCompat;
 
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMicrophoneBinding;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MicrophoneActivity;
@@ -33,93 +20,104 @@ public class MicrophoneManager {
 
     StartTrip startTrip;
 
-    boolean decibelVisible;
-    public MediaRecorder mRecorder;
-
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
 
-    private final double referenceAmplitude = 2700.0;
-    private final int AUDIO_RECORDING_DELAY = 500;
-    double mThreshold = 40;
-    public int decibelCounter = 0;
+    private static final String TAG = "AudioRecord";
+    static final int SAMPLE_RATE_IN_HZ = 8000;
+    static final int BUFFER_SIZE = android.media.AudioRecord.getMinBufferSize(SAMPLE_RATE_IN_HZ,
+            AudioFormat.CHANNEL_IN_DEFAULT, AudioFormat.ENCODING_PCM_16BIT);
+    android.media.AudioRecord mAudioRecord;
+    boolean isGetVoiceRun;
+    Object mLock;
+    public double decibelMeasure;
+
     int noiseDetections = 0;
-    String mFileName;
+    int noiseCounter;   //when > noiseThreshold -> noiseDetections++
+    int counterThreshold = 5;
+    double decibelThreshold = 40.0;
+
+    public static final int REQUEST_RECORD_AUDIO = 200;
+
+
+    private static final String recPermission = Manifest.permission.RECORD_AUDIO;
+    public String[] sendRecPermission = {recPermission};
+
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
+
+        mLock = new Object();
         this.microphoneActivity = microphoneActivity;
         this.activityMicrophoneBinding = activityMicrophoneBinding;
-        mRecorder = null;
-        decibelVisible = true;
-        initializeMicrophone(microphoneActivity);
+
     }
 
     public MicrophoneManager(StartTrip startTrip){
+
+        mLock = new Object();
         this.startTrip = startTrip;
-        decibelVisible = false;
-        mRecorder = null;
-        initializeMicrophone(startTrip);
+
     }
 
-    private void makeToast(String text, Activity activity) {
-        Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
-    }
+    public void initializeMicrophone (Context context) {
 
-    public void initializeMicrophone(Activity activity) {
-        Dexter.withContext(activity)
-                .withPermissions(new String[]{Manifest.permission.RECORD_AUDIO})
-                .withListener(new MultiplePermissionsListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        startRecording(activity);
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                        makeToast("Permissions Required!", activity);
-                    }
-                }).check();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void startRecording(Activity activity) {
-
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mRecorder.setOutputFile("/dev/null");
-        try {
-            mRecorder.prepare();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (isGetVoiceRun) {
+            Log.e(TAG, "Still recording it");
+            return;
         }
-        mRecorder.start();
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mAudioRecord = new android.media.AudioRecord(MediaRecorder.AudioSource.MIC,
+                SAMPLE_RATE_IN_HZ, AudioFormat.CHANNEL_IN_DEFAULT,
+                AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE);
+        if (mAudioRecord == null) {
+            Log.e("sound", "mAudioRecord initialization failed");
+        }
+        isGetVoiceRun = true;
 
-        final Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                double amp = mRecorder.getMaxAmplitude();
-                double decibel = (20*amp / referenceAmplitude);
-                if (decibel > mThreshold) {
-                    Log.d("amplitude", "too much noise");
-                    decibelCounter = decibelCounter + 1;
-                    if (decibelCounter == 5) {
-                        noiseDetections += 1;
-                        Log.d("Noise detection", String.valueOf(noiseDetections));
-                        if (decibelVisible) {
-                            makeToast("Noise detected", activity);
-                        }
-                    }
-                } else decibelCounter = 0;
-                if (decibelVisible) {
-                    activityMicrophoneBinding.textActivityMicrophone.setText("Decibel: " + String.format(Locale.US, "%.1f", decibel));
+        new Thread(() -> {
+            mAudioRecord.startRecording();
+            short[] buffer = new short[BUFFER_SIZE];
+            while (isGetVoiceRun) {
+                //r is the actual length of data read, generally speaking, r will be less than buffersize
+                int r = mAudioRecord.read(buffer, 0, BUFFER_SIZE);
+                long v = 0;
+                // Take out the contents of buffer. Do the sum of squares
+                for (int i = 0; i <buffer.length; i++) {
+                    v += buffer[i] * buffer[i];
                 }
-                mHandler.postDelayed(this, AUDIO_RECORDING_DELAY);
+                // Divide the sum of squares by the total length of the data to get the volume.
+                double mean = v / (double) r;
+                double volume = 10 * Math.log10(mean);
+                Log.d(TAG, "Decibel value:" + volume);
+                decibelMeasure = volume;
+                String outputStr = "";
+                if(decibelMeasure > decibelThreshold) {
+                    outputStr = "Decibels: " + decibelMeasure;
+                    noiseCounter++;
+                    if (noiseCounter == counterThreshold) {
+                        noiseDetections++;
+                        noiseCounter = 0;
+                    }
+                }
+                if (context instanceof MicrophoneActivity)
+                    activityMicrophoneBinding.textActivityMicrophone.setText(outputStr);
+                Log.d("Decibel detected: ", String.valueOf(decibelMeasure));
+                // About ten times a second
+                synchronized (mLock) {
+                    try {
+                        mLock.wait(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }, AUDIO_RECORDING_DELAY);
+            mAudioRecord.stop();
+            mAudioRecord.release();
+            mAudioRecord = null;
+        }).start();
     }
+
 
     public int getNoiseDetections() {
         return noiseDetections;
