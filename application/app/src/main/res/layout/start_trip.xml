@@ -34,7 +34,8 @@
     <FrameLayout
         android:id="@+id/parentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="594dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <com.otaliastudios.cameraview.CameraView
             android:id="@+id/cameraView"

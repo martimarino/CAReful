@@ -2,7 +2,6 @@ package it.unipi.dii.inattentivedrivers.ui.newtrip;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -123,13 +122,12 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 speed = gps.getAvgSpeed();          //1 - 4
 
                 // 0 < disattentioLevel < 1700
-                disattentionLevel = (float) (speed * curv * (3*(head + drow) + 2*(usage) + 1*(noise + fall)));
+                disattentionLevel = (float) ((speed/4 + curv/3)* (head/12 + drow/30 + usage + noise/12 + fall/5));
                 disattentionLevel = (int) (alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel);
                 prevDisattentionLevel = disattentionLevel;
+                attentionLevel = (int) (10 - (disattentionLevel));
 
-                attentionLevel = (int) (100 - (disattentionLevel/17));
-
-                anim = new ProgressBarAnimation(progressBar, progressBar.getProgress(), attentionLevel);
+                anim = new ProgressBarAnimation(progressBar, progressBar.getProgress(), attentionLevel*100/10);
                 anim.setDuration(3000);
                 progressBar.startAnimation(anim);
 
@@ -198,7 +196,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
                         print();
 
-                        gps.currentLocation = locationResult.getLastLocation();
+                        GpsManager.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(StartTrip.this, mMap, foregroundActivity);
                         gps.calculateAvgSpeed();
                     }
@@ -233,11 +231,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onPause() {
         super.onPause();
-        if(motSelected) {
-            MotionManager.sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
-            MotionManager.sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
-            MotionManager.sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
-        }
+        if(motSelected || magSelected)
+            mot.unregisterListeners(motSelected, magSelected);
     }
 
     @Override
@@ -247,11 +242,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         if(resumeTimes > 0) {
             Log.d("Resume times: ", String.valueOf(resumeTimes));
             Toast.makeText(StartTrip.this, "Resume detected", Toast.LENGTH_SHORT).show();
-        }
-        if(motSelected) {
-            MotionManager.sensorManager.registerListener(MotionManager.accelerometerEventListener, MotionManager.accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            MotionManager.sensorManager.registerListener(MotionManager.gyroscopeEventListener, MotionManager.gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            MotionManager.sensorManager.registerListener(MotionManager.magnetometerEventListener, MotionManager.magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            if(motSelected || magSelected)
+                mot.registerListeners(motSelected, magSelected);
         }
         foregroundActivity = true;
     }
@@ -260,6 +252,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     protected void onStop() {
         super.onStop();
         t.cancel();
+        if(motSelected || magSelected)
+            mot.unregisterListeners(motSelected, magSelected);
         foregroundActivity = false;
     }
 
@@ -286,14 +280,13 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         Toast.makeText(getApplicationContext(),
                 "att: " + attentionLevel
                         + ", disatt: " + prevDisattentionLevel
-                        + ", prevDis: " + disattentionLevel
-                        + ", speed: " + speed
-                        + ", noise: " + noise
-                        + ", head: " + head
-                        + ", drow: " + drow
-                        + ", curve: " + curv
-                        + ", usage: " + usage
-                        + ", fall: " + fall,
+                        + ", avg: " + speed
+                        + ", db: " + noise
+                        + ", h: " + head
+                        + ", d: " + drow
+                        + ", c: " + curv
+                        + ", u: " + usage
+                        + ", f: " + fall,
                 Toast.LENGTH_SHORT).show();
     }
 }

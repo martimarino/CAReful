@@ -245,6 +245,38 @@ public class MotionManager {
         }
     }
 
+    public void registerListeners(boolean mot, boolean mag){
+        if(mot && mag) {
+            sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+        if(mot && !mag) {
+            sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+        if(!mot && mag) {
+            sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    public void unregisterListeners(boolean mot, boolean mag){
+        if(mot && mag) {
+            sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
+            sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
+            sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
+        }
+        if(mot && !mag) {
+            sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
+            sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
+        }
+        if(!mot && mag) {
+            sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
+            sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
+        }
+    }
+
     public int getCountFall() {
         return countFall;
     }
