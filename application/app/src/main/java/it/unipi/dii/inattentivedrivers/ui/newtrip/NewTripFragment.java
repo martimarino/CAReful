@@ -1,7 +1,6 @@
 package it.unipi.dii.inattentivedrivers.ui.newtrip;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,8 @@ public class NewTripFragment extends Fragment {
 
     private FragmentNewtripBinding binding;
 
-    ImageView camera, gps, motion, microphone;
-    ImageView camera_off, gps_off, motion_off, microphone_off;
+    ImageView camera, compass, motion, microphone;
+    ImageView camera_off, compass_off, motion_off, microphone_off;
     Button start;
     Switch developMode;
 
@@ -35,29 +34,29 @@ public class NewTripFragment extends Fragment {
         developMode = binding.developMode;
 
         camera = binding.camera;
-        gps = binding.localization;
+        compass = binding.road;
         motion = binding.motion;
         microphone = binding.microphone;
 
         camera_off = binding.cameraOff;
-        gps_off = binding.localizationOff;
+        compass_off = binding.roadOff;
         motion_off = binding.motionOff;
         microphone_off = binding.microphoneOff;
 
         // Listeners to change image when sensor is selected
         setVisibility();
 
-        developMode.setOnClickListener(v ->{
-            if (developMode.isChecked()) {
+        developMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked) {
                 camera.setOnClickListener(view -> tryCamera());
-                gps.setOnClickListener(view -> tryGps());
+                compass.setOnClickListener(view -> tryMag());
                 motion.setOnClickListener(view -> tryMotion());
                 microphone.setOnClickListener(view -> tryMicrophone());
-            }
-            else{
+            } else {
                 setVisibility();
             }
         });
+
         return root;
     }
 
@@ -77,28 +76,28 @@ public class NewTripFragment extends Fragment {
             Toast.makeText(getContext(), "Camera sensor on", Toast.LENGTH_SHORT).show();
         });
 
-        gps.setOnClickListener(v -> {
-            gps.setVisibility(View.INVISIBLE);
-            gps_off.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "Gps sensor off", Toast.LENGTH_SHORT).show();
+        compass.setOnClickListener(v -> {
+            compass.setVisibility(View.INVISIBLE);
+            compass_off.setVisibility(View.VISIBLE);
+            Toast.makeText(getContext(), "Magnetometer sensor off", Toast.LENGTH_SHORT).show();
         });
 
-        gps_off.setOnClickListener(v -> {
-            gps_off.setVisibility(View.INVISIBLE);
-            gps.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "Gps sensor on", Toast.LENGTH_SHORT).show();
+        compass_off.setOnClickListener(v -> {
+            compass_off.setVisibility(View.INVISIBLE);
+            compass.setVisibility(View.VISIBLE);
+            Toast.makeText(getContext(), "Magnetometer sensor on", Toast.LENGTH_SHORT).show();
         });
 
         motion.setOnClickListener(v -> {
             motion.setVisibility(View.INVISIBLE);
             motion_off.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "Gyroscope sensor off", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Motion sensors off", Toast.LENGTH_SHORT).show();
         });
 
         motion_off.setOnClickListener(v -> {
             motion_off.setVisibility(View.INVISIBLE);
             motion.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "Gyroscope sensor on", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Motion sensors on", Toast.LENGTH_SHORT).show();
         });
 
         microphone.setOnClickListener(v -> {
@@ -124,7 +123,7 @@ public class NewTripFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void tryGps() {
+    private void tryMag() {
         Intent intent = new Intent(getActivity(), MapsActivity.class);
         startActivity(intent);
     }
@@ -137,7 +136,7 @@ public class NewTripFragment extends Fragment {
     private void startTrip() {
         Intent intent = new Intent(getActivity(), StartTrip.class);
         intent.putExtra("mic", binding.microphone.getVisibility() == View.VISIBLE);
-        intent.putExtra("gps", binding.localization.getVisibility() == View.VISIBLE);
+        intent.putExtra("mag", binding.road.getVisibility() == View.VISIBLE);
         intent.putExtra("cam", binding.camera.getVisibility() == View.VISIBLE);
         intent.putExtra("mot", binding.motion.getVisibility() == View.VISIBLE);
         startActivity(intent);

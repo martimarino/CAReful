@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import it.unipi.dii.inattentivedrivers.databinding.ActivityMapsBinding;
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMotionBinding;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.MapsActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
@@ -24,17 +26,23 @@ public class MotionManager {
     public static final float usageThreshold = 1.9f;
     public static final int firstIndexThreshold = 10;
     public static final int secondIndexThreshold = 60;
+
     public ActivityMotionBinding motionActivityBinding;
+    public MotionActivity motionActivity;
+    public MapsActivity mapsActivity;
+    public StartTrip startTrip;
+    public Context context;
+    public ActivityMapsBinding activityMapsBinding;
+
     public static SensorEventListener accelerometerEventListener;
     public static SensorEventListener gyroscopeEventListener;
     public static SensorEventListener magnetometerEventListener;
-    public MotionActivity motionActivity;
+
     public static SensorManager sensorManager;
     public static Sensor accelerometerSensor;
     public static Sensor gyroscopeSensor;
     public static Sensor magnetometerSensor;
-    public StartTrip startTrip;
-    public Context context;
+
     public ArrayList<Float> array;
     public ArrayList<Float> azimuts;
     public int countFall;
@@ -49,7 +57,6 @@ public class MotionManager {
     public float[] mGravity;
     public int curvatureIndex;
 
-
     public MotionManager(MotionActivity motionActivity, ActivityMotionBinding motionActivityBinding, Context context) {
 
         array = new ArrayList<>();
@@ -60,10 +67,25 @@ public class MotionManager {
         this.motionActivityBinding = motionActivityBinding;
         this.context = context;
 
-        initializeMotion(this.motionActivity);
+        initializeMotion(this.motionActivity, true, false);
+
     }
 
-    public MotionManager(StartTrip startTrip, Context context) {
+    public MotionManager(MapsActivity mapsActivity, ActivityMapsBinding activityMapsBinding, Context context) {
+
+        array = new ArrayList<>();
+        azimuts = new ArrayList<>();
+        fall = false;
+        countFall = 0;
+        this.mapsActivity = mapsActivity;
+        this.activityMapsBinding = activityMapsBinding;
+        this.context = context;
+
+        initializeMotion(this.mapsActivity, false, true);
+
+    }
+
+    public MotionManager(StartTrip startTrip, Context context, boolean accGyro, boolean magn) {
 
         array = new ArrayList<>();
         azimuts = new ArrayList<>();
@@ -72,108 +94,112 @@ public class MotionManager {
         this.startTrip = startTrip;
         this.context = context;
 
-        initializeMotion(this.startTrip);
+        initializeMotion(this.startTrip, accGyro, magn);
     }
 
-    public void initializeMotion(Activity activity){
+    public void initializeMotion(Activity activity, boolean accGyro, boolean magn) {
 
         sensorManager = (SensorManager) this.context.getSystemService(SENSOR_SERVICE);
         accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         magnetometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        if (accelerometerSensor == null && gyroscopeSensor == null && magnetometerSensor == null){
-            Toast.makeText(activity,"The device has no sensors to detect motion", Toast.LENGTH_SHORT).show();
+        if (accelerometerSensor == null && gyroscopeSensor == null && magnetometerSensor == null) {
+            Toast.makeText(activity, "The device has no sensors to detect motion", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        accelerometerEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                mGravity = sensorEvent.values;
+        if (accGyro) {
+            accelerometerEventListener = new SensorEventListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    mGravity = sensorEvent.values;
 
-                double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
-                if (array.size() < size) {
-                    array.add((float) magnitude);
-                } else {
-                    array.clear();
-                    array.add((float) magnitude);
-                }
+                    double magnitude = Math.sqrt((sensorEvent.values[0] * sensorEvent.values[0]) + (sensorEvent.values[1] * sensorEvent.values[1]) + (sensorEvent.values[2] * sensorEvent.values[2]));
+                    if (array.size() < size) {
+                        array.add((float) magnitude);
+                    } else {
+                        array.clear();
+                        array.add((float) magnitude);
+                    }
 
-                for (int i = 0; i < array.size(); i++) {
-                    if (array.get(i) < lowThreshold) {
-                        for (int j = i + 1; j < array.size(); j++) {
-                            if (array.get(j) > highThreshold) {
-                                fall = true;
-                                break;
+                    for (int i = 0; i < array.size(); i++) {
+                        if (array.get(i) < lowThreshold) {
+                            for (int j = i + 1; j < array.size(); j++) {
+                                if (array.get(j) > highThreshold) {
+                                    fall = true;
+                                    break;
+                                }
                             }
+                        }
+                    }
+
+                    if (fall == true) {
+                        array.clear();
+                        fall = false;
+                        countFall = countFall + 1;
+                        if (activity instanceof MotionActivity) {
+                            TextView tv = motionActivityBinding.tvFalls;
+                            tv.setText("Falls detected: " + Integer.toString(countFall));
+                        } else {
+                            Log.d("Fall detection:", String.valueOf(countFall));
                         }
                     }
                 }
 
-                if (fall==true) {
-                    array.clear();
-                    fall = false;
-                    countFall = countFall + 1;
-                    if (activity instanceof MotionActivity) {
-                        TextView tv = motionActivityBinding.tvFalls;
-                        tv.setText("Falls detected: " + Integer.toString(countFall));
-                    }
-                    else {
-                        Log.d("Fall detection:", String.valueOf(countFall));
-                    }
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
                 }
-            }
+            };
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
-
-        gyroscopeEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                if((sensorEvent.values[0]> usageThreshold) ||
-                    (sensorEvent.values[0]<-usageThreshold) ||
-                    (sensorEvent.values[1]>usageThreshold) ||
-                    (sensorEvent.values[1]<-usageThreshold) ||
-                    (sensorEvent.values[2]>usageThreshold) ||
-                    (sensorEvent.values[2]<-usageThreshold))
+            gyroscopeEventListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    if ((sensorEvent.values[0] > usageThreshold) ||
+                            (sensorEvent.values[0] < -usageThreshold) ||
+                            (sensorEvent.values[1] > usageThreshold) ||
+                            (sensorEvent.values[1] < -usageThreshold) ||
+                            (sensorEvent.values[2] > usageThreshold) ||
+                            (sensorEvent.values[2] < -usageThreshold))
                         usageDetected = true;
 
-                if (usageDetected==true){
-                    if(activity instanceof MotionActivity) {
-                        TextView tv = motionActivityBinding.tvUsages;
-                        tv.setText("Usage detected: " + usageDetected);
-                    } else {
-                        Log.d("used", String.valueOf(usageDetected));
+                    if (usageDetected == true) {
+                        if (activity instanceof MotionActivity) {
+                            TextView tv = motionActivityBinding.tvUsages;
+                            tv.setText("Usage detected: " + usageDetected);
+                        } else {
+                            Log.d("used", String.valueOf(usageDetected));
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
-
-        magnetometerEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                mGeomagnetic = sensorEvent.values;
-                if (mGravity != null && mGeomagnetic != null){
-                    getOrientation(activity);
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
                 }
-            }
+            };
+            sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
+        if(magn) {
 
-        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(gyroscopeEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            magnetometerEventListener = new SensorEventListener() {
+                @Override
+                public void onSensorChanged(SensorEvent sensorEvent) {
+                    mGravity = sensorEvent.values;
+                    mGeomagnetic = sensorEvent.values;
+                    if (mGravity != null && mGeomagnetic != null) {
+                        getOrientation(activity);
+                    }
+                }
 
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int i) {
+                }
+            };
+            sensorManager.registerListener(magnetometerEventListener, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -182,7 +208,7 @@ public class MotionManager {
         float R[] = new float[9];
         float I[] = new float[9];
         boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-        if (success) {
+        if (success) {  activityMapsBinding.tvTortuosity.setText("CIAO");
             float orientation[] = new float[3];
             SensorManager.getOrientation(R, orientation);
             azimut = Math.abs(orientation[0]); // orientation contains: azimut, pitch and roll
@@ -204,8 +230,8 @@ public class MotionManager {
                 else{
                     curvatureIndex = 3;
                 }
-                if(activity instanceof MotionActivity) {
-                    TextView tv = motionActivityBinding.tvTortuosity;
+                if(activity instanceof MapsActivity) {
+                    TextView tv = activityMapsBinding.tvTortuosity;
                     tv.setText("Sum: " + sum + "\nCurvatureIndex: " + curvatureIndex);
                 }
                 Log.d("sum", String.valueOf(sum));

@@ -21,15 +21,15 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="HardcodedText,MissingConstraints" />
 
     <!--***************************************************************-->
 
     <ImageView
-        android:id="@+id/localization_off"
+        android:id="@+id/road_off"
         android:layout_width="72dp"
         android:layout_height="89dp"
-        android:src="@drawable/localization_off"
+        android:src="@drawable/curve_off"
         app:layout_constraintBottom_toTopOf="@+id/microphone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -67,7 +67,7 @@
         android:layout_height="88dp"
         android:src="@drawable/camera_off"
         app:layout_constraintBottom_toTopOf="@+id/motion"
-        app:layout_constraintEnd_toStartOf="@+id/localization"
+        app:layout_constraintEnd_toStartOf="@+id/road"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
@@ -82,17 +82,17 @@
         android:layout_height="88dp"
         android:src="@drawable/camera"
         app:layout_constraintBottom_toTopOf="@+id/motion"
-        app:layout_constraintEnd_toStartOf="@+id/localization"
+        app:layout_constraintEnd_toStartOf="@+id/road"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/localization"
+        android:id="@+id/road"
         android:layout_width="72dp"
         android:layout_height="89dp"
-        android:src="@drawable/localization"
+        android:src="@drawable/curve"
         app:layout_constraintBottom_toTopOf="@+id/microphone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

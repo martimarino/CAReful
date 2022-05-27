@@ -9,27 +9,14 @@
     tools:ignore="MissingClass">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Attention level"
-        app:layout_constraintBottom_toTopOf="@+id/determinateBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.765" />
-
-    <ProgressBar
-        android:id="@+id/determinateBar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="309dp"
-        android:layout_height="20dp"
-        android:progress="100"
-        android:progressDrawable="@drawable/custom_progressbar"
+        android:id="@+id/tvTortuosity"
+        android:layout_width="150dp"
+        android:layout_height="58dp"
+        android:text=""
         app:layout_constraintBottom_toTopOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.663" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <fragment
         android:id="@+id/map"

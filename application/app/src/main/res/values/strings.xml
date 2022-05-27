@@ -15,7 +15,6 @@
     <string name="geoloc">Geo-localization</string>
     <string name="not_tracking">Not tracking location</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="switch_gps">Using GPS sensors</string>
     <string name="surname">Surname</string>
     <string name="name">Name</string>
     <string name="username">Username</string>

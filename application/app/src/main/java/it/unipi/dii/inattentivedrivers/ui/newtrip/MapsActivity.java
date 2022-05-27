@@ -10,29 +10,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMapsBinding;
 import it.unipi.dii.inattentivedrivers.sensors.GpsManager;
+import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ActivityMapsBinding binding;
+    public static ActivityMapsBinding binding;
     private static final int REQUEST_CODE = 101;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
@@ -40,6 +36,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static int interval = 5;
 
     GpsManager gps;
+    MotionManager mot;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +46,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         gps = new GpsManager(this);
         getCurrentLocation();
+        mot = new MotionManager(this, binding, getApplicationContext());
     }
 
     @Override
@@ -72,11 +70,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }, REQUEST_CODE);
             return;
         }
-        Task<Location> task = gps.fusedLocationProviderClient.getLastLocation();
+        Task<Location> task = GpsManager.fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
 
             if (location != null) {
-                gps.currentLocation = location;
+                GpsManager.currentLocation = location;
                 SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
                 assert supportMapFragment != null;
@@ -99,25 +97,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
                         //TODO: UI updates.
-                        gps.currentLocation = locationResult.getLastLocation();
+                        GpsManager.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(MapsActivity.this, mMap, foregroundActivity);
                     }
                 }
             }
         };
-        gps.fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        GpsManager.fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (REQUEST_CODE) {
-            case REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCurrentLocation();
-                }
-                break;
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation();
         }
     }
 

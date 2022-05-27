@@ -36,7 +36,7 @@ import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
 
 public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
-    boolean camSelected, gpsSelected, motSelected, micSelected;
+    boolean camSelected, magSelected, motSelected, micSelected;
 
     MotionManager mot;
     CameraManager cam;
@@ -76,14 +76,14 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
         if (extras != null) {
             micSelected = extras.getBoolean("mic");
-            gpsSelected = extras.getBoolean("gps");
+            magSelected = extras.getBoolean("mag");
             camSelected = extras.getBoolean("cam");
             motSelected = extras.getBoolean("mot");
         }
 
         progressBar = binding.determinateBar;
 
-        if(micSelected) {
+        if (micSelected) {
             mic = new MicrophoneManager(this);
             ActivityCompat.requestPermissions(this, mic.sendRecPermission, MicrophoneManager.REQUEST_RECORD_AUDIO);
         }
@@ -91,8 +91,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         gps = new GpsManager(this);
         getCurrentLocation();
 
-        if(motSelected)
-            mot = new MotionManager(this, getApplicationContext());
+        if (motSelected || magSelected)
+            mot = new MotionManager(this, getApplicationContext(), motSelected, magSelected);
 
         if(camSelected)
             cam = new CameraManager(this, binding);
@@ -115,30 +115,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 fall = mot.getCountFall();             //5
                 curv = mot.getCurvatureIndex();         // 1 - 3
                 speed = gps.getAvgSpeed();          //1 - 4
-
-                Log.d("Attention level: ", String.valueOf(attentionLevel));
-                Log.d("Prev disatttention: ", String.valueOf(prevDisattentionLevel));
-                Log.d("Disattention level: ", String.valueOf(disattentionLevel));
-                Log.d("Speed: ", String.valueOf(speed));
-                Log.d("Noise: ", String.valueOf(noise));
-                Log.d("Head: ", String.valueOf(head));
-                Log.d("Drow: ", String.valueOf(drow));
-                Log.d("Curve: ", String.valueOf(curv));
-                Log.d("Usage: ", String.valueOf(usage));
-                Log.d("Fall: ", String.valueOf(fall));
-
-                Toast.makeText(getApplicationContext(),
-                        "att: " + attentionLevel
-                                + ", disatt: " + prevDisattentionLevel
-                                + ", prevDis: " + disattentionLevel
-                                + ", speed: " + speed
-                                + ", noise: " + noise
-                                + ", head: " + head
-                                + ", drow: " + drow
-                                + ", curve: " + curv
-                                + ", usage: " + usage
-                                + ", fall: " + fall,
-                        Toast.LENGTH_SHORT).show();
 
                 // 0 < disattentioLevel < 1700
                 disattentionLevel = (float) (speed * curv * (3*(head + drow) + 2*(usage) + 1*(noise + fall)));
@@ -209,6 +185,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
                         //TODO: UI updates.
+
+                        print();
 
                         gps.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(StartTrip.this, mMap, foregroundActivity);
@@ -281,5 +259,31 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         t.cancel();
         foregroundActivity = false;
         mMap = null;
+    }
+
+    private void print() {
+        Log.d("Attention level: ", String.valueOf(attentionLevel));
+        Log.d("Prev disatttention: ", String.valueOf(prevDisattentionLevel));
+        Log.d("Disattention level: ", String.valueOf(disattentionLevel));
+        Log.d("Speed: ", String.valueOf(speed));
+        Log.d("Noise: ", String.valueOf(noise));
+        Log.d("Head: ", String.valueOf(head));
+        Log.d("Drow: ", String.valueOf(drow));
+        Log.d("Curve: ", String.valueOf(curv));
+        Log.d("Usage: ", String.valueOf(usage));
+        Log.d("Fall: ", String.valueOf(fall));
+
+        Toast.makeText(getApplicationContext(),
+                "att: " + attentionLevel
+                        + ", disatt: " + prevDisattentionLevel
+                        + ", prevDis: " + disattentionLevel
+                        + ", speed: " + speed
+                        + ", noise: " + noise
+                        + ", head: " + head
+                        + ", drow: " + drow
+                        + ", curve: " + curv
+                        + ", usage: " + usage
+                        + ", fall: " + fall,
+                Toast.LENGTH_SHORT).show();
     }
 }

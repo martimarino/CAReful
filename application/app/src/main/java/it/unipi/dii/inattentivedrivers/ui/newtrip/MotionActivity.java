@@ -20,6 +20,7 @@ public class MotionActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mot = new MotionManager(this, binding, getApplicationContext());
+
     }
 
 
