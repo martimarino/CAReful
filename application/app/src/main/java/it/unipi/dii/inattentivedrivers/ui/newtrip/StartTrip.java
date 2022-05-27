@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,6 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     public static StartTripBinding binding;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
-    private static final int REQUEST_CODE = 101;
 
     /* General variables */
     private boolean foregroundActivity;
@@ -61,8 +61,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     int noise, drow, head, fall, usage;
     float curv, speed;
 
-
-
+    ProgressBar progressBar;
+    ProgressBarAnimation anim;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +79,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             camSelected = extras.getBoolean("cam");
             motSelected = extras.getBoolean("mot");
         }
+
+        progressBar = binding.determinateBar;
 
         if(micSelected) {
             mic = new MicrophoneManager(this);
@@ -121,7 +123,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
                 attentionLevel = (int) (100 - (disattentionLevel/17));
 
-                binding.determinateBar.setProgress(attentionLevel);
+                anim = new ProgressBarAnimation(progressBar, progressBar.getProgress(), attentionLevel);
+                anim.setDuration(3000);
+                progressBar.startAnimation(anim);
 
                 mic.setNoiseDetections(0);
                 cam.setDrowsinessCounter(0);
@@ -151,14 +155,14 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION
-                    }, REQUEST_CODE);
+                    }, GpsManager.LOCATION_REQUEST);
             return;
         }
-        Task<Location> task = gps.fusedLocationProviderClient.getLastLocation();
+        Task<Location> task = GpsManager.fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
 
             if (location != null) {
-                gps.currentLocation = location;
+                GpsManager.currentLocation = location;
                 SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
                 assert supportMapFragment != null;
@@ -168,8 +172,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(MapsActivity.getInterval() * 1000);
-        locationRequest.setFastestInterval(MapsActivity.getInterval() * 1000);
+        locationRequest.setInterval(MapsActivity.getInterval() * 1000L);
+        locationRequest.setFastestInterval(MapsActivity.getInterval() * 1000L);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationCallback = new LocationCallback() {
             @Override
@@ -213,7 +217,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 }
             }
         };
-        gps.fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        GpsManager.fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
     }
 
@@ -221,7 +225,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case REQUEST_CODE:
+            case GpsManager.LOCATION_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getCurrentLocation();
                 }
@@ -241,10 +245,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onPause() {
         super.onPause();
-        mot.sensorManager.unregisterListener(mot.accelerometerEventListener);
-        mot.sensorManager.unregisterListener(mot.gyroscopeEventListener);
-        mot.sensorManager.unregisterListener(mot.magnetometerEventListener);
-
+        MotionManager.sensorManager.unregisterListener(MotionManager.accelerometerEventListener);
+        MotionManager.sensorManager.unregisterListener(MotionManager.gyroscopeEventListener);
+        MotionManager.sensorManager.unregisterListener(MotionManager.magnetometerEventListener);
     }
 
     @Override

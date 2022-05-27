@@ -58,8 +58,6 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.3.1'
     implementation 'com.google.mlkit:face-detection:16.1.5'
 
-
-
     implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly-SNAPSHOT'
     // The GPU delegate library is optional. Depend on it as needed.
     implementation 'org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly-SNAPSHOT'
