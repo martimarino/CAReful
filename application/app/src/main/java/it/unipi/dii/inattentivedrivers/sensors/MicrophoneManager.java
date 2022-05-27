@@ -33,12 +33,14 @@ public class MicrophoneManager {
     String noiseType;
     int noiseDetections = 0;
     int noiseCounter;   //when > noiseThreshold -> noiseDetections++
-    int noiseTreshold = 5;
+    int counterThreshold = 5;
+    double decibelThreshold = 40.0;
 
     public static final int REQUEST_RECORD_AUDIO = 200;
     private AudioClassifier classifier;
     private TensorAudio tensor;
     private AudioRecord record;
+    private DecibelDetector dd;
 
 
     private static final String recPermission = Manifest.permission.RECORD_AUDIO;
@@ -57,6 +59,8 @@ public class MicrophoneManager {
     }
 
     public void initializeMicrophone(Activity activity) {
+        dd = new DecibelDetector();
+        dd.getNoiseLevel(activity.getApplicationContext());
         try {
             classifier = AudioClassifier.createFromFile(activity, modelPath);
             tensor = classifier.createInputTensorAudio();
@@ -71,10 +75,10 @@ public class MicrophoneManager {
                     noiseType = category.getLabel();
                     Log.d("Class", category.getLabel());
                     String outputStr = "";
-                    if(Objects.equals(noiseType, "Music") || Objects.equals(noiseType, "Speech")) {
-                        outputStr = "Class: " + noiseType;
+                    if((Objects.equals(noiseType, "Music") || Objects.equals(noiseType, "Speech")) && dd.decibelMeasure > decibelThreshold) {
+                        outputStr = "Class: " + noiseType + "\nDecibels: " + dd.decibelMeasure;
                         noiseCounter++;
-                        if (noiseCounter == noiseTreshold) {
+                        if (noiseCounter == counterThreshold) {
                             noiseDetections++;
                             noiseCounter = 0;
                         }
