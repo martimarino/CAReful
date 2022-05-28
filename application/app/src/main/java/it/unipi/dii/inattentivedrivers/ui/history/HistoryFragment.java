@@ -21,15 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
+import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 import it.unipi.dii.inattentivedrivers.R;
 
 public class HistoryFragment extends Fragment {
 
     private FragmentHistoryBinding binding;
-    private List<Trip> tripList;
     ArrayList<Trip> arrayList;
-    TextView history;
+    DatabaseHelper databaseHelper;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,6 +37,7 @@ public class HistoryFragment extends Fragment {
 
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        databaseHelper = new DatabaseHelper(getContext());
 
         if (NewTripFragment.session.arrayList == null){
             Log.d("ArrayList", "ArrayList empty");

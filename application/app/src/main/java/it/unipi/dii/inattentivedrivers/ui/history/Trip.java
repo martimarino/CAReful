@@ -87,4 +87,7 @@ public class Trip {
             Toast.makeText(context, "Please sign in to save your next trip!", Toast.LENGTH_SHORT).show();
         }
     }
+    public void updateHistory() {
+        NewTripFragment.session.arrayList = databaseHelper.retrieveHistory(NewTripFragment.session.username);
+    }
 }

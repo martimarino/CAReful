@@ -206,6 +206,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             score = (int) progress;
             Trip trip = new Trip(String.valueOf(timeDeparture), String.valueOf(timeArrival), String.valueOf(score), departure, arrival, getApplicationContext());
             trip.insertData();
+            trip.updateHistory();
             if(motSelected || magSelected)
                 mot.unregisterListeners(motSelected, magSelected);
             this.onBackPressed();
