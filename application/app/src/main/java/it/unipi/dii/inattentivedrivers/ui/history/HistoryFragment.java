@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
@@ -39,10 +38,10 @@ public class HistoryFragment extends Fragment {
         View root = binding.getRoot();
         databaseHelper = new DatabaseHelper(getContext());
 
-        if (NewTripFragment.session.arrayList == null){
+        if (NewTripFragment.session.getTripList() == null){
             Log.d("ArrayList", "ArrayList empty");
         } else {
-            Log.d("ArrayList", String.valueOf(NewTripFragment.session.getArrayList()));
+            Log.d("ArrayList", String.valueOf(NewTripFragment.session.getTripList()));
             fillHistory();
         }
 
@@ -52,7 +51,7 @@ public class HistoryFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void fillHistory() {
 
-        arrayList = NewTripFragment.session.arrayList;
+        arrayList = NewTripFragment.session.getTripList();
         for (Trip t: arrayList) {
 
             TextView tv = new TextView(getActivity());
@@ -67,8 +66,7 @@ public class HistoryFragment extends Fragment {
 
             TableRow tr = new TableRow(getContext());
             tr.addView(tv);
-//            tr.setPadding(20, 20, 20, 20);
-//            tr.setBackgroundColor(Color.parseColor("#81D6FF"));
+
             tr.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.trip_tr));
 
             TableLayout.LayoutParams tableRowParams=

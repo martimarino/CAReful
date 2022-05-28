@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentSigninSignupBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
@@ -22,7 +23,7 @@ public class SignInSignUp extends Fragment {
 
     DatabaseHelper databaseHelper;
     EditText username, name, surname, email, password, repeat_password, username_login, password_login;
-    Button signup_reg, signin_reg, signin_login, signup_login;
+    Button signup_reg, signin_reg, signin_login, signup_login, logout;
 
     FragmentSigninSignupBinding binding;
     @Override
@@ -43,13 +44,27 @@ public class SignInSignUp extends Fragment {
         signin_reg = binding.signinReg;
         signin_login = binding.signinLogin;
         signup_login = binding.signupLogin;
+        logout = binding.logout;
         username_login = binding.username;
         password_login = binding.password;
+
+        if(Objects.equals(NewTripFragment.session.getUsername(), "anonymous")) {
+            binding.containerProfile.setVisibility(View.INVISIBLE);
+            binding.containerSignin.setVisibility(View.VISIBLE);
+        } else {
+            showProfile();
+        }
 
         signin_reg.setOnClickListener(view -> {
             binding.containerSignup.setVisibility(View.INVISIBLE);
             binding.containerSignin.setVisibility(View.VISIBLE);
         });
+
+        logout.setOnClickListener(view -> {
+            binding.containerProfile.setVisibility(View.INVISIBLE);
+            binding.containerSignin.setVisibility(View.VISIBLE);
+        });
+
 
         signup_reg.setOnClickListener(view -> {
             String username_ = username.getText().toString();
@@ -89,12 +104,12 @@ public class SignInSignUp extends Fragment {
             String password_ = password_login.getText().toString();
             Boolean checklogin = databaseHelper.CheckLogin(username_, password_);
             if(checklogin == true){
-                NewTripFragment.session.username = username_;
                 ArrayList<Trip> arrayList = databaseHelper.retrieveHistory(username_);
                 if (arrayList.size() > 0){
-                    NewTripFragment.session.arrayList = arrayList;
+                    NewTripFragment.session.setTripList(arrayList);
                 }
                 Toast.makeText(getContext(), "Login Successful\nSee your history in the HistoryFragment", Toast.LENGTH_SHORT).show();
+                showProfile();
             }else{
                 Toast.makeText(getContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
             }
@@ -106,5 +121,15 @@ public class SignInSignUp extends Fragment {
         });
 
         return root;
+    }
+
+    public void showProfile() {
+        binding.us.setText("Username: " + NewTripFragment.session.getUsername());
+        binding.nm.setText("Name: " + NewTripFragment.session.getName());
+        binding.sn.setText("Surname: " + NewTripFragment.session.getSurname());
+        binding.em.setText("E-mail: " + NewTripFragment.session.getEmail());
+
+        binding.containerProfile.setVisibility(View.VISIBLE);
+        binding.containerSignin.setVisibility(View.INVISIBLE);
     }
 }

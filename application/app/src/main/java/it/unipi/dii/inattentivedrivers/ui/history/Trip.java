@@ -79,8 +79,8 @@ public class Trip {
     }
 
     public void insertData() {
-        if (databaseHelper.checkUsername(NewTripFragment.session.username) == false) {
-            databaseHelper.insertHistory(NewTripFragment.session.username, String.valueOf(getTimeDeparture()),
+        if (databaseHelper.checkUsername(NewTripFragment.session.getUsername()) == false) {
+            databaseHelper.insertHistory(NewTripFragment.session.getUsername(), String.valueOf(getTimeDeparture()),
                     String.valueOf(getTimeArrival()), String.valueOf(getScore()),
                     getDeparture(), getArrival());
         } else {
@@ -88,6 +88,6 @@ public class Trip {
         }
     }
     public void updateHistory() {
-        NewTripFragment.session.arrayList = databaseHelper.retrieveHistory(NewTripFragment.session.username);
+        NewTripFragment.session.setTripList(databaseHelper.retrieveHistory(NewTripFragment.session.getUsername()));
     }
 }

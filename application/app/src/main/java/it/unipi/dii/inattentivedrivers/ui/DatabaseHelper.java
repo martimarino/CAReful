@@ -7,11 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import it.unipi.dii.inattentivedrivers.ui.history.Trip;
+import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -79,11 +78,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Boolean CheckLogin(String username_, String password_){
+    @SuppressLint("Range")
+    public Boolean CheckLogin(String username_, String password_) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM user WHERE username=? AND password=?", new String[]{username_, password_});
         if (cursor.getCount() > 0) {
-            return true;
+            if(cursor.moveToNext()) {
+                NewTripFragment.session.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+                NewTripFragment.session.setName(cursor.getString(cursor.getColumnIndex("name")));
+                NewTripFragment.session.setSurname(cursor.getString(cursor.getColumnIndex("surname")));
+                NewTripFragment.session.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+            }return true;
+
         } else {
             return false;
         }

@@ -34,7 +34,7 @@ public class NewTripFragment extends Fragment {
         View root = binding.getRoot();
 
         if (session == null) {      /* not logged user */
-            session = new Session("anonymous", null);
+            session = new Session();
         }
 
         start = binding.start;
