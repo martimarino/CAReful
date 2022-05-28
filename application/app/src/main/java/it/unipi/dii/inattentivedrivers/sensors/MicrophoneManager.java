@@ -3,6 +3,7 @@ package it.unipi.dii.inattentivedrivers.sensors;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.util.Log;
@@ -121,9 +122,9 @@ public class MicrophoneManager {
                         noiseDetections++;
                         noiseCounter = 0;
                         if(context instanceof MicrophoneActivity)
-                            activityMicrophoneBinding.thresholdExceeded.setVisibility(View.VISIBLE);
+                            activityMicrophoneBinding.thresholdExceeded.setTextColor(Color.parseColor("#FF0000"));
                     } else if(context instanceof MicrophoneActivity)
-                        activityMicrophoneBinding.thresholdExceeded.setVisibility(View.INVISIBLE);
+                        activityMicrophoneBinding.thresholdExceeded.setTextColor(Color.parseColor("#FFFFFF"));
                 }
 
                 // About ten times a second
