@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -38,8 +39,13 @@ public class HistoryFragment extends Fragment {
         View root = binding.getRoot();
         databaseHelper = new DatabaseHelper(getContext());
 
+        if(NewTripFragment.session.getUsername().equals("anonymous")){
+            Toast.makeText(getContext(), "Please register to save your trips!", Toast.LENGTH_LONG).show();
+        }
+
         if (NewTripFragment.session.getTripList() == null){
             Log.d("ArrayList", "ArrayList empty");
+            Toast.makeText(getContext(), "Please start some trips to see your history!", Toast.LENGTH_LONG).show();
         } else {
             Log.d("ArrayList", String.valueOf(NewTripFragment.session.getTripList()));
             fillHistory();
