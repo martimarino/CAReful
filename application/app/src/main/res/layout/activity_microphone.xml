@@ -9,8 +9,8 @@
     <TextView
         android:id="@+id/textActivityMicrophone"
         android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:text="TextView"
+        android:layout_height="wrap_content"
+        android:text="Decibels: "
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,6 +18,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.499"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/thresholdExceeded"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_marginTop="25dp"
+        android:text="Threshold exceeded!"
+        android:textColor="#FFFFFF"
+        android:padding="5dp"
+        android:background="#FF0000"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textActivityMicrophone"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

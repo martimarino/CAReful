@@ -236,10 +236,10 @@ public class MotionManager {
                 }
                 if(activity instanceof MapsActivity) {
                     TextView tv = activityMapsBinding.tvTortuosity;
-                    tv.setText("Sum: " + sum + "\nCurvatureIndex: " + curvatureIndex);
+                    tv.setText("Sum: " + sum + "\nRoad tortuosity level: " + curvatureIndex);
                 }
                 Log.d("sum", String.valueOf(sum));
-                Log.d("riskIndex", String.valueOf(curvatureIndex));
+                Log.d("RoadTortuosityLevel", String.valueOf(curvatureIndex));
                 azimuts.clear();
             }
         }

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -45,7 +46,7 @@ public class MicrophoneManager {
     int noiseDetections = 0;
     int noiseCounter = 0;   //when > noiseThreshold -> noiseDetections++
     static int counterThreshold = 5;
-    static double decibelThreshold = 150.0;
+    static double decibelThreshold = 50.0;
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
         mLock = new Object();
@@ -109,16 +110,22 @@ public class MicrophoneManager {
                 Log.d(TAG, "Decibel value:" + volume);
                 decibelMeasure = volume;
                 String outputStr = "Decibels: " + decibelMeasure;
+
+                if (context instanceof MicrophoneActivity)
+                    activityMicrophoneBinding.textActivityMicrophone.setText(outputStr);
+                Log.d("Decibel detected: ", String.valueOf(decibelMeasure));
+
                 if(decibelMeasure > decibelThreshold) {
                     noiseCounter++;
                     if (noiseCounter == counterThreshold) {
                         noiseDetections++;
                         noiseCounter = 0;
-                    }
+                        if(context instanceof MicrophoneActivity)
+                            activityMicrophoneBinding.thresholdExceeded.setVisibility(View.VISIBLE);
+                    } else if(context instanceof MicrophoneActivity)
+                        activityMicrophoneBinding.thresholdExceeded.setVisibility(View.INVISIBLE);
                 }
-                if (context instanceof MicrophoneActivity)
-                    activityMicrophoneBinding.textActivityMicrophone.setText(outputStr);
-                Log.d("Decibel detected: ", String.valueOf(decibelMeasure));
+
                 // About ten times a second
                 synchronized (mLock) {
                     try {
