@@ -1,6 +1,7 @@
 package it.unipi.dii.inattentivedrivers.ui.profile;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import it.unipi.dii.inattentivedrivers.ui.history.Trip;
 
@@ -15,6 +16,18 @@ public class Session{
     public Session (){                   /* not logged user */
         this.username = "anonymous";
         this.tripList = null;
+    }
+
+    public boolean isLogged() {
+        return !Objects.equals(username, "anonymous");
+    }
+
+    public void logout(){
+        this.username = "anonymous";
+        this.tripList = null;
+        this.name = "";
+        this.surname = "";
+        this.email = "";
     }
 
     public String getUsername() {

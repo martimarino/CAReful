@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import it.unipi.dii.inattentivedrivers.databinding.FragmentSigninSignupBinding;
 import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
@@ -48,7 +47,7 @@ public class SignInSignUp extends Fragment {
         username_login = binding.username;
         password_login = binding.password;
 
-        if(Objects.equals(NewTripFragment.session.getUsername(), "anonymous")) {
+        if(!NewTripFragment.session.isLogged()) {
             binding.containerProfile.setVisibility(View.INVISIBLE);
             binding.containerSignin.setVisibility(View.VISIBLE);
         } else {
@@ -63,10 +62,11 @@ public class SignInSignUp extends Fragment {
         logout.setOnClickListener(view -> {
             binding.containerProfile.setVisibility(View.INVISIBLE);
             binding.containerSignin.setVisibility(View.VISIBLE);
+            NewTripFragment.session.logout();
         });
 
-
         signup_reg.setOnClickListener(view -> {
+
             String username_ = username.getText().toString();
             String name_ = name.getText().toString();
             String surname_ = surname.getText().toString();
