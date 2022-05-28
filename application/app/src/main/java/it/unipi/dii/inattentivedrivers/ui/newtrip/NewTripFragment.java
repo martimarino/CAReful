@@ -59,6 +59,7 @@ public class NewTripFragment extends Fragment {
                 compass.setOnClickListener(view -> tryMag());
                 motion.setOnClickListener(view -> tryMotion());
                 microphone.setOnClickListener(view -> tryMicrophone());
+                start.setClickable(false);
             } else {
                 setVisibility();
             }
@@ -68,6 +69,8 @@ public class NewTripFragment extends Fragment {
     }
 
     private void setVisibility(){
+
+        start.setClickable(true);
         start.setOnClickListener(view -> startTrip());
 
         camera.setOnClickListener(v -> {
