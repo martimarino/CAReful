@@ -33,9 +33,10 @@ public class NewTripFragment extends Fragment {
         binding = FragmentNewtripBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        if (session == null) {
+        if (session == null) {      /* not logged user */
             session = new Session("anonymous", null);
         }
+
         start = binding.start;
         developMode = binding.developMode;
 
@@ -67,7 +68,6 @@ public class NewTripFragment extends Fragment {
     }
 
     private void setVisibility(){
-
         start.setOnClickListener(view -> startTrip());
 
         camera.setOnClickListener(v -> {

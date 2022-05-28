@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
@@ -38,7 +37,7 @@ public class CameraManager {
     public static final double DROWSINESS_PERCENTAGE_THRESHOLD = 0.5;
     public static final double DROWSINESS_SECONDS = 2;
     public static final double TURNED_HEAD_ANGLE_THRESHOLD = 40.0;
-    public static final double TURNED_HEAD_SECONDS= 6;
+    public static final double TURNED_HEAD_SECONDS= 4;
 
     boolean cameraVisible;
 
@@ -163,12 +162,7 @@ public class CameraManager {
         Task<List<Face>> result =
                 faceDetector.process(inputImage)
                         .addOnSuccessListener(
-                                new OnSuccessListener<List<Face>>() {
-                                    @Override
-                                    public void onSuccess(List<Face> faces) {
-                                        processResults(faces, activity);
-                                    }
-                                })
+                                faces -> processResults(faces, activity))
                         .addOnFailureListener(
                                 new OnFailureListener() {
                                     @Override
@@ -234,25 +228,10 @@ public class CameraManager {
                 boundingBox.left = StartTrip.binding.parentLayout.getWidth() - boundingBox.left;
                 boundingBox.right = StartTrip.binding.parentLayout.getWidth() - boundingBox.right;
             }
-            //Log.d("MainActivity", "processResults: " + i.getLabels().toString());
-            //String text = "Undefined";
-            /*if(i.getLabels().size() != 0) {
-                text = i.getLabels().get(0).getText();
-            }*/
-
-            //text = String.valueOf(rotX) + " | " + String.valueOf(rotY) + " | " + String.valueOf(rotZ) + " | " + String.valueOf(rightEyeOpenProb);
-
             if(cameraVisible) {
                 Draw element = new Draw(activity, boundingBox, String.valueOf(rotX), String.valueOf(rotY), String.valueOf(rotZ), String.valueOf(rightEyeOpenProb), String.valueOf(leftEyeOpenProb));
                 CameraActivity.binding.parentLayout.addView(element);
             }
-            /*
-            Log.d("euler x", String.valueOf(rotX));
-            Log.d("euler y", String.valueOf(rotY));
-            Log.d("euler z", String.valueOf(rotZ));
-            Log.d("--------------", "----------------------------------------------");
-            Log.d("--------------", "----------------------------------------------");
-            */
             if(rightEyeOpenProb< DROWSINESS_PERCENTAGE_THRESHOLD && leftEyeOpenProb< DROWSINESS_PERCENTAGE_THRESHOLD){
                 drowsinessCounterDetection = drowsinessCounterDetection + 1;
                 if(drowsinessCounterDetection == DROWSINESS_SECONDS*10){

@@ -41,9 +41,6 @@
         <activity android:name=".ui.profile.SignInSignUp"
             android:exported="false"
             tools:ignore="Instantiatable" />
-<!--        <fragment android:name=".ui.history.HistoryFragment"-->
-<!--            android:exported="false"-->
-<!--            tools:ignore="Instantiatable" />-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

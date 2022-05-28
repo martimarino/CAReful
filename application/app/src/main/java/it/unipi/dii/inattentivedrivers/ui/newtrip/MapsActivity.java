@@ -30,10 +30,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     public static ActivityMapsBinding binding;
     private static final int REQUEST_CODE = 101;
-    private LocationCallback locationCallback;
-    private LocationRequest locationRequest;
-    private boolean foregroundActivity;
-    public static int interval = 5;
+    private boolean foregroundActivity;         /* move map to current only if the app is visible */
+    public static int interval = 5;     /* interval of map updates */
 
     GpsManager gps;
     MotionManager mot;
@@ -51,14 +49,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
         gps.updateMap(this, mMap, foregroundActivity);
         mMap.addMarker(new MarkerOptions().position(gps.current).title("Departure") .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
     }
 
     private void getCurrentLocation() {
+
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED
@@ -70,6 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }, REQUEST_CODE);
             return;
         }
+
         Task<Location> task = GpsManager.fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
 
@@ -83,11 +81,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         });
 
-        locationRequest = LocationRequest.create();
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(interval * 1000);
         locationRequest.setFastestInterval(interval * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationCallback = new LocationCallback() {
+
+        LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
 
@@ -104,7 +103,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
         GpsManager.fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
-
     }
 
     @Override

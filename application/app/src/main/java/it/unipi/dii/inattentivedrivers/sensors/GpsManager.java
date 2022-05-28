@@ -16,14 +16,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import it.unipi.dii.inattentivedrivers.R;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MapsActivity;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
 
@@ -31,8 +27,8 @@ public class GpsManager {
 
     public static Location currentLocation;
     public static FusedLocationProviderClient fusedLocationProviderClient;
-    public static final int LOCATION_REQUEST = 101;
     public LatLng current;
+
     ArrayList arr;
     int size;
     float avgSpeed;
@@ -47,11 +43,13 @@ public class GpsManager {
 
         current = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
+        /* specifies parameters to update map */
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(current)
                 .zoom(18)
                 .build();
 
+        /* move map to current location */
         if (foregroundActivity && mMap != null) {
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -62,7 +60,6 @@ public class GpsManager {
     }
 
     public void calculateAvgSpeed() {
-
         if(arr.size() == size) {
             float s = 0;
             for(int i = 0; i < arr.size(); i++)
@@ -75,6 +72,7 @@ public class GpsManager {
     }
 
     public int getAvgSpeed() {
+        /* Different level of roads */
         if (avgSpeed<=30){
             return 1;
         }

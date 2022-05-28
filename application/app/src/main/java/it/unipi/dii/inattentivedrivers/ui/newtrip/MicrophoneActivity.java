@@ -24,7 +24,6 @@ public class MicrophoneActivity extends AppCompatActivity {
 
         mic = new MicrophoneManager(this, binding);
         ActivityCompat.requestPermissions(this, mic.sendRecPermission, MicrophoneManager.REQUEST_RECORD_AUDIO);
-
     }
 
     @Override

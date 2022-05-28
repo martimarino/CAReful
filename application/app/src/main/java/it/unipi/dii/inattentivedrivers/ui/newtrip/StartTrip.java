@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,9 +24,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,46 +56,57 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     /* Map variables */
     public static GoogleMap mMap;
     public static StartTripBinding binding;
-    private LocationCallback locationCallback;
-    private LocationRequest locationRequest;
+
+    private static final int REQUEST_CODE = 101;
 
     /* General variables */
     private boolean foregroundActivity;
     public int resumeTimes = -1;        //avoid first activity start call
 
+    /* Attention index */
     Timer t;
     public float disattentionLevel;
     public float prevDisattentionLevel = 0;
     public float attentionLevel = 100f;
     public static int samplingPeriod = 60;     //in seconds
     float alpha = 0.7f;
-    float noise, drow, head, fall, usage;
-    float curv, speed;
-    float progressBar;
+    float noise, drow, head, fall, usage, curv, speed;
 
+    public static final int maxDisattention = 10;
+    public static final float speedNorm = 4;
+    public static final float curvNorm = 3;
+    public static final float headNorm = 15;
+    public static final float drowNorm = 30;
+    public static final float noiseNorm = 12;
+    public static final float fallNorm = 5;
+    float progress;
+    ProgressBarAnimation anim;
+    ProgressBar pB;
+
+    /* End of trip */
     Button stop;
     public LocalDateTime timeDeparture;
     public LocalDateTime timeArrival;
     public int score;
     public String departure = null;
     public String arrival;
-    ProgressBar pB;
-    ProgressBarAnimation anim;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        /* build page */
         super.onCreate(savedInstanceState);
         binding = StartTripBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Bundle extras = getIntent().getExtras();
-
         timeDeparture = LocalDateTime.now();
         score = 0;
+        pB = binding.determinateBar;
 
+        /* get parameters from new trip */
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             micSelected = extras.getBoolean("mic");
             magSelected = extras.getBoolean("mag");
@@ -99,38 +114,48 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
             motSelected = extras.getBoolean("mot");
         }
 
-        pB = binding.determinateBar;
+        Dexter.withContext(getApplicationContext())
+                .withPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        /* constructors called only if sensors are selected in NewTrip */
+                        if (micSelected) {
+                            mic = new MicrophoneManager(StartTrip.this);
+                            ActivityCompat.requestPermissions(StartTrip.this, MicrophoneManager.sendRecPermission, MicrophoneManager.REQUEST_RECORD_AUDIO);
+                        }
 
-        if (micSelected) {
-            mic = new MicrophoneManager(this);
-            ActivityCompat.requestPermissions(this, mic.sendRecPermission, MicrophoneManager.REQUEST_RECORD_AUDIO);
-        }
+                        if (motSelected || magSelected)
+                            mot = new MotionManager(StartTrip.this, getApplicationContext(), motSelected, magSelected);
 
-        if(motSelected)
-            mot = new MotionManager(this, getApplicationContext(), motSelected, magSelected);
-        
-        gps = new GpsManager(this);
-        getCurrentLocation();
+                        if(camSelected)
+                            cam = new CameraManager(StartTrip.this, binding);
 
-        if (motSelected || magSelected)
-            mot = new MotionManager(this, getApplicationContext(), motSelected, magSelected);
+                        /* gps always available */
+                        gps = new GpsManager(StartTrip.this);
+                        getCurrentLocation();
 
-        if(camSelected)
-            cam = new CameraManager(this, binding);
+                        setStopButton();
+                        startAttentionDetection();
+                    }
 
-        setStopButton();
-        getCurrentLocation();
-        startAttentionDetection();
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        Toast.makeText(StartTrip.this, "Permissions Required!", Toast.LENGTH_SHORT).show();
+                    }
+                }).check();
 
     }
 
     public void startAttentionDetection(){
+
         t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
 
+                /* get counters value */
                 if(micSelected)
                     noise = mic.getNoiseDetections();       //12
                 if(camSelected) {
@@ -145,19 +170,19 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                     curv = mot.getCurvatureIndex();         // 1 - 3
                 speed = gps.getAvgSpeed();          //1 - 4
 
-                disattentionLevel = (float) ((speed/4 + curv/3)* (head/12 + drow/30 + usage + noise/12 + fall/5));
-                disattentionLevel = (float) (alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel);
+                /* calculate index */
+                disattentionLevel = (speed/speedNorm + curv/ curvNorm)* (head/ headNorm + drow/ drowNorm + usage + noise/ noiseNorm + fall/ fallNorm);
+                disattentionLevel = alpha * disattentionLevel + (1-alpha) * prevDisattentionLevel;
                 prevDisattentionLevel = disattentionLevel;
-                attentionLevel = (float) (10 - (disattentionLevel));
+                attentionLevel = maxDisattention - (disattentionLevel);
 
-                progressBar = (float) attentionLevel *100 / 10;
-                binding.determinateBar.setProgress((int)progressBar);
-
-                anim = new ProgressBarAnimation(pB, pB.getProgress(), progressBar);
+                /* update prgress bar */
+                progress = attentionLevel * 100 / 10;
+                anim = new ProgressBarAnimation(pB, pB.getProgress(), progress);
                 anim.setDuration(3000);
                 pB.startAnimation(anim);
 
-
+                /* reset counters */
                 if(micSelected)
                     mic.setNoiseDetections(0);
                 if(camSelected) {
@@ -169,16 +194,16 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                     mot.setCountFall(0);
                 }
             }
-        }, 10,60000);
+        }, 10,60000);     /* the disattention level is recompute every minute */
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setStopButton() {
+    public void setStopButton() {               /* function related to Stop Trip button */
         stop = binding.stop;
         stop.setOnClickListener(view -> {
             arrival = gps.getAddress(this);
             timeArrival = LocalDateTime.now();
-            score = (int)progressBar;
+            score = (int) progress;
             Trip trip = new Trip(String.valueOf(timeDeparture), String.valueOf(timeArrival), String.valueOf(score), departure, arrival, getApplicationContext());
             trip.insertData();
             if(motSelected || magSelected)
@@ -197,6 +222,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void getCurrentLocation() {
+
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED
@@ -205,18 +231,18 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION
-                    }, GpsManager.LOCATION_REQUEST);
+                    }, REQUEST_CODE);
             return;
         }
         Task<Location> task = GpsManager.fusedLocationProviderClient.getLastLocation();
         task.addOnSuccessListener(location -> {
 
             if (location != null) {
-                gps.currentLocation = location;
+                GpsManager.currentLocation = location;
                 if (departure == null){
                     departure = gps.getAddress(this);
                 }
-                gps.currentLocation = location;
+                GpsManager.currentLocation = location;
                 SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
                 assert supportMapFragment != null;
@@ -225,11 +251,13 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
         });
 
-        locationRequest = LocationRequest.create();
+        /* location callback set */
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(MapsActivity.getInterval() * 1000L);
         locationRequest.setFastestInterval(MapsActivity.getInterval() * 1000L);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationCallback = new LocationCallback() {
+        //                        print();
+        LocationCallback locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
 
@@ -238,9 +266,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
 
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
-                        //TODO: UI updates.
 
-                        print();
+//                        print();
 
                         GpsManager.currentLocation = locationResult.getLastLocation();
                         gps.updateMap(StartTrip.this, mMap, foregroundActivity);
@@ -254,30 +281,9 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case GpsManager.LOCATION_REQUEST:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCurrentLocation();
-                }
-                break;
-            case MicrophoneManager.REQUEST_RECORD_AUDIO:
-                if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    mic.initializeMicrophone(this);
-                }else{
-                    Toast.makeText(this , "Permission to use the microphone denied...", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        if(motSelected || magSelected)
+        if(mot != null)
             mot.unregisterListeners(motSelected, magSelected);
     }
 
@@ -311,6 +317,7 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void print() {
+
         Log.d("Attention level: ", String.valueOf(attentionLevel));
         Log.d("Prev disatttention: ", String.valueOf(prevDisattentionLevel));
         Log.d("Disattention level: ", String.valueOf(disattentionLevel));

@@ -26,7 +26,6 @@ public class MotionActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         mot.registerListeners(true, false);
-
     }
 
     @Override

@@ -6,8 +6,17 @@ import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import java.util.List;
 
 import it.unipi.dii.inattentivedrivers.databinding.ActivityMicrophoneBinding;
 import it.unipi.dii.inattentivedrivers.ui.newtrip.MicrophoneActivity;
@@ -17,10 +26,12 @@ public class MicrophoneManager {
 
     MicrophoneActivity microphoneActivity;
     ActivityMicrophoneBinding activityMicrophoneBinding;
-
     StartTrip startTrip;
 
+    public static final int REQUEST_RECORD_AUDIO = 200;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
+    private static final String recPermission = Manifest.permission.RECORD_AUDIO;
+    public static String[] sendRecPermission = {recPermission};
 
     private static final String TAG = "AudioRecord";
     static final int SAMPLE_RATE_IN_HZ = 8000;
@@ -32,33 +43,39 @@ public class MicrophoneManager {
     public double decibelMeasure;
 
     int noiseDetections = 0;
-    int noiseCounter;   //when > noiseThreshold -> noiseDetections++
+    int noiseCounter = 0;   //when > noiseThreshold -> noiseDetections++
     static int counterThreshold = 5;
-    static double decibelThreshold = 40.0;
-
-    public static final int REQUEST_RECORD_AUDIO = 200;
-
-
-    private static final String recPermission = Manifest.permission.RECORD_AUDIO;
-    public static String[] sendRecPermission = {recPermission};
-
+    static double decibelThreshold = 150.0;
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
-
         mLock = new Object();
         this.microphoneActivity = microphoneActivity;
         this.activityMicrophoneBinding = activityMicrophoneBinding;
-
     }
 
     public MicrophoneManager(StartTrip startTrip){
-
         mLock = new Object();
         this.startTrip = startTrip;
-
     }
 
     public void initializeMicrophone (Context context) {
+
+        Dexter.withContext(context)
+                .withPermissions(Manifest.permission.RECORD_AUDIO)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        startRecording(context);
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        Toast.makeText(context, "Permissions Required!", Toast.LENGTH_SHORT).show();
+                    }
+                }).check();
+    }
+
+    public void startRecording (Context context){
 
         if (isGetVoiceRun) {
             Log.e(TAG, "Still recording it");
@@ -91,9 +108,8 @@ public class MicrophoneManager {
                 double volume = 10 * Math.log10(mean);
                 Log.d(TAG, "Decibel value:" + volume);
                 decibelMeasure = volume;
-                String outputStr = "";
+                String outputStr = "Decibels: " + decibelMeasure;
                 if(decibelMeasure > decibelThreshold) {
-                    outputStr = "Decibels: " + decibelMeasure;
                     noiseCounter++;
                     if (noiseCounter == counterThreshold) {
                         noiseDetections++;
@@ -117,7 +133,6 @@ public class MicrophoneManager {
             mAudioRecord = null;
         }).start();
     }
-
 
     public int getNoiseDetections() {
         return noiseDetections;
