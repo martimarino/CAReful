@@ -14,5 +14,5 @@ dependencyResolutionManagement {
         jcenter()
     }
 }
-rootProject.name = "Inattentive Drivers"
+rootProject.name = "CAReful"
 include ':app'

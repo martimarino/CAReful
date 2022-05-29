@@ -7,20 +7,20 @@
 
     <fragment
         android:id="@+id/navigation_newtrip"
-        android:name="it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment"
+        android:name="it.unipi.dii.careful.ui.newtrip.NewTripFragment"
         android:label="@string/title_newtrip"
         tools:layout="@layout/fragment_newtrip" />
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="it.unipi.dii.inattentivedrivers.ui.history.HistoryFragment"
+        android:name="it.unipi.dii.careful.ui.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
 
-    <activity
+    <fragment
         android:id="@+id/navigation_profile"
-        android:name="it.unipi.dii.inattentivedrivers.ui.profile.Login"
+        android:name="it.unipi.dii.careful.ui.profile.SignInSignUp"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_signin_signup" />
 
 </navigation>
