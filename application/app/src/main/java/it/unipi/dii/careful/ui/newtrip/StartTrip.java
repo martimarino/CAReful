@@ -291,8 +291,11 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onResume() {
         super.onResume();
-        if(resumeTimes > 0 && (motSelected || magSelected))
-            mot.registerListeners(motSelected, magSelected);
+        resumeTimes++;
+        if(resumeTimes > 0) {
+            if(motSelected || magSelected)
+                mot.registerListeners(motSelected, magSelected);
+        }
         foregroundActivity = true;
     }
 

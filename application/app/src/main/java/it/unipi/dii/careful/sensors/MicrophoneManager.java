@@ -46,7 +46,7 @@ public class MicrophoneManager {
     int noiseDetections = 0;
     int noiseCounter = 0;   //when > noiseThreshold -> noiseDetections++
     static int counterThreshold = 5;
-    static double decibelThreshold = 50.0;
+    static double decibelThreshold = 150.0;
 
     public MicrophoneManager(MicrophoneActivity microphoneActivity, ActivityMicrophoneBinding activityMicrophoneBinding){
         mLock = new Object();
