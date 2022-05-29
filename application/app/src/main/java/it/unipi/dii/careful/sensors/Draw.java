@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.sensors;
+package it.unipi.dii.careful.sensors;
 
 import android.content.Context;
 import android.graphics.Canvas;

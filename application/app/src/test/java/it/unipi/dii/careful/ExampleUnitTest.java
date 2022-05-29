@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers;
+package it.unipi.dii.careful;
 
 import org.junit.Test;
 

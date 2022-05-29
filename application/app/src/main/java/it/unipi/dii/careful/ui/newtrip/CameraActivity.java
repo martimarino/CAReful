@@ -1,11 +1,11 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
-import it.unipi.dii.inattentivedrivers.sensors.CameraManager;
+import it.unipi.dii.careful.databinding.ActivityCameraBinding;
+import it.unipi.dii.careful.sensors.CameraManager;
 
 public class CameraActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.sensors;
+package it.unipi.dii.careful.sensors;
 
 import android.Manifest;
 import android.app.Activity;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import it.unipi.dii.inattentivedrivers.ui.newtrip.MapsActivity;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
+import it.unipi.dii.careful.ui.newtrip.MapsActivity;
+import it.unipi.dii.careful.ui.newtrip.StartTrip;
 
 public class GpsManager {
 

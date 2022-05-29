@@ -1,9 +1,9 @@
-package it.unipi.dii.inattentivedrivers.ui.profile;
+package it.unipi.dii.careful.ui.profile;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-import it.unipi.dii.inattentivedrivers.ui.history.Trip;
+import it.unipi.dii.careful.ui.history.Trip;
 
 public class Session{
 

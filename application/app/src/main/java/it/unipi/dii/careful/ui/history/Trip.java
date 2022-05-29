@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.history;
+package it.unipi.dii.careful.ui.history;
 
 import android.content.Context;
 import android.location.Location;
@@ -6,8 +6,8 @@ import android.widget.Toast;
 
 import java.time.LocalDateTime;
 
-import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
+import it.unipi.dii.careful.ui.DatabaseHelper;
+import it.unipi.dii.careful.ui.newtrip.NewTripFragment;
 
 public class Trip {
 

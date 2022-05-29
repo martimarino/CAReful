@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMicrophoneBinding;
-import it.unipi.dii.inattentivedrivers.sensors.MicrophoneManager;
+import it.unipi.dii.careful.databinding.ActivityMicrophoneBinding;
+import it.unipi.dii.careful.sensors.MicrophoneManager;
 
 public class MicrophoneActivity extends AppCompatActivity {
 

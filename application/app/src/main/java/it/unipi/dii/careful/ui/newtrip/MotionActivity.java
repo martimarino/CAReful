@@ -1,11 +1,11 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMotionBinding;
-import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
+import it.unipi.dii.careful.databinding.ActivityMotionBinding;
+import it.unipi.dii.careful.sensors.MotionManager;
 
 public class MotionActivity extends AppCompatActivity {
 

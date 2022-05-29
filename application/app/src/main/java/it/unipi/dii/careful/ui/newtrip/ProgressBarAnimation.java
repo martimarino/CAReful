@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.view.animation.Animation;
 import android.view.animation.Transformation;

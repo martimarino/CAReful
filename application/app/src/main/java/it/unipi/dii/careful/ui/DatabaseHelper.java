@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui;
+package it.unipi.dii.careful.ui;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-import it.unipi.dii.inattentivedrivers.ui.history.Trip;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
+import it.unipi.dii.careful.ui.history.Trip;
+import it.unipi.dii.careful.ui.newtrip.NewTripFragment;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 

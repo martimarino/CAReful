@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.history;
+package it.unipi.dii.careful.ui.history;
 
 import android.graphics.Color;
 import android.graphics.text.LineBreaker;
@@ -20,10 +20,10 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
-import it.unipi.dii.inattentivedrivers.databinding.FragmentHistoryBinding;
-import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
-import it.unipi.dii.inattentivedrivers.R;
+import it.unipi.dii.careful.databinding.FragmentHistoryBinding;
+import it.unipi.dii.careful.ui.DatabaseHelper;
+import it.unipi.dii.careful.ui.newtrip.NewTripFragment;
+import it.unipi.dii.careful.R;
 
 public class HistoryFragment extends Fragment {
 

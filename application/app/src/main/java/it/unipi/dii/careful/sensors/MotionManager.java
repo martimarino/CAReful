@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.sensors;
+package it.unipi.dii.careful.sensors;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -15,11 +15,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMapsBinding;
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMotionBinding;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.MapsActivity;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.MotionActivity;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
+import it.unipi.dii.careful.databinding.ActivityMapsBinding;
+import it.unipi.dii.careful.databinding.ActivityMotionBinding;
+import it.unipi.dii.careful.ui.newtrip.MapsActivity;
+import it.unipi.dii.careful.ui.newtrip.MotionActivity;
+import it.unipi.dii.careful.ui.newtrip.StartTrip;
 
 public class MotionManager {
 

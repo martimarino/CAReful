@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.sensors;
+package it.unipi.dii.careful.sensors;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,10 +27,10 @@ import com.otaliastudios.cameraview.frame.FrameProcessor;
 
 import java.util.List;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityCameraBinding;
-import it.unipi.dii.inattentivedrivers.databinding.StartTripBinding;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.CameraActivity;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
+import it.unipi.dii.careful.databinding.ActivityCameraBinding;
+import it.unipi.dii.careful.databinding.StartTripBinding;
+import it.unipi.dii.careful.ui.newtrip.CameraActivity;
+import it.unipi.dii.careful.ui.newtrip.StartTrip;
 
 public class CameraManager {
 

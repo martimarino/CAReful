@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import it.unipi.dii.inattentivedrivers.databinding.FragmentNewtripBinding;
-import it.unipi.dii.inattentivedrivers.ui.profile.Session;
+import it.unipi.dii.careful.databinding.FragmentNewtripBinding;
+import it.unipi.dii.careful.ui.profile.Session;
 
 public class NewTripFragment extends Fragment {
 

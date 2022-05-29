@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.profile;
+package it.unipi.dii.careful.ui.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
-import it.unipi.dii.inattentivedrivers.databinding.FragmentSigninSignupBinding;
-import it.unipi.dii.inattentivedrivers.ui.DatabaseHelper;
-import it.unipi.dii.inattentivedrivers.ui.history.Trip;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.NewTripFragment;
+import it.unipi.dii.careful.databinding.FragmentSigninSignupBinding;
+import it.unipi.dii.careful.ui.DatabaseHelper;
+import it.unipi.dii.careful.ui.history.Trip;
+import it.unipi.dii.careful.ui.newtrip.NewTripFragment;
 
 public class SignInSignUp extends Fragment {
 

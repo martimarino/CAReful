@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -20,10 +20,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
-import it.unipi.dii.inattentivedrivers.R;
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMapsBinding;
-import it.unipi.dii.inattentivedrivers.sensors.GpsManager;
-import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
+import it.unipi.dii.careful.R;
+import it.unipi.dii.careful.databinding.ActivityMapsBinding;
+import it.unipi.dii.careful.sensors.GpsManager;
+import it.unipi.dii.careful.sensors.MotionManager;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 

@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.sensors;
+package it.unipi.dii.careful.sensors;
 
 import android.Manifest;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -20,9 +19,9 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMicrophoneBinding;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.MicrophoneActivity;
-import it.unipi.dii.inattentivedrivers.ui.newtrip.StartTrip;
+import it.unipi.dii.careful.databinding.ActivityMicrophoneBinding;
+import it.unipi.dii.careful.ui.newtrip.MicrophoneActivity;
+import it.unipi.dii.careful.ui.newtrip.StartTrip;
 
 public class MicrophoneManager {
 

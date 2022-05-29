@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers.ui.newtrip;
+package it.unipi.dii.careful.ui.newtrip;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -35,13 +35,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import it.unipi.dii.inattentivedrivers.R;
-import it.unipi.dii.inattentivedrivers.databinding.StartTripBinding;
-import it.unipi.dii.inattentivedrivers.sensors.CameraManager;
-import it.unipi.dii.inattentivedrivers.sensors.GpsManager;
-import it.unipi.dii.inattentivedrivers.sensors.MicrophoneManager;
-import it.unipi.dii.inattentivedrivers.sensors.MotionManager;
-import it.unipi.dii.inattentivedrivers.ui.history.Trip;
+import it.unipi.dii.careful.R;
+import it.unipi.dii.careful.databinding.StartTripBinding;
+import it.unipi.dii.careful.sensors.CameraManager;
+import it.unipi.dii.careful.sensors.GpsManager;
+import it.unipi.dii.careful.sensors.MicrophoneManager;
+import it.unipi.dii.careful.sensors.MotionManager;
+import it.unipi.dii.careful.ui.history.Trip;
 
 
 public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
@@ -291,12 +291,8 @@ public class StartTrip extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     protected void onResume() {
         super.onResume();
-        resumeTimes++;
-        if(resumeTimes > 0) {
-            Log.d("Resume times: ", String.valueOf(resumeTimes));
-            if(motSelected || magSelected)
-                mot.registerListeners(motSelected, magSelected);
-        }
+        if(resumeTimes > 0 && (motSelected || magSelected))
+            mot.registerListeners(motSelected, magSelected);
         foregroundActivity = true;
     }
 

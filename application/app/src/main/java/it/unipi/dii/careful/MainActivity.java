@@ -1,4 +1,4 @@
-package it.unipi.dii.inattentivedrivers;
+package it.unipi.dii.careful;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import it.unipi.dii.inattentivedrivers.databinding.ActivityMainBinding;
+import it.unipi.dii.careful.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
