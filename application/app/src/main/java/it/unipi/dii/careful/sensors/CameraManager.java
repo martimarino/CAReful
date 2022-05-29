@@ -118,7 +118,7 @@ public class CameraManager {
 
                     @Override
                     public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                        makeToast("Permissions Required!", activity);
+                        makeToast("Permissions Required!!", activity);
                     }
                 }).check();
     }
